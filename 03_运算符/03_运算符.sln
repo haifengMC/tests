@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01_无符号与有符号比较", "01_无符号与有符号比较\01_无符号与有符号比较.vcxproj", "{C5F8A77B-4293-440F-9A9A-33C6E38A30EA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02_负数取余", "02_负数取余\02_负数取余.vcxproj", "{1903E1B2-D68A-49FA-80F3-7DF9C4049789}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{C5F8A77B-4293-440F-9A9A-33C6E38A30EA}.Release|x64.Build.0 = Release|x64
 		{C5F8A77B-4293-440F-9A9A-33C6E38A30EA}.Release|x86.ActiveCfg = Release|Win32
 		{C5F8A77B-4293-440F-9A9A-33C6E38A30EA}.Release|x86.Build.0 = Release|Win32
+		{1903E1B2-D68A-49FA-80F3-7DF9C4049789}.Debug|x64.ActiveCfg = Debug|x64
+		{1903E1B2-D68A-49FA-80F3-7DF9C4049789}.Debug|x64.Build.0 = Debug|x64
+		{1903E1B2-D68A-49FA-80F3-7DF9C4049789}.Debug|x86.ActiveCfg = Debug|Win32
+		{1903E1B2-D68A-49FA-80F3-7DF9C4049789}.Debug|x86.Build.0 = Debug|Win32
+		{1903E1B2-D68A-49FA-80F3-7DF9C4049789}.Release|x64.ActiveCfg = Release|x64
+		{1903E1B2-D68A-49FA-80F3-7DF9C4049789}.Release|x64.Build.0 = Release|x64
+		{1903E1B2-D68A-49FA-80F3-7DF9C4049789}.Release|x86.ActiveCfg = Release|Win32
+		{1903E1B2-D68A-49FA-80F3-7DF9C4049789}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
