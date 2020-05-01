@@ -3,6 +3,52 @@
 #include <typeinfo>
 using namespace std;
 
+template<typename T> 
+class Copier//¿½±´ÊÊÅäÆ÷
+{
+	T* pt; 
+	const T* cpt;
+public:
+	size_t size() const
+	{
+		if (cpt) return  sizeof(*cpt);
+		else return 0;
+	}
+	bool read(void* buf, const unsigned int& len) { return true; }
+	bool write(void* buf, const unsigned int& len) const
+	{
+		if (!cpt || !buf || len < size())
+			return false;
+
+		memcpy(buf, cpt, sizeof(*cpt));
+		return true;
+	}
+	Copier(T& t) : pt(&t), cpt(&t) {}
+	Copier(const T& t) : pt(NULL), cpt(&t) {}
+};
+
+template<> class Copier<std::string>//¿½±´ÊÊÅäÆ÷
+{
+	std::string* pt;
+	const std::string* cpt;
+public:
+	size_t size() const
+	{
+		if (cpt) return cpt->size();
+		else return 0;
+	}
+	bool read(void* buf, const unsigned int& len) { return true; }
+	bool write(void* buf, const unsigned int& len) const
+	{
+		if (!cpt || !buf || len < size())
+			return false;
+
+		memcpy(buf, cpt->c_str(), cpt->size());
+		return true;
+	}
+	Copier(std::string& t) : pt(&t), cpt(&t) {}
+	Copier(const std::string& t) : pt(NULL), cpt(&t) {}
+};
 
 // ±ä³¤Ä£°åµÄÉùÃ÷
 template<typename... A> class BMW {};  
@@ -14,8 +60,8 @@ protected:
 	unsigned short tNum = 0;
 public:
 	const unsigned short& num() const { return tNum; }
-	unsigned int size() const { return 0; }
-	bool fill(void* buf, const unsigned int& len) { return true; }
+	size_t size() const { return 0; }
+	bool write(void* buf, const unsigned int& len) const { return true; }
 
 	bool operator==(const BMW<>& bmw) const { return true; }
 	bool operator<(const BMW<>& bmw) const { return false; }
@@ -37,18 +83,21 @@ public:
 		head = h;
 		BMW<>::tNum = sizeof...(Tail) + 1;
 	}
+	BMW(Head&& h, Tail&&... t) : BMW<Tail...>(t...)
+	{
+		head = std::move(h);
+		BMW<>::tNum = sizeof...(Tail) + 1;
+	}
 
 	Head head;
 
-	unsigned int size() const { return sizeof(head) + this->BMW<Tail...>::size(); }
-	bool fill(void* buf, const unsigned int& len)
+	size_t size() const { return Copier<Head>(head).size() + this->BMW<Tail...>::size(); }
+	bool write(void* buf, const unsigned int& len) const
 	{
 		if (!buf || len < size())
 			return false;
-
-		memcpy(buf, &head, sizeof(head));
-
-		return this->BMW<Tail...>::fill((char*)buf + sizeof(head), len - sizeof(head));
+		Copier<Head> cHead(head);
+		return cHead.write(buf, len) && this->BMW<Tail...>::write((char*)buf + cHead.size(), len - cHead.size());
 	}
 
 	//==, !=
@@ -100,37 +149,6 @@ ostream& operator<<(ostream& os, const BMW<Head, Tail...>& bmw)
 }
 ostream& operator<<(ostream& os, const BMW<>& bmw) { return os << "}"; }
 
-template<typename Head, typename ...Tail>
-unsigned int BMW<Head, Tail...>::size() const { return head.size() + this->BMW<Tail...>::size(); }
-/*
-template<typename... Tail>
-class BMW<std::string, Tail...>
-{
-public:
-	BMW() : BMW<Tail...>(), head("")
-	{
-		BMW<>::tNum = sizeof...(Tail) + 1;
-	}
-	BMW(const string& h, Tail... t) : BMW<Tail...>(t...)
-	{
-		head = h;
-		BMW<>::tNum = sizeof...(Tail) + 1;
-	}
-
-	unsigned int size() const { return head.size() + this->BMW<Tail...>::size(); }
-	bool fill(void* buf, const unsigned int& len)
-	{
-		if (!buf || len < size())
-			return false;
-
-		memcpy(buf, head.c_str(), head.size());
-
-		return this->BMW<Tail...>::fill((char*)buf + head.size(), len - head.size());
-	}
-	std::string head;
-};
-*/
-
 int main()
 {
 	BMW<int, char, float> car1;
@@ -169,15 +187,18 @@ int main()
 	cout << car1.BMW<float>::size() << endl;
 	cout << car1.BMW<>::size() << endl;
 
-	char buf[4] = "";
+	char buf1[4] = "";
 	BMW<char, char, char> car4('a', 'b', 'c');
-	car4.fill(buf, sizeof(buf));
-	cout << buf << endl;
-
-	/*
+	
+	car4.write(buf1, sizeof(buf1));
+	cout << buf1 << endl;
+	
 	BMW<char, char, string> car5('a', 'b', "hello world");
 	cout << car5.size() << endl;
-	*/
+
+	char buf2[32] = "";
+	car5.write(buf2, sizeof(buf2));
+	cout << buf2 << endl;
 
 	return 0;
 }
