@@ -14,15 +14,25 @@ public:
 		if (cpt) return  sizeof(*cpt);
 		else return 0;
 	}
-	bool read(void* buf, const unsigned int& len) { return true; }
-	bool write(void* buf, const unsigned int& len) const
+
+	unsigned int read(void* buf, const unsigned int& len)
+	{
+		if (!pt || !buf || len < size())
+			return false;
+
+		memcpy(pt, buf, sizeof(*pt));
+		return size();
+	}
+
+	unsigned int write(void* buf, const unsigned int& len) const
 	{
 		if (!cpt || !buf || len < size())
 			return false;
 
 		memcpy(buf, cpt, sizeof(*cpt));
-		return true;
+		return size();
 	}
+
 	Copier(T& t) : pt(&t), cpt(&t) {}
 	Copier(const T& t) : pt(NULL), cpt(&t) {}
 };
@@ -37,15 +47,18 @@ public:
 		if (cpt) return cpt->size();
 		else return 0;
 	}
-	bool read(void* buf, const unsigned int& len) { return true; }
-	bool write(void* buf, const unsigned int& len) const
+
+	unsigned int  read(void* buf, const unsigned int& len) { return 0; }
+
+	unsigned int  write(void* buf, const unsigned int& len) const
 	{
 		if (!cpt || !buf || len < size())
 			return false;
 
 		memcpy(buf, cpt->c_str(), cpt->size());
-		return true;
+		return size();
 	}
+
 	Copier(std::string& t) : pt(&t), cpt(&t) {}
 	Copier(const std::string& t) : pt(NULL), cpt(&t) {}
 };
@@ -61,7 +74,8 @@ protected:
 public:
 	const unsigned short& num() const { return tNum; }
 	size_t size() const { return 0; }
-	bool write(void* buf, const unsigned int& len) const { return true; }
+	unsigned int read(void* buf, const unsigned int& len) { return 0; }
+	unsigned int write(void* buf, const unsigned int& len) const { return 0; }
 
 	bool operator==(const BMW<>& bmw) const { return true; }
 	bool operator<(const BMW<>& bmw) const { return false; }
@@ -92,12 +106,30 @@ public:
 	Head head;
 
 	size_t size() const { return Copier<Head>(head).size() + this->BMW<Tail...>::size(); }
-	bool write(void* buf, const unsigned int& len) const
+	unsigned int read(void* buf, const unsigned int& len)
 	{
 		if (!buf || len < size())
-			return false;
+			return 0;
 		Copier<Head> cHead(head);
-		return cHead.write(buf, len) && this->BMW<Tail...>::write((char*)buf + cHead.size(), len - cHead.size());
+		
+		unsigned int n = cHead.read(buf, len);
+		if (n)
+			return n + this->BMW<Tail...>::read((char*)buf + cHead.size(), len - cHead.size());
+		else
+			return n;
+	}
+
+	unsigned int write(void* buf, const unsigned int& len) const
+	{
+		if (!buf || len < size())
+			return 0;
+		Copier<Head> cHead(head);
+
+		unsigned int n = cHead.write(buf, len);
+		if (n)
+			return n + this->BMW<Tail...>::write((char*)buf + cHead.size(), len - cHead.size());
+		else
+			return n;
 	}
 
 	//==, !=
@@ -193,12 +225,32 @@ int main()
 	car4.write(buf1, sizeof(buf1));
 	cout << buf1 << endl;
 	
-	BMW<char, char, string> car5('a', 'b', "hello world");
+	BMW<char, char, string> car5('a', 'b', "hello world"), car8;
 	cout << car5.size() << endl;
 
 	char buf2[32] = "";
-	car5.write(buf2, sizeof(buf2));
+	cout << car5.write(buf2, sizeof(buf2)) << endl;
 	cout << buf2 << endl;
+
+	BMW<int, int, int> car6(1, 2, 3), car7;
+	cout << car6 << car7 << endl;
+	char buf3[32] = "";
+	cout << car6.write(buf3, sizeof(buf3)) << endl;
+	cout << buf3 << endl;
+	cout << car7.read(buf3, sizeof(buf3)) << endl;
+	cout << car7 << endl;
+
+	cout << car8.read(buf2, sizeof(buf2)) << endl;
+	cout << car8 << endl;
+
+	BMW<char, string, char> car9('a', "hello world", 'b'), car10;
+	cout << car9 << car10 << endl;
+	char buf4[32] = "";
+	cout << car9.write(buf4, sizeof(buf4)) << endl;
+	cout << car9 << endl;
+	cout << car10.read(buf4, sizeof(buf4)) << endl;
+	cout << car10 << endl;
+
 
 	return 0;
 }
