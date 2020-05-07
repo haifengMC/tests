@@ -16,12 +16,14 @@ using namespace std;
 #define DEC_2 1
 #define DEC_3 2
 #define DEC_4 3
+#define DEC_5 4
 #define DEC(n) COMB(DEC_, n)
 
 #define RIS_1 2
 #define RIS_2 3
 #define RIS_3 4
 #define RIS_4 5
+#define RIS_5 6
 #define RIS(n) COMB(RIS_, n)
 
 #define _NUM(_0, _1, _2, _3, _4, N, ...) N
@@ -46,6 +48,7 @@ using namespace std;
 #define GETARG_2(n, X, ...) EXPAND(COMB(GETARG_, DEC(n))(DEC(n), __VA_ARGS__))
 #define GETARG_3(n, X, ...) EXPAND(COMB(GETARG_, DEC(n))(DEC(n), __VA_ARGS__))
 #define GETARG_4(n, X, ...) EXPAND(COMB(GETARG_, DEC(n))(DEC(n), __VA_ARGS__))
+#define GETARG_5(n, X, ...) EXPAND(COMB(GETARG_, DEC(n))(DEC(n), __VA_ARGS__))
 #define GETARG(N, ...) EXPAND(COMB(GETARG_, N)(N, __VA_ARGS__))
 
 #define _SUB_F(n, X) n
@@ -59,6 +62,7 @@ int main()
 	cout << TO_STRING(REPEAT(2, _SUB_F)) << endl;
 	cout << TO_STRING(GETARG(4, 0, 1, 0, 1, 2)) << endl;
 	cout << TO_STRING(SUB(2, 1)) << endl;
+	cout << TO_STRING(SUB(3, 1)) << endl;
 
 	system("pause");
 	return 0;
