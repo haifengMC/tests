@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02_递归宏定义", "02_�
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03_可变参宏参数数量", "03_可变参宏参数数量\03_可变参宏参数数量.vcxproj", "{32C0DCAD-FAC9-4155-A32C-6A4D4068D242}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04_可变参与递归", "04_可变参与递归\04_可变参与递归.vcxproj", "{584C28B7-C6EF-4D7F-A06E-BAF53493A495}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -41,6 +43,14 @@ Global
 		{32C0DCAD-FAC9-4155-A32C-6A4D4068D242}.Release|x64.Build.0 = Release|x64
 		{32C0DCAD-FAC9-4155-A32C-6A4D4068D242}.Release|x86.ActiveCfg = Release|Win32
 		{32C0DCAD-FAC9-4155-A32C-6A4D4068D242}.Release|x86.Build.0 = Release|Win32
+		{584C28B7-C6EF-4D7F-A06E-BAF53493A495}.Debug|x64.ActiveCfg = Debug|x64
+		{584C28B7-C6EF-4D7F-A06E-BAF53493A495}.Debug|x64.Build.0 = Debug|x64
+		{584C28B7-C6EF-4D7F-A06E-BAF53493A495}.Debug|x86.ActiveCfg = Debug|Win32
+		{584C28B7-C6EF-4D7F-A06E-BAF53493A495}.Debug|x86.Build.0 = Debug|Win32
+		{584C28B7-C6EF-4D7F-A06E-BAF53493A495}.Release|x64.ActiveCfg = Release|x64
+		{584C28B7-C6EF-4D7F-A06E-BAF53493A495}.Release|x64.Build.0 = Release|x64
+		{584C28B7-C6EF-4D7F-A06E-BAF53493A495}.Release|x86.ActiveCfg = Release|Win32
+		{584C28B7-C6EF-4D7F-A06E-BAF53493A495}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
