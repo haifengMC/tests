@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03_可变参宏参数数量
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04_可变参与递归", "04_可变参与递归\04_可变参与递归.vcxproj", "{584C28B7-C6EF-4D7F-A06E-BAF53493A495}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "05_宏减法", "05_宏减法\05_宏减法.vcxproj", "{8C887792-77F6-44FE-9D33-E92989794B0F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -51,6 +53,14 @@ Global
 		{584C28B7-C6EF-4D7F-A06E-BAF53493A495}.Release|x64.Build.0 = Release|x64
 		{584C28B7-C6EF-4D7F-A06E-BAF53493A495}.Release|x86.ActiveCfg = Release|Win32
 		{584C28B7-C6EF-4D7F-A06E-BAF53493A495}.Release|x86.Build.0 = Release|Win32
+		{8C887792-77F6-44FE-9D33-E92989794B0F}.Debug|x64.ActiveCfg = Debug|x64
+		{8C887792-77F6-44FE-9D33-E92989794B0F}.Debug|x64.Build.0 = Debug|x64
+		{8C887792-77F6-44FE-9D33-E92989794B0F}.Debug|x86.ActiveCfg = Debug|Win32
+		{8C887792-77F6-44FE-9D33-E92989794B0F}.Debug|x86.Build.0 = Debug|Win32
+		{8C887792-77F6-44FE-9D33-E92989794B0F}.Release|x64.ActiveCfg = Release|x64
+		{8C887792-77F6-44FE-9D33-E92989794B0F}.Release|x64.Build.0 = Release|x64
+		{8C887792-77F6-44FE-9D33-E92989794B0F}.Release|x86.ActiveCfg = Release|Win32
+		{8C887792-77F6-44FE-9D33-E92989794B0F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
