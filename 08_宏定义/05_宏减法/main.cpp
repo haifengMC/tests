@@ -48,16 +48,17 @@ using namespace std;
 #define GETARG_4(n, X, ...) EXPAND(COMB(GETARG_, DEC(n))(DEC(n), __VA_ARGS__))
 #define GETARG(N, ...) EXPAND(COMB(GETARG_, N)(N, __VA_ARGS__))
 
-//#define _SUB_CNT(...) EXPAND(GETARG(__VA_ARGS__))
-//#define SUB(X, Y) _SUB_CNT(RIS(RIS(X)), REPEAT(Y, _SUB_F), REPEAT(X, _SUB_F))
+#define _SUB_F(n, X) n
+#define _SUB_CNT(...) EXPAND(GETARG(__VA_ARGS__))
+#define SUB(X, Y) _SUB_CNT(RIS(RIS(X)), REPEAT(Y, _SUB_F), REPEAT(X, _SUB_F))
 
 int main()
 {
 #define F(n, X) n
 	cout << TO_STRING(REPEAT_VA(F, a, b)) << endl;
-	cout << TO_STRING(GETARG(2, a, b)) << endl;
-	//cout << TO_STRING(SUB(2, 1)) << endl;
-	//cout << TO_STRING(GETARG(2, 0, 1, 0, 1, 2)) << endl;
+	cout << TO_STRING(REPEAT(2, _SUB_F)) << endl;
+	cout << TO_STRING(GETARG(4, 0, 1, 0, 1, 2)) << endl;
+	cout << TO_STRING(SUB(2, 1)) << endl;
 
 	system("pause");
 	return 0;
