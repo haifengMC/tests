@@ -17,6 +17,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "06_宏加法", "06_宏加�
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "07_去掉前N个参数", "07_去掉前N个参数\07_去掉前N个参数.vcxproj", "{DAD4C19B-8FE1-44BF-96F1-46D2FCA43853}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "08_switch宏", "08_switch宏\08_switch宏.vcxproj", "{55220F5D-6B96-43AD-B033-745C7C170E61}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -81,6 +83,14 @@ Global
 		{DAD4C19B-8FE1-44BF-96F1-46D2FCA43853}.Release|x64.Build.0 = Release|x64
 		{DAD4C19B-8FE1-44BF-96F1-46D2FCA43853}.Release|x86.ActiveCfg = Release|Win32
 		{DAD4C19B-8FE1-44BF-96F1-46D2FCA43853}.Release|x86.Build.0 = Release|Win32
+		{55220F5D-6B96-43AD-B033-745C7C170E61}.Debug|x64.ActiveCfg = Debug|x64
+		{55220F5D-6B96-43AD-B033-745C7C170E61}.Debug|x64.Build.0 = Debug|x64
+		{55220F5D-6B96-43AD-B033-745C7C170E61}.Debug|x86.ActiveCfg = Debug|Win32
+		{55220F5D-6B96-43AD-B033-745C7C170E61}.Debug|x86.Build.0 = Debug|Win32
+		{55220F5D-6B96-43AD-B033-745C7C170E61}.Release|x64.ActiveCfg = Release|x64
+		{55220F5D-6B96-43AD-B033-745C7C170E61}.Release|x64.Build.0 = Release|x64
+		{55220F5D-6B96-43AD-B033-745C7C170E61}.Release|x86.ActiveCfg = Release|Win32
+		{55220F5D-6B96-43AD-B033-745C7C170E61}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
