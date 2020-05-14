@@ -22,11 +22,12 @@ using namespace std;
 #define NOT_0 1
 #define NOT_1 0
 #define NOT(n) COMB(NOT_, n)
-#define SWITCH_CASE(conf, confName, ...) EXPAND(COMB(COMB(confName, _), EXPAND(conf(##__VA_ARGS__)))(##__VA_ARGS__))
 #define EQ(X, Y) NOT(IF(SUB(X, Y)))
 
 #define COMMA(X) ,X
 
+#define DEC__1 _2
+#define DEC_0 _1
 #define DEC_1 0
 #define DEC_2 1
 #define DEC_3 2
@@ -34,6 +35,7 @@ using namespace std;
 #define DEC_5 4
 #define DEC(n) COMB(DEC_, n)
 
+#define RIS_0 1
 #define RIS_1 2
 #define RIS_2 3
 #define RIS_3 4
@@ -62,6 +64,8 @@ using namespace std;
 #define CUTARGS_F(X, ...) __VA_ARGS__
 #define CUTARGS(N, ...) EXPAND(COMB(GETARG_, N)(N, CUTARGS_F, __VA_ARGS__))
 
+#define SWITCH_CASE(conf, ...) EXPAND(GETARG(RIS(conf), ##__VA_ARGS__))
+
 #define _NUM(_0, _1, _2, _3, _4, N, ...) N
 #define _NUM_ARGS() 4, 3, 2, 1, 0
 #define _NUM_ARGS_CNT(...) EXPAND(_NUM(__VA_ARGS__))
@@ -76,13 +80,25 @@ using namespace std;
 #define _ADDSUB_F(n, X) n															   
 #define _SUB_CNT(...) EXPAND(GETARG(__VA_ARGS__))
 #define _ADD_CNT(...) EXPAND(NUM(__VA_ARGS__))
-#define SUB(X, Y) _SUB_CNT(RIS(RIS(X)), REPEAT_ZERO(Y, _ADDSUB_F), REPEAT_ZERO(X, _ADDSUB_F))
+//#define SUB(X, Y) _SUB_CNT(RIS(RIS(X)), REPEAT_ZERO(Y, _ADDSUB_F), REPEAT_ZERO(X, _ADDSUB_F))
+#define SUB(X, Y) DEC(GETARG(Y, COMB(REPEAT_, Y)(X, Y, _ADDSUB_F, DEC, COMMA)))
 #define ADD(X, Y) _ADD_CNT(REPEAT(Y, _ADDSUB_F), REPEAT(X, _ADDSUB_F))
 
 int main()
 {
 	cout << TO_STRING(EQ(2, 3)) << endl;
 	cout << TO_STRING(EQ(2, 2)) << endl;
+
+#define A a
+#define B b
+#define C c
+	cout << TO_STRING(SWITCH_CASE(0, A, B, C)) << endl;
+	cout << TO_STRING(SWITCH_CASE(1, A, B, C)) << endl;
+	cout << TO_STRING(SWITCH_CASE(2, A, B, C)) << endl;
+
+	cout << TO_STRING(SUB(2, 1)) << endl;
+	cout << TO_STRING(SUB(1, -1)) << endl;
+
 
 	return 0;
 }
