@@ -21,6 +21,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "08_switch宏", "08_switch�
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "09_安全获取宏", "09_安全获取宏\09_安全获取宏.vcxproj", "{31A2F0C5-F41C-4EAF-A5D8-CC874A683F69}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "10_逻辑运算宏", "10_逻辑运算宏\10_逻辑运算宏.vcxproj", "{7D916A63-70C7-486A-8E51-5B3A59DD3FBB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -101,6 +103,14 @@ Global
 		{31A2F0C5-F41C-4EAF-A5D8-CC874A683F69}.Release|x64.Build.0 = Release|x64
 		{31A2F0C5-F41C-4EAF-A5D8-CC874A683F69}.Release|x86.ActiveCfg = Release|Win32
 		{31A2F0C5-F41C-4EAF-A5D8-CC874A683F69}.Release|x86.Build.0 = Release|Win32
+		{7D916A63-70C7-486A-8E51-5B3A59DD3FBB}.Debug|x64.ActiveCfg = Debug|x64
+		{7D916A63-70C7-486A-8E51-5B3A59DD3FBB}.Debug|x64.Build.0 = Debug|x64
+		{7D916A63-70C7-486A-8E51-5B3A59DD3FBB}.Debug|x86.ActiveCfg = Debug|Win32
+		{7D916A63-70C7-486A-8E51-5B3A59DD3FBB}.Debug|x86.Build.0 = Debug|Win32
+		{7D916A63-70C7-486A-8E51-5B3A59DD3FBB}.Release|x64.ActiveCfg = Release|x64
+		{7D916A63-70C7-486A-8E51-5B3A59DD3FBB}.Release|x64.Build.0 = Release|x64
+		{7D916A63-70C7-486A-8E51-5B3A59DD3FBB}.Release|x86.ActiveCfg = Release|Win32
+		{7D916A63-70C7-486A-8E51-5B3A59DD3FBB}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
