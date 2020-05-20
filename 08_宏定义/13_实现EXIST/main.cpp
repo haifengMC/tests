@@ -131,9 +131,9 @@ using namespace std;
 #define REVERSE_REPEAT(n, f, X) COMB(REPEAT_VA_, n)(n, 1, n, f, DEC, COMMA_M, X)
 #define REVERSE_REPEAT_ZERO(n, f, X) COMB(REVERSE_REPEAT(n, f, X), COMMA_M(f(0, X)))
 
-#define _ADDSUB_F(n, X) n															   
-#define _SUB_CNT(...) EXPAND(GETARG(__VA_ARGS__))
-#define _ADD_CNT(...) EXPAND(NUM(__VA_ARGS__))
+//#define _ADDSUB_F(n, X) n															   
+//#define _SUB_CNT(...) EXPAND(GETARG(__VA_ARGS__))
+//#define _ADD_CNT(...) EXPAND(NUM(__VA_ARGS__))
 
 //#define ADD(X, Y) _ADD_CNT(REPEAT(Y, _ADDSUB_F), REPEAT(X, _ADDSUB_F))
 //#define ADD(X, Y) RIS(GETARG(Y, COMB(REPEAT_, Y)(X, Y, _ADDSUB_F, RIS, COMMA)))
