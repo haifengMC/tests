@@ -102,7 +102,7 @@ using namespace std;
 #define SWITCH_CASE(conf, ...) EXPAND(GETARG(RIS(conf), ##__VA_ARGS__))
 #define NOT_0 1
 #define NOT_1 0
-#define NOT(n) COMB(NOT_, n)
+#define NO(n) COMB(NOT_, n)
 #define IF(n) SWITCH_CASE(RIS(SIGN(n)), 1, 0, 1)
 #define NE(X, Y) SWITCH_CASE(RIS(SIGN(SUB(X, Y))), 1, 0, 1)
 #define EQ(X, Y) SWITCH_CASE(RIS(SIGN(SUB(X, Y))), 0, 1, 0)

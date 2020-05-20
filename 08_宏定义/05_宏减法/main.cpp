@@ -21,7 +21,7 @@ using namespace std;
 #define IF(n) COMB(IF_, n)
 #define NOT_0 1
 #define NOT_1 0
-#define NOT(n) COMB(NOT_, n)
+#define NO(n) COMB(NOT_, n)
 #define SWITCH_CASE(conf, confName, ...) EXPAND(COMB(COMB(confName, _), EXPAND(conf(##__VA_ARGS__)))(##__VA_ARGS__))
 #define EQ(X, Y) NOT(IF(SUB(X, Y)))
 

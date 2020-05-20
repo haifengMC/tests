@@ -101,9 +101,9 @@ using namespace std;
 
 #define SWITCH_CASE(conf, ...) EXPAND(GETARG(RIS(conf), ##__VA_ARGS__))
 #define SWITCH_CASE_ARGS(conf, ...) EXPAND(COMB(GETARG_, RIS(conf))(RIS(conf), GETARG_F, GETARG, CUTARGS)(1, ##__VA_ARGS__))
-#define NOT_0 1
-#define NOT_1 0
-#define NOT(n) COMB(NOT_, n)
+#define NO_0 1
+#define NO_1 0
+#define NO(n) COMB(NO_, n)
 #define IF(n) SWITCH_CASE(RIS(SIGN(n)), 1, 0, 1)
 #define NE(X, Y) SWITCH_CASE(RIS(SIGN(SUB(X, Y))), 1, 0, 1)
 #define EQ(X, Y) SWITCH_CASE(RIS(SIGN(SUB(X, Y))), 0, 1, 0)
@@ -157,7 +157,7 @@ using namespace std;
 //#define SUB(X, Y) DEC(GETARG(Y, COMB(REPEAT_, Y)(X, Y, _ADDSUB_F, DEC, COMMA)))
 #define SUB(X, Y) COMB(ADD_, X)(X, OPP(Y))
 
-#define OR(X, Y) NOT(EQ(ADD(IF(X), IF(Y)), 0))
+#define OR(X, Y) NO(EQ(ADD(IF(X), IF(Y)), 0))
 #define AD(X, Y) EQ(ADD(IF(X), IF(Y)), 2)
 
 #define GET_SAFE_1(var, ret, n, X, ...) var[X]
