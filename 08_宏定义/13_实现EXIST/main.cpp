@@ -45,6 +45,9 @@ using namespace std;
 #define OPP(n) COMB(OPP_, n)
 
 #define COMMAM(X) ,X
+#define SEMM(X) ;X
+#define EXCPM(X) !X
+#define ORM(X) ||X
 
 #define DEC__7 _8
 #define DEC__6 _7
@@ -78,14 +81,11 @@ using namespace std;
 #define RIS_5 6
 #define RIS(n) COMB(RIS_, n)
 
-#define REPEAT_1(first, num, func, sort, X) func(first, X)
-#define REPEAT_2(first, num, func, sort, X) COMB(func(first, X), COMMA(COMB(REPEAT_, DEC(num))(sort(first), DEC(num), func, sort, X)))
-#define REPEAT_3(first, num, func, sort, X) COMB(func(first, X), COMMA(COMB(REPEAT_, DEC(num))(sort(first), DEC(num), func, sort, X)))
+//#define REPEAT_1(first, num, func, sort, X) func(first, X)
+//#define REPEAT_2(first, num, func, sort, X) COMB(func(first, X), COMMA(COMB(REPEAT_, DEC(num))(sort(first), DEC(num), func, sort, X)))
+//#define REPEAT_3(first, num, func, sort, X) COMB(func(first, X), COMMA(COMB(REPEAT_, DEC(num))(sort(first), DEC(num), func, sort, X)))
 
-#define REPEAT(n, f, X) COMB(REPEAT_, n)(1, n, f, RIS, X)
-#define REPEAT_ZERO(n, f, X) COMB(0, COMMA(REPEAT(n, f, X)))
-#define REVERSE_REPEAT(n, f, X) COMB(REPEAT_, n)(n, n, f, DEC, X)
-#define REVERSE_REPEAT_ZERO(n, f, X) COMB(REVERSE_REPEAT(n, f, X), COMMA(0))
+//#define REPEAT(n, f, X) COMB(REPEAT_, n)(1, n, f, RIS, X)
 
 #define GETARG_1(n, func, X, ...) EXPAND(func(X, ##__VA_ARGS__))
 #define GETARG_2(n, func, X, ...) EXPAND(COMB(GETARG_, DEC(n))(DEC(n), func, __VA_ARGS__))
@@ -100,6 +100,7 @@ using namespace std;
 #define CUTARGS(N, ...) EXPAND(COMB(GETARG_, N)(N, CUTARGS_F, __VA_ARGS__))
 
 #define SWITCH_CASE(conf, ...) EXPAND(GETARG(RIS(conf), ##__VA_ARGS__))
+#define SWITCH_CASE_ARGS(conf, ...) EXPAND(COMB(GETARG_, RIS(conf))(RIS(conf), GETARG_F, GETARG, CUTARGS)(1, ##__VA_ARGS__))
 #define NOT_0 1
 #define NOT_1 0
 #define NOT(n) COMB(NOT_, n)
@@ -119,11 +120,16 @@ using namespace std;
 #define _NUM_ARGS_CNT(...) EXPAND(_NUM(__VA_ARGS__))
 #define NUM(...) EXPAND(_NUM_ARGS_CNT(0, ##__VA_ARGS__, _NUM_ARGS()))
 
-#define REPEAT_VA_1(first, num, func, sort, X) func(first, X)
-#define REPEAT_VA_2(first, num, func, sort, X, ...) COMB(func(first, X), COMMA(COMB(REPEAT_VA_, DEC(num))(sort(first), DEC(num), func, sort, __VA_ARGS__)))
-#define REPEAT_VA_3(first, num, func, sort, X, ...) COMB(func(first, X), COMMA(COMB(REPEAT_VA_, DEC(num))(sort(first), DEC(num), func, sort, __VA_ARGS__)))
-#define REPEAT_VA_4(first, num, func, sort, X, ...) COMB(func(first, X), COMMA(COMB(REPEAT_VA_, DEC(num))(sort(first), DEC(num), func, sort, __VA_ARGS__)))
-#define REPEAT_VA(func, ...) EXPAND(COMB(REPEAT_VA_, EXPAND(NUM(##__VA_ARGS__)))(1, EXPAND(NUM(##__VA_ARGS__)), func, RIS, __VA_ARGS__))\
+#define REPEAT_VA_1(first, num, total, func, sort, sep, X, ...) func(first, X)																			  
+#define REPEAT_VA_2(first, num, total, func, sort, sep, X, ...) COMB(func(first, X), sep(COMB(REPEAT_VA_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, sort, sep, SWITCH_CASE_ARGS(GT(num, 1), X, ##__VA_ARGS__))))
+#define REPEAT_VA_3(first, num, total, func, sort, sep, X, ...) COMB(func(first, X), sep(COMB(REPEAT_VA_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, sort, sep, SWITCH_CASE_ARGS(GT(num, 1), X, ##__VA_ARGS__))))
+#define REPEAT_VA_4(first, num, total, func, sort, sep, X, ...) COMB(func(first, X), sep(COMB(REPEAT_VA_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, sort, sep, SWITCH_CASE_ARGS(GT(num, 1), X, ##__VA_ARGS__))))
+#define REPEAT_VA(func, ...) EXPAND(COMB(REPEAT_VA_, EXPAND(NUM(##__VA_ARGS__)))(1, EXPAND(NUM(##__VA_ARGS__)), EXPAND(NUM(##__VA_ARGS__)), func, RIS, COMMAM, __VA_ARGS__))
+#define REPEAT_VA_SEP(func, sep, ...) EXPAND(COMB(REPEAT_VA_, EXPAND(NUM(##__VA_ARGS__)))(1, EXPAND(NUM(##__VA_ARGS__)), EXPAND(NUM(##__VA_ARGS__)), func, RIS, sep, __VA_ARGS__))
+#define REPEAT(n, f, X) COMB(REPEAT_VA_, n)(1, 1, n, f, RIS, COMMAM, X)
+#define REPEAT_ZERO(n, f, X) COMB(f(0, X), COMMAM(REPEAT(n, f, X)))
+#define REVERSE_REPEAT(n, f, X) COMB(REPEAT_VA_, n)(n, 1, n, f, DEC, COMMAM, X)
+#define REVERSE_REPEAT_ZERO(n, f, X) COMB(REVERSE_REPEAT(n, f, X), COMMAM(f(0, X)))
 
 #define _ADDSUB_F(n, X) n															   
 #define _SUB_CNT(...) EXPAND(GETARG(__VA_ARGS__))
@@ -160,26 +166,35 @@ using namespace std;
 #define GET_SAFE_RET(var, ret, ...) (EXPAND(COMB(GET_SAFE_, EXPAND(NUM(__VA_ARGS__)))(var, ret, EXPAND(NUM(__VA_ARGS__)), __VA_ARGS__)))
 #define GET_SAFE(var, ...) GET_SAFE_RET(var, 0, __VA_ARGS__)
 
+#define EXIST_F(n, X) EXCPM(X)
+#define EXIST(ret, ...) if(EXPAND(REPEAT_VA_SEP(EXIST_F, ORM, __VA_ARGS__))) return ret;
+#define EXIST_V(...) EXIST(void, __VA_ARGS__)
+#define EXIST_B(...) EXIST(false, __VA_ARGS__)
+#define EXIST_I(...) EXIST(0, __VA_ARGS__)
+
+
 int main()
 {
-	cout << TO_STRING(LS(_1, 2)) << endl;
-	cout << TO_STRING(LE(_1, 2)) << endl;
-	cout << TO_STRING(GT(_1, 2)) << endl;
-	cout << TO_STRING(GE(_1, 2)) << endl;
-	cout << TO_STRING(EQ(_1, 2)) << endl;
-	cout << TO_STRING(NE(_1, 2)) << endl;
+#define F(n, X) COMB(X, n)
+	cout << TO_STRING(REPEAT_VA(F, a, b, c)) << endl;
+	cout << TO_STRING(REPEAT_VA_SEP(F, SEMM, a, b, c)) << endl;
+	cout << TO_STRING(REPEAT(2, F, a)) << endl;
+	cout << TO_STRING(REPEAT(3, F, a)) << endl;
+	cout << TO_STRING(REPEAT(4, F, a)) << endl;
+	cout << TO_STRING(REPEAT_ZERO(4, F, a)) << endl;
+	cout << TO_STRING(REVERSE_REPEAT(4, F, a)) << endl;
+	cout << TO_STRING(REVERSE_REPEAT_ZERO(4, F, a)) << endl;
 
-	cout << TO_STRING(LS(_1, _1)) << endl;
-	cout << TO_STRING(LE(_1, _1)) << endl;
-	cout << TO_STRING(GT(_1, _1)) << endl;
-	cout << TO_STRING(GE(_1, _1)) << endl;
-	cout << TO_STRING(EQ(_1, _1)) << endl;
-	cout << TO_STRING(NE(_1, _1)) << endl;
+	cout << TO_STRING(REPEAT_VA_SEP(EXIST_F, ORM, a, b, c)) << endl;
+	cout << TO_STRING(SWITCH_CASE_ARGS(0, a, b, c)) << endl;
+	cout << TO_STRING(SWITCH_CASE_ARGS(1, a, b, c)) << endl;
+	cout << TO_STRING(EXPAND(COMB(GETARG_, 2)(2, GETARG_F, GETARG, CUTARGS)(1, a, b, c))) << endl;
+	
+	cout << TO_STRING(EXIST(0, a, b, c)) << endl;
+	cout << TO_STRING(EXIST_V(a, b, c)) << endl;
+	cout << TO_STRING(EXIST_B(a, b, c)) << endl;
+	cout << TO_STRING(EXIST_I(a, b, c)) << endl;
 
-	cout << TO_STRING(MIN(_1, 2)) << endl;
-	cout << TO_STRING(MAX(_1, 2)) << endl;
-	cout << TO_STRING(MIN(2, _1)) << endl;
-	cout << TO_STRING(MAX(2, _1)) << endl;
 
 	return 0;
 }

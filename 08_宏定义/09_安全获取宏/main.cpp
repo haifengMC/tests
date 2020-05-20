@@ -24,7 +24,7 @@ using namespace std;
 #define NOT(n) COMB(NOT_, n)
 #define EQ(X, Y) NOT(IF(SUB(X, Y)))
 
-#define COMMA(X) ,X
+#define COMMAM(X) ,X
 
 #define DEC__1 _2
 #define DEC_0 _1
@@ -90,7 +90,7 @@ using namespace std;
 #define GET_SAFE_RET(var, ret, ...) (EXPAND(COMB(GET_SAFE_, EXPAND(NUM(__VA_ARGS__)))(var, ret, EXPAND(NUM(__VA_ARGS__)), __VA_ARGS__)))
 #define GET_SAFE(var, ...) GET_SAFE_RET(var, 0, __VA_ARGS__)
 
-class A
+class cA
 {
 public:
 	int i[2][3] = { { 1, 2, 3 }, { 4, 5, 6 } };
@@ -104,7 +104,7 @@ int main()
 	cout << (*p1)[2] << endl; 
 	cout << sizeof(i) / sizeof(i[0]) << endl;
 
-	A a;
+	cA a;
 	cout << GET_SAFE(a, 1) << endl;
 	cout << GET_SAFE(a, 2) << endl;
 	cout << GET_SAFE(a, 1, 1) << endl;

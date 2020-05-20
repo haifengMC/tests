@@ -44,8 +44,8 @@ using namespace std;
 #define OPP_7 _7
 #define OPP(n) COMB(OPP_, n)
 
-#define COMMA(X) ,X
-#define SEM(X) ;X
+#define COMMAM(X) ,X
+#define SEMM(X) ;X
 
 #define DEC__7 _8
 #define DEC__6 _7
@@ -168,7 +168,7 @@ int main()
 {
 #define F(n, X) COMB(X, n)
 	cout << TO_STRING(REPEAT_VA(F, a, b, c)) << endl;
-	cout << TO_STRING(REPEAT_VA_SEP(F, SEM, a, b, c)) << endl;
+	cout << TO_STRING(REPEAT_VA_SEP(F, SEMM, a, b, c)) << endl;
 	cout << TO_STRING(REPEAT(2, F, a)) << endl;
 	cout << TO_STRING(REPEAT(3, F, a)) << endl;
 	cout << TO_STRING(REPEAT(4, F, a)) << endl;

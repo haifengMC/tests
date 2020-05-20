@@ -24,7 +24,7 @@ using namespace std;
 #define NOT(n) COMB(NOT_, n)
 #define EQ(X, Y) NOT(IF(SUB(X, Y)))
 
-#define COMMA(X) ,X
+#define COMMAM(X) ,X
 
 #define DEC__1 _2
 #define DEC_0 _1
@@ -89,12 +89,12 @@ int main()
 	cout << TO_STRING(EQ(2, 3)) << endl;
 	cout << TO_STRING(EQ(2, 2)) << endl;
 
-#define A a
+#define cA a
 #define B b
 #define C c
-	cout << TO_STRING(SWITCH_CASE(0, A, B, C)) << endl;
-	cout << TO_STRING(SWITCH_CASE(1, A, B, C)) << endl;
-	cout << TO_STRING(SWITCH_CASE(2, A, B, C)) << endl;
+	cout << TO_STRING(SWITCH_CASE(0, cA, B, C)) << endl;
+	cout << TO_STRING(SWITCH_CASE(1, cA, B, C)) << endl;
+	cout << TO_STRING(SWITCH_CASE(2, cA, B, C)) << endl;
 
 	cout << TO_STRING(SUB(2, 1)) << endl;
 	cout << TO_STRING(SUB(1, -1)) << endl;
