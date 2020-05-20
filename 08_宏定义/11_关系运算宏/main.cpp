@@ -44,7 +44,7 @@ using namespace std;
 #define OPP_7 _7
 #define OPP(n) COMB(OPP_, n)
 
-#define COMMAM(X) ,X
+#define COMMA_M(X) ,X
 
 #define DEC__7 _8
 #define DEC__6 _7

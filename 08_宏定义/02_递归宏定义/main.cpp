@@ -9,7 +9,7 @@ using namespace std;
 #define COMB(X, Y) COMB1(X, Y)
 #define COMB1(X, Y) X##Y
 
-#define COMMAM(X) ,X
+#define COMMA_M(X) ,X
 
 
 #define DEC_1 0

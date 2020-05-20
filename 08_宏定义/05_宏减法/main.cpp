@@ -25,7 +25,7 @@ using namespace std;
 #define SWITCH_CASE(conf, confName, ...) EXPAND(COMB(COMB(confName, _), EXPAND(conf(##__VA_ARGS__)))(##__VA_ARGS__))
 #define EQ(X, Y) NOT(IF(SUB(X, Y)))
 
-#define COMMAM(X) ,X
+#define COMMA_M(X) ,X
 #define BRACKET(X) (X)
 
 #define DEC_0 -1

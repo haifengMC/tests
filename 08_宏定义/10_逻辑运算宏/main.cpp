@@ -65,7 +65,7 @@ using namespace std;
 #define NOT(n) COMB(NOT_, n)
 #define EQ(X, Y) NOT(IF(SUB(X, Y)))
 
-#define COMMAM(X) ,X
+#define COMMA_M(X) ,X
 
 #define DEC__7 _8
 #define DEC__6 _7
