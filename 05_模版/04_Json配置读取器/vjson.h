@@ -7,10 +7,13 @@ public:
         \param json A non-const source json string for in-situ parsing.
         \note in-situ means the source JSON string will be modified after parsing.
     */
-    JsonReader(const char* json);
+    JsonReader() {}
+    JsonReader(const char* json) { Init(json); }
 
     /// Destructor.
-    ~JsonReader();
+    ~JsonReader() { Clear(); }
+
+    bool Reset(const char* json);
 
     // Archive concept
 
@@ -43,24 +46,28 @@ private:
     JsonReader(const JsonReader&) = delete;
     JsonReader& operator=(const JsonReader&) = delete;
 
+	bool Init(const char* json);
+	void Clear();
+
     void Next();
 
     // PIMPL
-    void* mDocument;              ///< DOM result of parsing.
-    void* mStack;                 ///< Stack for iterating the DOM
-    bool mError;                  ///< Whether an error has occurred.
+    void* mDocument = NULL;              ///< DOM result of parsing.
+    void* mStack = NULL;                 ///< Stack for iterating the DOM
+    bool mError = true;                  ///< Whether an error has occurred.
 };
 
 class JsonWriter {
 public:
     /// Constructor.
-    JsonWriter();
+    JsonWriter() { Init(); }
 
     /// Destructor.
-    ~JsonWriter();
+    ~JsonWriter() { Reset(); }
 
     /// Obtains the serialized JSON string.
     const char* GetString() const;
+    size_t GetSize() const;
 
     // Archive concept
 
@@ -92,7 +99,22 @@ private:
     JsonWriter(const JsonWriter&) = delete;
     JsonWriter& operator=(const JsonWriter&) = delete;
 
+    void Init();
+    void Clear();
+    void Reset();
+
     // PIMPL idiom
-    void* mWriter;      ///< JSON writer.
-    void* mStream;      ///< Stream buffer.
+    void* mWriter = NULL;      ///< JSON writer.
+    void* mStream = NULL;      ///< Stream buffer.
+};
+
+class JsonStream
+{
+	std::string fileName;
+public:
+    JsonStream(const std::string& fileName);
+
+	bool operator>>(JsonReader& reader);
+	bool operator<<(const JsonWriter& writer);
+
 };

@@ -38,23 +38,10 @@ typedef std::stack<JsonReaderStackItem> JsonReaderStack;
 		return *this; \
 	}
 
-JsonReader::JsonReader(const char* json) : mDocument(), mStack(), mError(false)
+bool JsonReader::Reset(const char* json)
 {
-	mDocument = new Document;
-	DOCUMENT->Parse(json);
-	if (DOCUMENT->HasParseError())
-		mError = true;
-	else 
-	{
-		mStack = new JsonReaderStack;
-		STACK->push(JsonReaderStackItem(DOCUMENT, JsonReaderStackItem::BeforeStart));
-	}
-}
-
-JsonReader::~JsonReader() 
-{
-	delete DOCUMENT;
-	delete STACK;
+	Clear();
+	return Init(json);
 }
 
 // Archive concept
@@ -211,6 +198,32 @@ JsonReader& JsonReader::SetNull()
 	RETERR(true);
 }
 
+bool JsonReader::Init(const char* json)
+{
+	mError = false;
+
+	mDocument = new Document;
+	DOCUMENT->Parse(json);
+	if (DOCUMENT->HasParseError())
+		mError = true;
+	else
+	{
+		mStack = new JsonReaderStack;
+		STACK->push(JsonReaderStackItem(DOCUMENT, JsonReaderStackItem::BeforeStart));
+	}
+
+	return !mError;
+}
+
+void JsonReader::Clear()
+{
+	DEL(mDocument);
+	DEL(mStack);
+	mError = true;
+	//delete DOCUMENT;
+	//delete STACK;
+}
+
 void JsonReader::Next()
 {
 	if (mError) return;
@@ -247,21 +260,14 @@ void JsonReader::Next()
 #define WRITER reinterpret_cast<PrettyWriter<StringBuffer>*>(mWriter)
 #define STREAM reinterpret_cast<StringBuffer*>(mStream)
 
-JsonWriter::JsonWriter() : mWriter(), mStream() 
-{
-	mStream = new StringBuffer;
-	mWriter = new PrettyWriter<StringBuffer>(*STREAM);
-}
-
-JsonWriter::~JsonWriter() 
-{
-	delete WRITER;
-	delete STREAM;
-}
-
 const char* JsonWriter::GetString() const 
 {
 	return STREAM->GetString();
+}
+
+size_t JsonWriter::GetSize() const
+{
+	return STREAM->GetSize();
 }
 
 JsonWriter& JsonWriter::StartObject() 
@@ -343,13 +349,73 @@ JsonWriter& JsonWriter::operator&(std::string& s)
 	return *this;
 }
 
-JsonWriter& JsonWriter::SetNull() {
+JsonWriter& JsonWriter::SetNull() 
+{
 	WRITER->Null();
 	return *this;
+}
+
+void JsonWriter::Init()
+{
+	mStream = new StringBuffer;
+	mWriter = new PrettyWriter<StringBuffer>(*STREAM);
+}
+
+void JsonWriter::Clear()
+{
+	DEL(mWriter);
+	DEL(mStream);
+	//delete WRITER;
+	//delete STREAM;
+}
+
+void JsonWriter::Reset()
+{
+	Clear();
+	Init();
 }
 
 #undef STREAM
 #undef WRITER
 
+JsonStream::JsonStream(const std::string& fileName) : fileName(fileName) {}
 
+bool JsonStream::operator>>(JsonReader& reader)
+{
+	if (fileName.empty())
+		return false;
 
+	FILE* infile;
+	fopen_s(&infile, fileName.c_str(), "rb");
+	if (!infile)
+		return false;
+
+	fseek(infile, 0, SEEK_END);
+	int len = ftell(infile);
+	fseek(infile, 0, SEEK_SET);
+
+	char jsonBuf[65536] = "";
+	fread(jsonBuf, 1, len, infile);
+	fclose(infile);
+
+	if (!reader.Reset(jsonBuf))
+		return false;
+
+	return true;
+}
+
+bool JsonStream::operator<<(const JsonWriter& writer)
+{
+	if (fileName.empty())
+		return false;
+
+	FILE* infile;
+	fopen_s(&infile, fileName.c_str(), "wb");
+	if (!infile)
+		return false;
+
+	fwrite(writer.GetString(), 1, writer.GetSize(), infile);
+	fclose(infile);
+
+	return true;
+}

@@ -85,7 +85,6 @@ void test2()
 		JsonWriter writer;
 		writer& s;
 		json = writer.GetString();
-		std::cout << s << std::endl;
 		std::cout << json << std::endl;
 	}
 
@@ -98,10 +97,33 @@ void test2()
 	}
 }
 
+void test3()
+{
+	JsonStream stream("ShaderCfg.json");
+	// Serialize
+	{
+		ShaderCfg s(0.5f, 0.6f, 1.0f, 0.0f, 1.0f);
+
+		JsonWriter writer;
+		writer& s;
+		stream << writer;
+	}
+
+	// Deserialize
+	{
+		ShaderCfg s;
+		JsonReader reader;
+		stream >> reader;
+		reader& s;
+		std::cout << s << std::endl;
+	}
+}
+
 int main()
 {
 	test1();
 	test2();
+	test3();
 
 	return 0;
 }
