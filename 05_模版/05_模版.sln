@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02_缓存管理模版", "02
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03_单例模式", "03_单例模式\03_单例模式.vcxproj", "{7B125D9B-15D6-476A-876F-16C4B56E4A20}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04_Json配置读取器", "04_Json配置读取器\04_Json配置读取器.vcxproj", "{87D78751-A4F0-45C1-8EA5-4BD1A9FD6C79}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -41,6 +43,14 @@ Global
 		{7B125D9B-15D6-476A-876F-16C4B56E4A20}.Release|x64.Build.0 = Release|x64
 		{7B125D9B-15D6-476A-876F-16C4B56E4A20}.Release|x86.ActiveCfg = Release|Win32
 		{7B125D9B-15D6-476A-876F-16C4B56E4A20}.Release|x86.Build.0 = Release|Win32
+		{87D78751-A4F0-45C1-8EA5-4BD1A9FD6C79}.Debug|x64.ActiveCfg = Debug|x64
+		{87D78751-A4F0-45C1-8EA5-4BD1A9FD6C79}.Debug|x64.Build.0 = Debug|x64
+		{87D78751-A4F0-45C1-8EA5-4BD1A9FD6C79}.Debug|x86.ActiveCfg = Debug|Win32
+		{87D78751-A4F0-45C1-8EA5-4BD1A9FD6C79}.Debug|x86.Build.0 = Debug|Win32
+		{87D78751-A4F0-45C1-8EA5-4BD1A9FD6C79}.Release|x64.ActiveCfg = Release|x64
+		{87D78751-A4F0-45C1-8EA5-4BD1A9FD6C79}.Release|x64.Build.0 = Release|x64
+		{87D78751-A4F0-45C1-8EA5-4BD1A9FD6C79}.Release|x86.ActiveCfg = Release|Win32
+		{87D78751-A4F0-45C1-8EA5-4BD1A9FD6C79}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
