@@ -119,11 +119,22 @@ void test3()
 	}
 }
 
+void test4()
+{
+	JsonStream stream("Student.json");
+	Student s;
+	JsonReader reader;
+	stream >> reader;
+	reader& s;
+	std::cout << s << std::endl;
+}
+
 int main()
 {
 	test1();
 	test2();
 	test3();
+	test4();
 
 	return 0;
 }

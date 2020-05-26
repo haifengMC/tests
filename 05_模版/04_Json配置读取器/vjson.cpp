@@ -57,8 +57,9 @@ JsonReader& JsonReader::StartObject()
 
 JsonReader& JsonReader::Member(const char* name)
 {
-	RETERR(mError);
+	//RETERR(mError);
 	RETERR(!CURRENT.IsObject() || TOP.state != JsonReaderStackItem::Started);
+	mError = false;
 
 	Value::ConstMemberIterator memberItr = CURRENT.FindMember(name);
 	RETERR(memberItr == CURRENT.MemberEnd());
