@@ -183,6 +183,17 @@ JsonReader& JsonReader::operator&(double& d)
 	return *this;
 }
 
+JsonReader& JsonReader::operator&(void* v)
+{
+	RETERR(mError);
+	RETERR(!CURRENT.IsUint64());
+
+	v = (void*)CURRENT.GetUint64();
+	Next();
+
+	return *this;
+}
+
 JsonReader& JsonReader::operator&(std::string& s) 
 {
 	RETERR(mError);
@@ -236,77 +247,98 @@ void JsonReader::Next()
 #define WRITER reinterpret_cast<PrettyWriter<StringBuffer>*>(mWriter)
 #define STREAM reinterpret_cast<StringBuffer*>(mStream)
 
-JsonWriter::JsonWriter() : mWriter(), mStream() {
+JsonWriter::JsonWriter() : mWriter(), mStream() 
+{
 	mStream = new StringBuffer;
 	mWriter = new PrettyWriter<StringBuffer>(*STREAM);
 }
 
-JsonWriter::~JsonWriter() {
+JsonWriter::~JsonWriter() 
+{
 	delete WRITER;
 	delete STREAM;
 }
 
-const char* JsonWriter::GetString() const {
+const char* JsonWriter::GetString() const 
+{
 	return STREAM->GetString();
 }
 
-JsonWriter& JsonWriter::StartObject() {
+JsonWriter& JsonWriter::StartObject() 
+{
 	WRITER->StartObject();
 	return *this;
 }
 
-JsonWriter& JsonWriter::EndObject() {
+JsonWriter& JsonWriter::EndObject() 
+{
 	WRITER->EndObject();
 	return *this;
 }
 
-JsonWriter& JsonWriter::Member(const char* name) {
+JsonWriter& JsonWriter::Member(const char* name) 
+{
 	WRITER->String(name, static_cast<SizeType>(strlen(name)));
 	return *this;
 }
 
-bool JsonWriter::HasMember(const char*) const {
+bool JsonWriter::HasMember(const char*) const 
+{
 	// This function is for JsonReader only.
 	assert(false);
 	return false;
 }
 
-JsonWriter& JsonWriter::StartArray(size_t*) {
+JsonWriter& JsonWriter::StartArray(size_t*)
+{
 	WRITER->StartArray();
 	return *this;
 }
 
-JsonWriter& JsonWriter::EndArray() {
+JsonWriter& JsonWriter::EndArray()
+{
 	WRITER->EndArray();
 	return *this;
 }
 
-JsonWriter& JsonWriter::operator&(bool& b) {
+JsonWriter& JsonWriter::operator&(bool& b) 
+{
 	WRITER->Bool(b);
 	return *this;
 }
 
-JsonWriter& JsonWriter::operator&(unsigned& u) {
+JsonWriter& JsonWriter::operator&(unsigned& u) 
+{
 	WRITER->Uint(u);
 	return *this;
 }
 
-JsonWriter& JsonWriter::operator&(int& i) {
+JsonWriter& JsonWriter::operator&(int& i) 
+{
 	WRITER->Int(i);
 	return *this;
 }
 
-JsonWriter& JsonWriter::operator&(float& f) {
+JsonWriter& JsonWriter::operator&(float& f) 
+{
 	WRITER->Double(f);
 	return *this;
 }
 
-JsonWriter& JsonWriter::operator&(double& d) {
+JsonWriter& JsonWriter::operator&(double& d) 
+{
 	WRITER->Double(d);
 	return *this;
 }
 
-JsonWriter& JsonWriter::operator&(std::string& s) {
+JsonWriter& JsonWriter::operator&(void* v)
+{
+	WRITER->Uint64((uint64_t)v);
+	return *this;
+}
+
+JsonWriter& JsonWriter::operator&(std::string& s) 
+{
 	WRITER->String(s.c_str(), static_cast<SizeType>(s.size()));
 	return *this;
 }

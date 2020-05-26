@@ -31,7 +31,8 @@ public:
 	JsonReader& operator&(int& i);
 	JsonReader& operator&(float& f);
     JsonReader& operator&(double& d);
-    JsonReader& operator&(std::string& s);
+    JsonReader& operator&(void* v);
+	JsonReader& operator&(std::string& s);
 
     JsonReader& SetNull();
 
@@ -80,6 +81,7 @@ public:
 	JsonWriter& operator&(int& i);
     JsonWriter& operator&(float& f);
     JsonWriter& operator&(double& d);
+    JsonWriter& operator&(void* v);
     JsonWriter& operator&(std::string& s);
     JsonWriter& SetNull();
 
