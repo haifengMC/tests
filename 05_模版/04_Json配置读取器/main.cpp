@@ -9,7 +9,7 @@ struct Student {
 
 	std::string name;
 	unsigned age;
-	double height;
+	float height;
 	bool canSwim;
 };
 

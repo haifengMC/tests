@@ -161,6 +161,17 @@ JsonReader& JsonReader::operator&(int& i)
 	return *this;
 }
 
+JsonReader& JsonReader::operator&(float& f)
+{
+	RETERR(mError);
+	RETERR(!CURRENT.IsNumber());
+
+	f = CURRENT.GetFloat();
+	Next();
+
+	return *this;
+}
+
 JsonReader& JsonReader::operator&(double& d)
 {
 	RETERR(mError);
@@ -282,6 +293,11 @@ JsonWriter& JsonWriter::operator&(unsigned& u) {
 
 JsonWriter& JsonWriter::operator&(int& i) {
 	WRITER->Int(i);
+	return *this;
+}
+
+JsonWriter& JsonWriter::operator&(float& f) {
+	WRITER->Double(f);
 	return *this;
 }
 
