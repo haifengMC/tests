@@ -1,5 +1,6 @@
 #include <stack>
 #include <string>
+#include <set>
 #include <cassert>
 
 #include "vjson.h"
@@ -37,6 +38,7 @@ typedef std::stack<JsonReaderStackItem> JsonReaderStack;
 		mError = true;\
 		return *this; \
 	}
+#define CHECK_FILTER() if (needFilter) return *this;
 
 bool JsonReader::Reset(const char* json)
 {
@@ -57,15 +59,27 @@ JsonReader& JsonReader::StartObject()
 
 JsonReader& JsonReader::Member(const char* name)
 {
-	//RETERR(mError);
+	RETERR(mError);
 	RETERR(!CURRENT.IsObject() || TOP.state != JsonReaderStackItem::Started);
-	mError = false;
+	
+	needFilter = true;
+
+	if (filterObj && filterObj->hasFilter(name))
+		return *this;
 
 	Value::ConstMemberIterator memberItr = CURRENT.FindMember(name);
-	RETERR(memberItr == CURRENT.MemberEnd());
-	
-	STACK->push(JsonReaderStackItem(&memberItr->value, JsonReaderStackItem::BeforeStart));
-	
+	if (memberItr != CURRENT.MemberEnd())
+	{
+		STACK->push(JsonReaderStackItem(&memberItr->value, JsonReaderStackItem::BeforeStart));
+		needFilter = false;
+		return *this;
+	}
+		
+	if (filterObj)
+		filterObj->addFilter(name);
+	else
+		needFilter = false;
+
 	return *this;
 }
 
@@ -78,6 +92,9 @@ bool JsonReader::HasMember(const char* name) const
 
 JsonReader& JsonReader::EndObject() 
 {
+	filterObj = NULL;
+	needFilter = true;
+
 	RETERR(mError);
 	RETERR(!CURRENT.IsObject() || TOP.state != JsonReaderStackItem::Started)
 
@@ -119,8 +136,9 @@ JsonReader& JsonReader::EndArray()
 JsonReader& JsonReader::operator&(bool& b) 
 {
 	RETERR(mError);
+	CHECK_FILTER();
 	RETERR(!CURRENT.IsBool());
-	
+
 	b = CURRENT.GetBool();
 	Next();
 
@@ -130,6 +148,7 @@ JsonReader& JsonReader::operator&(bool& b)
 JsonReader& JsonReader::operator&(unsigned& u) 
 {
 	RETERR(mError);
+	CHECK_FILTER();
 	RETERR(!CURRENT.IsUint());
 
 	u = CURRENT.GetUint();
@@ -141,6 +160,7 @@ JsonReader& JsonReader::operator&(unsigned& u)
 JsonReader& JsonReader::operator&(int& i) 
 {
 	RETERR(mError);
+	CHECK_FILTER();
 	RETERR(!CURRENT.IsInt());
 
 	i = CURRENT.GetInt();
@@ -152,6 +172,7 @@ JsonReader& JsonReader::operator&(int& i)
 JsonReader& JsonReader::operator&(float& f)
 {
 	RETERR(mError);
+	CHECK_FILTER();
 	RETERR(!CURRENT.IsNumber());
 
 	f = CURRENT.GetFloat();
@@ -163,6 +184,7 @@ JsonReader& JsonReader::operator&(float& f)
 JsonReader& JsonReader::operator&(double& d)
 {
 	RETERR(mError);
+	CHECK_FILTER();
 	RETERR(!CURRENT.IsNumber());
 
 	d = CURRENT.GetDouble();
@@ -174,6 +196,7 @@ JsonReader& JsonReader::operator&(double& d)
 JsonReader& JsonReader::operator&(void* v)
 {
 	RETERR(mError);
+	CHECK_FILTER();
 	RETERR(!CURRENT.IsUint64());
 
 	v = (void*)CURRENT.GetUint64();
@@ -185,6 +208,7 @@ JsonReader& JsonReader::operator&(void* v)
 JsonReader& JsonReader::operator&(std::string& s) 
 {
 	RETERR(mError);
+	CHECK_FILTER();
 	RETERR(!CURRENT.IsString());
 
 	s = CURRENT.GetString();
@@ -223,6 +247,9 @@ void JsonReader::Clear()
 	mError = true;
 	//delete DOCUMENT;
 	//delete STACK;
+
+	filterObj = NULL;
+	needFilter = true;
 }
 
 void JsonReader::Next()
@@ -271,21 +298,33 @@ size_t JsonWriter::GetSize() const
 	return STREAM->GetSize();
 }
 
-JsonWriter& JsonWriter::StartObject() 
+JsonWriter& JsonWriter::StartObject()
 {
+	needFilter = true;
+
 	WRITER->StartObject();
 	return *this;
 }
 
-JsonWriter& JsonWriter::EndObject() 
+JsonWriter& JsonWriter::EndObject()
 {
+	filterObj = NULL;
+	needFilter = true;
+
 	WRITER->EndObject();
 	return *this;
 }
 
 JsonWriter& JsonWriter::Member(const char* name) 
 {
-	WRITER->String(name, static_cast<SizeType>(strlen(name)));
+	if (!filterObj || !filterObj->hasFilter(name))
+	{
+		needFilter = false;
+		WRITER->String(name, static_cast<SizeType>(strlen(name)));
+	}
+	else
+		needFilter = true;
+
 	return *this;
 }
 
@@ -310,42 +349,49 @@ JsonWriter& JsonWriter::EndArray()
 
 JsonWriter& JsonWriter::operator&(bool& b) 
 {
+	CHECK_FILTER();
 	WRITER->Bool(b);
 	return *this;
 }
 
 JsonWriter& JsonWriter::operator&(unsigned& u) 
 {
+	CHECK_FILTER();
 	WRITER->Uint(u);
 	return *this;
 }
 
 JsonWriter& JsonWriter::operator&(int& i) 
 {
+	CHECK_FILTER();
 	WRITER->Int(i);
 	return *this;
 }
 
 JsonWriter& JsonWriter::operator&(float& f) 
 {
+	CHECK_FILTER();
 	WRITER->Double(f);
 	return *this;
 }
 
 JsonWriter& JsonWriter::operator&(double& d) 
 {
+	CHECK_FILTER();
 	WRITER->Double(d);
 	return *this;
 }
 
 JsonWriter& JsonWriter::operator&(void* v)
 {
+	CHECK_FILTER();
 	WRITER->Uint64((uint64_t)v);
 	return *this;
 }
 
 JsonWriter& JsonWriter::operator&(std::string& s) 
 {
+	CHECK_FILTER();
 	WRITER->String(s.c_str(), static_cast<SizeType>(s.size()));
 	return *this;
 }
@@ -366,6 +412,8 @@ void JsonWriter::Clear()
 {
 	DEL(mWriter);
 	DEL(mStream);
+	filterObj = NULL;
+	bool needFilter = true;
 	//delete WRITER;
 	//delete STREAM;
 }
@@ -378,6 +426,7 @@ void JsonWriter::Reset()
 
 #undef STREAM
 #undef WRITER
+#undef CHECK_FILTER
 
 JsonStream::JsonStream(const std::string& fileName) : fileName(fileName) {}
 
@@ -419,4 +468,19 @@ bool JsonStream::operator<<(const JsonWriter& writer)
 	fclose(infile);
 
 	return true;
+}
+
+bool JsonData::addFilter(const std::string& name)
+{
+	return ignoreNames.insert(name).second; 
+}
+
+bool JsonData::delFilter(const std::string& name)
+{
+	return ignoreNames.erase(name);
+}
+
+bool JsonData::hasFilter(const std::string& name) const 
+{
+	return ignoreNames.find(name) != ignoreNames.end();
 }

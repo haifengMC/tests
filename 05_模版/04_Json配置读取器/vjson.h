@@ -1,5 +1,6 @@
 #pragma once
 
+class JsonData;
 class JsonReader {
 public:
     /// Constructor.
@@ -17,7 +18,10 @@ public:
 
     // Archive concept
 
-    operator bool() const { return !mError; }
+	operator bool() const { return !mError; }
+
+	//绑定数据对象
+	void BindObject(JsonData& obj) { filterObj = &obj; }
 
     JsonReader& StartObject();
     JsonReader& Member(const char* name);
@@ -54,7 +58,10 @@ private:
     // PIMPL
     void* mDocument = NULL;              ///< DOM result of parsing.
     void* mStack = NULL;                 ///< Stack for iterating the DOM
-    bool mError = true;                  ///< Whether an error has occurred.
+	bool mError = true;                  ///< Whether an error has occurred.
+
+	JsonData* filterObj = NULL;
+	bool needFilter = true;
 };
 
 class JsonWriter {
@@ -70,8 +77,10 @@ public:
     size_t GetSize() const;
 
     // Archive concept
-
     operator bool() const { return true; }
+
+    //绑定数据对象
+    void BindObject(const JsonData& obj) { filterObj = &obj; }
 
     JsonWriter& StartObject();
     JsonWriter& Member(const char* name);
@@ -106,6 +115,9 @@ private:
     // PIMPL idiom
     void* mWriter = NULL;      ///< JSON writer.
     void* mStream = NULL;      ///< Stream buffer.
+
+    const JsonData* filterObj = NULL;
+    bool needFilter = true;
 };
 
 class JsonStream
@@ -117,4 +129,13 @@ public:
 	bool operator>>(JsonReader& reader);
 	bool operator<<(const JsonWriter& writer);
 
+};
+
+class JsonData
+{
+    std::set<std::string> ignoreNames;
+public:
+    bool addFilter(const std::string& name);
+    bool delFilter(const std::string& name);
+    bool hasFilter(const std::string& name) const;
 };

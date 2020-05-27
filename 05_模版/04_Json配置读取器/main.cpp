@@ -2,7 +2,7 @@
 #include "vjson.h"
 #include "vtype.h"
 
-struct Student {
+struct Student : public JsonData {
 	Student() : name(), age(), height(), canSwim() {}
 	Student(const std::string name, unsigned age, double height, bool canSwim) :
 		name(name), age(age), height(height), canSwim(canSwim)
@@ -16,6 +16,7 @@ struct Student {
 
 template <typename Archiver>
 Archiver& operator&(Archiver& ar, Student& s) {
+	ar.BindObject(s);
 	ar.StartObject();
 	ar["name"]& s.name;
 	ar["age"]& s.age;
@@ -51,7 +52,7 @@ void test1()
 	}
 }
 
-struct ShaderCfg
+struct ShaderCfg : public JsonData
 {
 	ShaderCfg() {}
 	ShaderCfg(GLfloat x, GLfloat y, GLfloat r, GLfloat g, GLfloat b) : vertex(x, y), color(r, g, b) {}
@@ -81,6 +82,7 @@ void test2()
 	// Serialize
 	{
 		ShaderCfg s(0.5f, 0.6f, 1.0f, 0.0f, 1.0f);
+		std::cout << s << std::endl;
 
 		JsonWriter writer;
 		writer& s;
@@ -121,12 +123,29 @@ void test3()
 
 void test4()
 {
-	JsonStream stream("Student.json");
+	Student s("Lua", 9, 150.5, true);
+	JsonWriter writer;
+	s.addFilter("age");
+	s.addFilter("height");
+	s.delFilter("age");
+	writer& s;
+	std::string json = writer.GetString();
+	std::cout << json << std::endl;
+}
+
+void test5()
+{
+	JsonStream stream("Student.json"); 
+	JsonStream stream1("Student1.json");
 	Student s;
 	JsonReader reader;
+	JsonWriter writer;
+
 	stream >> reader;
 	reader& s;
-	std::cout << s << std::endl;
+
+	writer& s;
+	stream1 << writer;
 }
 
 int main()
@@ -135,6 +154,7 @@ int main()
 	test2();
 	test3();
 	test4();
+	test5();
 
 	return 0;
 }
