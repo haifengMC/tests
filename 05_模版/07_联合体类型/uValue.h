@@ -46,3 +46,7 @@ public:
 	)
 };
 
+#undef RESET
+#undef OPERATOR_F
+#undef OPERATOR_CASE_F
+#undef OPERATOR
