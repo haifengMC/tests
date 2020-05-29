@@ -2,12 +2,9 @@
 #include "vmacro.h"
 
 #define RESET(X) \
-		if(type != X)\
-		{\
-			this->type = X; \
-			v.v = NULL; \
-			buf.clear(); \
-		}
+		this->type = X; \
+		v.v = NULL; \
+		buf.clear(); 
 
 #define OPERATOR_F(n, type_name, tp, va) \
 		uValue& operator=(const tp& t)\

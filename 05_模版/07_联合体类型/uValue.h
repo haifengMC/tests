@@ -1,7 +1,7 @@
 #pragma once
 #include "uValueMacro.h"
 
-enum uValueType
+enum class uValueType
 {
 	uValueType_Void,
 	uValueType_Int,
