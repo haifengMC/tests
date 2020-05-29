@@ -105,7 +105,7 @@ using namespace std;
 #define CUTARGS_B_3(n, X, ...) COMB(X, COMMA_M(COMB(CUTARGS_B_, DEC(n))(DEC(n), ##__VA_ARGS__)))
 #define CUTARGS_B_4(n, X, ...) COMB(X, COMMA_M(COMB(CUTARGS_B_, DEC(n))(DEC(n), ##__VA_ARGS__)))
 #define CUTARGS_B_5(n, X, ...) COMB(X, COMMA_M(COMB(CUTARGS_B_, DEC(n))(DEC(n), ##__VA_ARGS__)))
-#define CUTARGS_B(N, ...) EXPAND(COMB(CUTARGS_B_, N)(N, __VA_ARGS__))
+#define CUTARGS_B(N, ...) EXPAND(COMB(CUTARGS_B_, N)(N, ##__VA_ARGS__))
 
 #define SWITCH_CASE(conf, ...) EXPAND(GETARG(RIS(conf), ##__VA_ARGS__))
 #define SWITCH_CASE_ARGS_N(conf, n, ...) EXPAND(COMB(GETARG_, RIS(conf))(RIS(conf), GETARG_F, CUTARGS_B, CUTARGS)(n, ##__VA_ARGS__))
@@ -129,10 +129,11 @@ using namespace std;
 #define _NUM_ARGS_CNT(...) EXPAND(_NUM(__VA_ARGS__))
 #define NUM(...) EXPAND(_NUM_ARGS_CNT(0, ##__VA_ARGS__, _NUM_ARGS()))
 
-#define REPEAT_1(first, num, total, func, funcN, sort, sep, ...) func(first, CUTARGS_B(funcN, ##__VA_ARGS__))																			  
-#define REPEAT_2(first, num, total, func, funcN, sort, sep, ...) COMB(func(first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
-#define REPEAT_3(first, num, total, func, funcN, sort, sep, ...) COMB(func(first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
-#define REPEAT_4(first, num, total, func, funcN, sort, sep, ...) COMB(func(first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
+#define REPEAT_FUNC(func, ...) EXPAND(func(__VA_ARGS__))
+#define REPEAT_1(first, num, total, func, funcN, sort, sep, ...) REPEAT_FUNC(func, first, EXPAND(CUTARGS_B(funcN, ##__VA_ARGS__)))																			  
+#define REPEAT_2(first, num, total, func, funcN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
+#define REPEAT_3(first, num, total, func, funcN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
+#define REPEAT_4(first, num, total, func, funcN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
 
 #define REPEAT_N_F_SEP(n, f, fn, sep, ...) COMB(REPEAT_, n)(1, DIV(EXPAND(NUM(##__VA_ARGS__)), fn), n, f, fn, RIS, sep, ##__VA_ARGS__)
 #define REPEAT_N_F_SEP_ZERO(n, f, fn, sep, ...) COMB(f(0, CUTARGS_B(fn, ##__VA_ARGS__)), COMMA_M(REPEAT_N_F_SEP(n, f, fn, sep, CUTARGS(1, ##__VA_ARGS__))))
@@ -291,6 +292,37 @@ int main()
 
 	cout << TO_STRING(EXIST(*this, a, b, c, d)) << endl;
 	cout << TO_STRING(GET_SAFE(a, 1, 2, 3)) << endl;
+	cout << "........." << endl;
+
+#define  F3(n, X, Y, Z) COMB(COMB(COMB(X, Y), Z), n)
+// #define F3_FUNC(...) EXPAND(F3(__VA_ARGS__))
+	//cout << TO_STRING(CUTARGS_B(3, a, b, c)) << endl;
+	//cout << TO_STRING(F3(1, a, b, c)) << endl;
+	//cout << TO_STRING(F3_FUNC(1, CUTARGS_B(3, a, b, c))) << endl;
+	cout << TO_STRING(REPEAT_1(1, 1, 1, F3, 3, RIS, SEM_M, a, b, c)) << endl;
+	//cout << TO_STRING(REPEAT_N_F_SEP(1, F3, 3, SEM_M, a, b, c)) << endl;
+	//cout << TO_STRING(REPEAT_F_SEP(F3, 3, SEM_M, a, b, c)) << endl;
+	enum uValueType
+	{
+		uValueType_Void,
+		uValueType_Int,
+		uValueType_Uint,
+		uValueType_Int64,
+		uValueType_Uint64,
+		uValueType_Float,
+		uValueType_Double,
+		uValueType_String,
+	};
+#define RESET(X) if(type != X) reset(X);
+#define OPERATOR_EQUAL_F(n, type_name, tp, va) \
+		uValue& operator=(const tp& t)\
+		{\
+			RESET(type_name)\
+			va = t;\
+			return *this;\
+		}
+#define OPERATOR_EQUAL(...) EXPAND(REPEAT_F_SEP(OPERATOR_EQUAL_F, 3, SEM_M, ##__VA_ARGS__))
+	cout << TO_STRING(OPERATOR_EQUAL(uValueType_Int, int, v.i)) << endl;
 
 	return 0;
 }
