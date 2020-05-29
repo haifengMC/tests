@@ -31,6 +31,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "13_实现EXIST", "13_实现
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "14_多参数REPEAT", "14_多参数REPEAT\14_多参数REPEAT.vcxproj", "{1F7B98C5-2506-4EB7-8A5E-030543CF870E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "15_传参REPEAT", "15_传参REPEAT\15_传参REPEAT.vcxproj", "{98929BC9-BE7F-452D-9C53-E55825C2E2C4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -151,6 +153,14 @@ Global
 		{1F7B98C5-2506-4EB7-8A5E-030543CF870E}.Release|x64.Build.0 = Release|x64
 		{1F7B98C5-2506-4EB7-8A5E-030543CF870E}.Release|x86.ActiveCfg = Release|Win32
 		{1F7B98C5-2506-4EB7-8A5E-030543CF870E}.Release|x86.Build.0 = Release|Win32
+		{98929BC9-BE7F-452D-9C53-E55825C2E2C4}.Debug|x64.ActiveCfg = Debug|x64
+		{98929BC9-BE7F-452D-9C53-E55825C2E2C4}.Debug|x64.Build.0 = Debug|x64
+		{98929BC9-BE7F-452D-9C53-E55825C2E2C4}.Debug|x86.ActiveCfg = Debug|Win32
+		{98929BC9-BE7F-452D-9C53-E55825C2E2C4}.Debug|x86.Build.0 = Debug|Win32
+		{98929BC9-BE7F-452D-9C53-E55825C2E2C4}.Release|x64.ActiveCfg = Release|x64
+		{98929BC9-BE7F-452D-9C53-E55825C2E2C4}.Release|x64.Build.0 = Release|x64
+		{98929BC9-BE7F-452D-9C53-E55825C2E2C4}.Release|x86.ActiveCfg = Release|Win32
+		{98929BC9-BE7F-452D-9C53-E55825C2E2C4}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
