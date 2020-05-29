@@ -1,44 +1,55 @@
 #include "global.h"
 #include "uValue.h"
+#include "vcommon.h"
 
 using namespace std;
 
 class A {};
 
+ENUM(EnumTest, test1, "EnumTest::test1", test2, "EnumTest::test2", test3, "EnumTest::test3")
+
 int main()
 {
+	//cout << TO_STRING(ENUM(EnumTest, test1, "EnumTest::test1", test2, "EnumTest::test2", test3, "EnumTest::test3")) << endl;
+	EnumTest a = EnumTest::test1;
+	EnumTest b = EnumTest::test2;
+	EnumTest c = EnumTest::test3;
+	
+	cout << a << " " << b << " " << c << endl;
+
 	//cout << TO_STRING(OPERATOR(uValueType_Int, int, v.i)) << endl;
 	//cout << TO_STRING(EXPAND(REPEAT_F_SEP(OPERATOR_CASE_F, 3, SEM_M, uValueType_Int, int, v.i,
 	//	uValueType_Uint, unsigned int, v.u, ));) << endl;
 	
-	uValue u;
-	int i = 1;
-	unsigned int ui = 2;
-	long l = 3;
-	unsigned long ul = 4;
-	float f = 5.5f;
-	double d = 6.6;
-	std::string s = "hello";
-	A a;
-	cout << u.getType() << "[" << u << "]" << endl;
-	u = i;
-	cout << u.getType() << "[" << u << "]" << endl;
-	u = ui;
-	cout << u.getType() << "[" << u << "]" << endl;
-	u = l;
-	cout << u.getType() << "[" << u << "]" << endl;
-	u = ul;
-	cout << u.getType() << "[" << u << "]" << endl;
-	u = f;
-	cout << u.getType() << "[" << u << "]" << endl;
-	u = d;
-	cout << u.getType() << "[" << u << "]" << endl;
-	u = s;
-	cout << u.getType() << "[" << u << "]" << endl;
-	u = "world";
-	cout << u.getType() << "[" << u << "]" << endl;
-	u = a;
-	cout << u.getType() << "[" << u << "]" << endl;
+	//uValue u;
+	//int i = 1;
+	//unsigned int ui = 2;
+	//long l = 3;
+	//unsigned long ul = 4;
+	//float f = 5.5f;
+	//double d = 6.6;
+	//std::string s = "hello";
+	//A a;
+	//cout << "[" << u << "]" << endl;
+	//cout << u.getType() << "[" << u << "]" << endl;
+	//u = i;
+	//cout << u.getType() << "[" << u << "]" << endl;
+	//u = ui;
+	//cout << u.getType() << "[" << u << "]" << endl;
+	//u = l;
+	//cout << u.getType() << "[" << u << "]" << endl;
+	//u = ul;
+	//cout << u.getType() << "[" << u << "]" << endl;
+	//u = f;
+	//cout << u.getType() << "[" << u << "]" << endl;
+	//u = d;
+	//cout << u.getType() << "[" << u << "]" << endl;
+	//u = s;
+	//cout << u.getType() << "[" << u << "]" << endl;
+	//u = "world";
+	//cout << u.getType() << "[" << u << "]" << endl;
+	//u = a;
+	//cout << u.getType() << "[" << u << "]" << endl;
 	
 	
 

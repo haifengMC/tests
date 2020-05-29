@@ -23,14 +23,11 @@ union _uValue
 
 class uValue
 {
-	uValueType type;
-	_uValue v;
+	uValueType type = uValueType::uValueType_Void;
+	_uValue v = _uValue();
 	std::string buf;
 
 public:
-	uValue() { RESET(uValueType_Void); }
-	~uValue() { RESET(uValueType_Void); }
-
 	const uValueType& getType() const { return type; }
 
 	OPERATOR//operator=() operator type() //operator<<(os, uVal)
