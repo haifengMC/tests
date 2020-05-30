@@ -3,6 +3,7 @@
 using namespace std;
 
 #define EXPAND(...) __VA_ARGS__
+#define EXPAND_F(F, ...) EXPAND(F(__VA_ARGS__))
 
 #define TO_STRING(X) TO_STRING1(X)
 #define TO_STRING1(X) #X
@@ -335,11 +336,11 @@ using namespace std;
 #define CUTARGS_B_28(n, X, ...) COMB(X, COMMA_M(COMB(CUTARGS_B_, DEC(n))(DEC(n), ##__VA_ARGS__)))
 #define CUTARGS_B_29(n, X, ...) COMB(X, COMMA_M(COMB(CUTARGS_B_, DEC(n))(DEC(n), ##__VA_ARGS__)))
 #define CUTARGS_B(N, ...) EXPAND(COMB(CUTARGS_B_, N)(N, ##__VA_ARGS__))
-#define CUTARGS_C(B, E, ...) CUTARGS(1,EXPAND(CUTARGS_B(RIS(B), X, ##__VA_ARGS__)),EXPAND(CUTARGS(RIS(E), X, ##__VA_ARGS__)))
+#define CUTARGS_C(B, E, ...) EXPAND(CUTARGS(1, EXPAND(CUTARGS_B(RIS(B), X, ##__VA_ARGS__)), EXPAND(CUTARGS(RIS(E), X, ##__VA_ARGS__))))
 
 #define SWITCH_CASE(conf, ...) EXPAND(GETARG(RIS(conf), ##__VA_ARGS__))
 #define SWITCH_CASE_ARGS_N_R_F(b, e, ...) EXPAND(CUTARGS_B(e, ##__VA_ARGS__))
-#define SWITCH_CASE_ARGS_N_R(conf, b, e, ...) EXPAND(COMB(GETARG_, RIS(conf))(RIS(conf), GETARG_F, SWITCH_CASE_ARGS_N_R_F, CUTARGS_C)(b, e, ##__VA_ARGS__))
+#define SWITCH_CASE_ARGS_N_R(conf, b, e, ...) EXPAND_F(COMB(GETARG_, RIS(conf))(RIS(conf), GETARG_F, SWITCH_CASE_ARGS_N_R_F, CUTARGS_C), b, e, ##__VA_ARGS__)
 #define SWITCH_CASE_ARGS_N(conf, n, ...) EXPAND(COMB(GETARG_, RIS(conf))(RIS(conf), GETARG_F, CUTARGS_B, CUTARGS)(n, ##__VA_ARGS__))
 #define SWITCH_CASE_ARGS(conf, ...) EXPAND(SWITCH_CASE_ARGS_N(conf, 1, ##__VA_ARGS__))
 #define NO_0 1
@@ -361,41 +362,46 @@ using namespace std;
 #define _NUM_ARGS_CNT(...) EXPAND(_NUM(__VA_ARGS__))
 #define NUM(...) EXPAND(_NUM_ARGS_CNT(0, ##__VA_ARGS__, _NUM_ARGS()))
 
-#define REPEAT_FUNC(func, ...) EXPAND(func(__VA_ARGS__))
-#define REPEAT_1(first, num, total, func, funcN, argsN, sort, sep, ...) REPEAT_FUNC(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__)))))																		  
-#define REPEAT_2(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__)))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), ADD(funcN), CUTARGS(argsN, ##__VA_ARGS__)))))
-#define REPEAT_3(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__)))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), ADD(funcN), CUTARGS(argsN, ##__VA_ARGS__)))))
-#define REPEAT_4(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__)))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), ADD(funcN), CUTARGS(argsN, ##__VA_ARGS__)))))
-#define REPEAT_5(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__)))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), ADD(funcN), CUTARGS(argsN, ##__VA_ARGS__)))))
-#define REPEAT_6(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__)))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), ADD(funcN), CUTARGS(argsN, ##__VA_ARGS__)))))
-#define REPEAT_7(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__)))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), ADD(funcN), CUTARGS(argsN, ##__VA_ARGS__)))))
-#define REPEAT_8(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__)))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), ADD(funcN), CUTARGS(argsN, ##__VA_ARGS__)))))
-#define REPEAT_9(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__)))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), ADD(funcN), CUTARGS(argsN, ##__VA_ARGS__)))))
-#define REPEAT_10(first, num, total, func, funcN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
-#define REPEAT_11(first, num, total, func, funcN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
-#define REPEAT_12(first, num, total, func, funcN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
-#define REPEAT_13(first, num, total, func, funcN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
-#define REPEAT_14(first, num, total, func, funcN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
-#define REPEAT_15(first, num, total, func, funcN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
-#define REPEAT_16(first, num, total, func, funcN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
-#define REPEAT_17(first, num, total, func, funcN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
-#define REPEAT_18(first, num, total, func, funcN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
-#define REPEAT_19(first, num, total, func, funcN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
-#define REPEAT_20(first, num, total, func, funcN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
-#define REPEAT_21(first, num, total, func, funcN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
-#define REPEAT_22(first, num, total, func, funcN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
-#define REPEAT_23(first, num, total, func, funcN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
-#define REPEAT_24(first, num, total, func, funcN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
-#define REPEAT_25(first, num, total, func, funcN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
-#define REPEAT_26(first, num, total, func, funcN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
-#define REPEAT_27(first, num, total, func, funcN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
-#define REPEAT_28(first, num, total, func, funcN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
-#define REPEAT_29(first, num, total, func, funcN, sort, sep, ...) COMB(REPEAT_FUNC(func, first, CUTARGS_B(funcN, ##__VA_ARGS__)), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN,sort, sep, SWITCH_CASE_ARGS_N(GT(num, 1), funcN, ##__VA_ARGS__))))
+//#define REPEAT_FUNC(func, ...) EXPAND(func(__VA_ARGS__))
+#define REPEAT_1(first, num, total, func, funcN, argsN, sort, sep, ...) EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__)))))																		  
+#define REPEAT_2(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_3(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_4(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_5(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_6(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_7(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_8(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_9(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_10(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_11(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_12(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_13(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_14(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_15(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_16(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_17(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_18(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_19(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_20(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_21(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_22(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_23(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_24(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_25(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_26(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_27(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_28(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
+#define REPEAT_29(first, num, total, func, funcN, argsN, sort, sep, ...) COMB(EXPAND_F(func, first, EXPAND(CUTARGS_B(ADD(funcN, argsN), EXPAND(CUTARGS_B(funcN, EXPAND(CUTARGS(argsN, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(argsN, ##__VA_ARGS__))))), sep(COMB(REPEAT_, DEC(total))(sort(first), SWITCH_CASE(LE(num, 1), DEC(num), 1), DEC(total), func, funcN, argsN, sort, sep, SWITCH_CASE_ARGS_N_R(GT(num, 1), argsN, ADD(funcN, argsN), ##__VA_ARGS__))))
 
-#define REPEAT_N_F_SEP(n, f, fn, sep, ...) COMB(REPEAT_, n)(1, DIV(EXPAND(NUM(##__VA_ARGS__)), fn), n, f, fn, RIS, sep, ##__VA_ARGS__)
-#define REPEAT_N_F_SEP_ZERO(n, f, fn, sep, ...) COMB(f(0, CUTARGS_B(fn, ##__VA_ARGS__)), COMMA_M(REPEAT_N_F_SEP(n, f, fn, sep, CUTARGS(1, ##__VA_ARGS__))))
-#define REVERSE_REPEAT_N_F_SEP(n, f, fn, sep, ...) COMB(REPEAT_, n)(n, DIV(EXPAND(NUM(##__VA_ARGS__)), fn), n, f, fn, DEC, sep, ##__VA_ARGS__)
-#define REVERSE_REPEAT_N_F_SEP_ZERO(n, f, fn, sep, ...) COMB(REVERSE_REPEAT_N_F_SEP(n, f, fn, sep, ##__VA_ARGS__), COMMA_M(f(0, SWITCH_CASE(LS(n, EXPAND(NUM(##__VA_ARGS__))), GETARG(EXPAND(NUM(##__VA_ARGS__)), ##__VA_ARGS__), GETARG(n, ##__VA_ARGS__)))))
+#define REPEAT_N_F_A_SEP(n, f, fn, an, sep, ...) COMB(REPEAT_, n)(1, DIV(EXPAND(NUM(##__VA_ARGS__)), fn), n, f, fn, an, RIS, sep, ##__VA_ARGS__)
+#define REPEAT_N_F_A_SEP_ZERO(n, f, fn, an, sep, ...) COMB(EXPAND_F(f, 0, EXPAND(CUTARGS_B(ADD(fn, an), EXPAND(CUTARGS_B(fn, EXPAND(CUTARGS(an, ##__VA_ARGS__)))), EXPAND(CUTARGS_B(an, ##__VA_ARGS__))))), COMMA_M(REPEAT_N_F_A_SEP(n, f, fn, an, sep, CUTARGS_C(an, ADD(an, fn), ##__VA_ARGS__))))
+#define REVERSE_REPEAT_N_F_A_SEP(n, f, fn, an, sep, ...) COMB(REPEAT_, n)(n, DIV(EXPAND(NUM(##__VA_ARGS__)), fn), n, f, fn, an, DEC, sep, ##__VA_ARGS__)
+#define REVERSE_REPEAT_N_F_A_SEP_ZERO(n, f, fn, an, sep, ...) COMB(REVERSE_REPEAT_N_F_SEP(n, f, fn, an, sep, ##__VA_ARGS__), COMMA_M(EXPAND_F(f, 0, CUTARGS_C(an, MUL(fn, DEC(MIN(n, DIV(EXPAND(NUM(##__VA_ARGS__)), fn)))), ##__VA_ARGS__))))
+
+#define REPEAT_N_F_SEP(n, f, fn, sep, ...) COMB(REPEAT_, n)(1, DIV(EXPAND(NUM(##__VA_ARGS__)), fn), n, f, fn, 0, RIS, sep, ##__VA_ARGS__)
+#define REPEAT_N_F_SEP_ZERO(n, f, fn, sep, ...) COMB(f(0, CUTARGS_B(fn, ##__VA_ARGS__)), COMMA_M(REPEAT_N_F_SEP(n, f, fn, sep, CUTARGS(fn, ##__VA_ARGS__))))
+#define REVERSE_REPEAT_N_F_SEP(n, f, fn, sep, ...) COMB(REPEAT_, n)(n, DIV(EXPAND(NUM(##__VA_ARGS__)), fn), n, f, fn, 0, DEC, sep, ##__VA_ARGS__)
+#define REVERSE_REPEAT_N_F_SEP_ZERO(n, f, fn, sep, ...) COMB(REVERSE_REPEAT_N_F_SEP(n, f, fn, sep, ##__VA_ARGS__), COMMA_M(f(0, EXPAND(CUTARGS_B(fn, CUTARGS(MUL(fn, DEC(MIN(n, DIV(EXPAND(NUM(##__VA_ARGS__)), fn)))), ##__VA_ARGS__))))))
 
 #define REPEAT_N_F(n, f, fn, ...) EXPAND(REPEAT_N_F_SEP(n, f, fn, COMMA_M, ##__VA_ARGS__))
 #define REPEAT_N_F_ZERO(n, f, fn, ...) EXPAND(REPEAT_N_F_SEP_ZERO(n, f, fn, COMMA_M, ##__VA_ARGS__))
@@ -644,27 +650,75 @@ int main()
 	//cout << TO_STRING(EXPAND(CUTARGS_B(1, CUTARGS(0, a)))) << endl;
 	//cout << TO_STRING(REPEAT_FUNC(F1, 1, a, )) << endl;
 	//cout << TO_STRING(EXPAND(CUTARGS_B(0, a)) << endl;
-	cout << TO_STRING(REPEAT_FUNC(F1, 1, EXPAND(CUTARGS_B(ADD(1, 0), EXPAND(CUTARGS_B(1, CUTARGS(0, a))), EXPAND(CUTARGS_B(0, a)))))) << endl;
+	cout << TO_STRING(EXPAND_F(F1, 1, EXPAND(CUTARGS_B(ADD(1, 0), EXPAND(CUTARGS_B(1, CUTARGS(0, a))), EXPAND(CUTARGS_B(0, a)))))) << endl;
 	cout << TO_STRING(REPEAT_1(1, 1, 1, F1, 1, 0, RIS, COMMA_M, a)) << endl;
 	cout << TO_STRING(REPEAT_2(1, 1, 2, F1, 1, 0, RIS, COMMA_M, a)) << endl;
-	
+	cout << ". . . . . . . ." << endl;
+	//cout << TO_STRING(REPEAT_VA_2(1, 1, 2, F1, 1, RIS, SEM_M, a)) << endl;
+//cout << TO_STRING(REPEAT_N_F_SEP(2, F1, 1, SEM_M, a)) << endl;
+	cout << TO_STRING(REPEAT_SEP(F1, SEM_M, a, b, c)) << endl;
+	cout << TO_STRING(REPEAT(F1, a, b, c)) << endl;
+	cout << TO_STRING(REPEAT_N(2, F1, a)) << endl;
+	cout << TO_STRING(REPEAT_N(4, F1, a, b)) << endl;
+	//cout << TO_STRING(REPEAT_N_F_ZERO(1, F1, 1, a, b, c)) << endl;
+	//cout << TO_STRING(REPEAT_N_ZERO(1, F1, a, b, c)) << endl;
+	cout << TO_STRING(REPEAT_N_ZERO(4, F1, a, b, c)) << endl;
+	//cout << TO_STRING(REVERSE_REPEAT_N_F_SEP(4, F1, 1, COMMA_M, a)) << endl;
+	//cout << TO_STRING(REVERSE_REPEAT_N_F(4, F1, 1, a)) << endl;
+	cout << TO_STRING(REVERSE_REPEAT_N(4, F1, a)) << endl;
+	cout << TO_STRING(REVERSE_REPEAT_N_ZERO(2, F1, a, b, c)) << endl;
+	cout << TO_STRING(REVERSE_REPEAT_N_ZERO(3, F1, a, b, c)) << endl;
+	cout << TO_STRING(REVERSE_REPEAT_N_ZERO(4, F1, a, b, c)) << endl;
+	cout << "..............." << endl;
 
 #define F2(n, X, Y) COMB(Y, UDRL_M(COMB(X, n)))
+#define F21(n, X, Y) COMB(COMB(X, Y), n)
 	cout << TO_STRING(REPEAT_1(1, 1, 1, F2, 1, 1, RIS, COMMA_M, T, a, b)) << endl;
+	cout << TO_STRING(REPEAT_N_F_A_SEP(4, F2, 1, 1, COMMA_M, T, a, b)) << endl;
+	cout << TO_STRING(REPEAT_N_F_A_SEP_ZERO(4, F2, 1, 1, COMMA_M, T, a, b)) << endl;
+	cout << TO_STRING(REVERSE_REPEAT_N_F_A_SEP(4, F2, 1, 1, COMMA_M, T, a, b, c, d)) << endl;
+	cout << TO_STRING(REVERSE_REPEAT_N_F_ZERO(4, F21, 2, a, b, c, d)) << endl;
+	cout << ". . . . . . . ." << endl;
+	cout << TO_STRING(REPEAT_N_F_SEP(4, F21, 2, SEM_M, a, b, c, d)) << endl;
+	cout << TO_STRING(REPEAT_F_SEP(F21, 2, SEM_M, a, b, c, d)) << endl;
+	cout << TO_STRING(REPEAT_F_SEP(F21, 2, SEM_M, a, b, c)) << endl;
+	cout << TO_STRING(REPEAT_F(F21, 2, a, b, c, d)) << endl;
+	//cout << TO_STRING(REPEAT_3(1, 2, 3, F2, 2, RIS, SEM_M, a, b, c, d)) << endl;
+	cout << TO_STRING(REPEAT_N_F(3, F21, 2, a, b)) << endl;
+	cout << TO_STRING(REPEAT_N_F(3, F21, 2, a, b, c)) << endl;
+	cout << TO_STRING(REPEAT_N_F(3, F21, 2, a)) << endl;
+	cout << TO_STRING(REPEAT_N_F(4, F21, 2, a, b, c, d)) << endl;
+	cout << TO_STRING(REPEAT_N_F_ZERO(4, F21, 2, a, b, c, d)) << endl;
+	cout << TO_STRING(REVERSE_REPEAT_N_F(4, F21, 2, a, b, c, d)) << endl;
+	cout << TO_STRING(REVERSE_REPEAT_N_F_ZERO(4, F21, 2, a, b, c, d)) << endl;
+	cout << "..............." << endl;
 
 #define F3(n, X, Y, Z) COMB(COMB(Y, Z), UDRL_M(COMB(X, n)))
+#define F31(n, X, Y, Z) COMB(COMB(COMB(X, Y), Z), n)
 	//cout << TO_STRING(REPEAT_FUNC(F3, 1, EXPAND(CUTARGS_B(ADD(1, 2), EXPAND(CUTARGS_B(1, CUTARGS(2, T, R, a, b))), EXPAND(CUTARGS_B(2, T, R, a, b)))))) << endl;
 	cout << TO_STRING(REPEAT_1(1, 1, 1, F3, 1, 2, RIS, COMMA_M, T, R, a, b)) << endl;
+	cout << ". . . . . . . ." << endl;
+	//cout << TO_STRING(CUTARGS_B(3, a, b, c)) << endl;
+//cout << TO_STRING(F3(1, a, b, c)) << endl;
+//cout << TO_STRING(F3_FUNC(1, CUTARGS_B(3, a, b, c))) << endl;
+//cout << TO_STRING(REPEAT_1(1, 1, 1, F3, 3, RIS, SEM_M, a, b, c)) << endl;
+//cout << TO_STRING(REPEAT_N_F_SEP(1, F3, 3, SEM_M, a, b, c)) << endl;
+	cout << TO_STRING(REPEAT_F_SEP(F31, 3, SEM_M, a, b, c, d, e, f, g)) << endl;
+	cout << "..............." << endl;
 
 #define F4(n, W, X, Y, Z) COMB(COMB(Y, Z), UDRL_M(COMB(COMB(W, X), n)))
 	cout << TO_STRING(REPEAT_1(1, 1, 1, F4, 2, 2, RIS, COMMA_M, T, R, a, b)) << endl;
+	//cout << TO_STRING(COMMA_M(COMB(REPEAT_, DEC(2))(RIS(1), SWITCH_CASE(LE(1, 1), DEC(1), 1), DEC(2), F4, 2, 2, RIS, sep, SWITCH_CASE_ARGS_N_R(GT(1, 1), 2, ADD(2, 2), T, R, a, b)))) << endl;
+	//cout << TO_STRING(COMB(EXPAND_F(F4, 1, EXPAND(CUTARGS_B(ADD(2, 2), EXPAND(CUTARGS_B(2, CUTARGS(2, T, R, a, b))), CUTARGS_B(2, T, R, a, b)))), COMMA_M(COMB(REPEAT_, DEC(2))(RIS(1), SWITCH_CASE(LE(1, 1), DEC(1), 1), DEC(2), F4, 2, 2, RIS, sep, SWITCH_CASE_ARGS_N_R(GT(1, 1), 2, ADD(2, 2), T, R, a, b))))) << endl;
 	cout << TO_STRING(REPEAT_2(1, 1, 2, F4, 2, 2, RIS, COMMA_M, T, R, a, b)) << endl;
-	cout << "............." << endl;
+	cout << TO_STRING(REPEAT_2(1, 2, 2, F4, 2, 2, RIS, COMMA_M, T, R, a, b, c, d)) << endl;
+	cout << "..............." << endl;
 
 	cout << TO_STRING(CUTARGS_C(1, 2, a, b, c, d)) << endl;
 	cout << TO_STRING(CUTARGS_C(1, 3, a, b, c, d)) << endl;
 	cout << TO_STRING(SWITCH_CASE_ARGS_N_R(0, 1, 3, a, b, c, d)) << endl;
 	cout << TO_STRING(SWITCH_CASE_ARGS_N_R(1, 1, 3, a, b, c, d)) << endl;
+	cout << "..............." << endl;
 
 	return 0;
 }
