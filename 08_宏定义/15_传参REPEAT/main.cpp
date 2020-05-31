@@ -437,16 +437,16 @@ using namespace std;
 #define REVERSE_REPEAT_N_SEP_ZERO(n, f, sep, ...) REVERSE_REPEAT_N_F_SEP_ZERO(n, f, 1, sep, ##__VA_ARGS__)		  //
 
 #define REPEAT_F_A(f, fn, an, ...) REPEAT_F_A_SEP(f, fn, an, COMMA_M, ##__VA_ARGS__)							  //
-#define REPEAT_F_A_ZERO(f, fn, an, ...) REPEAT_F_A_SEP_ZERO(f, fn, an, COMMA_M, ##__VA_ARGS__)
-#define REVERSE_REPEAT_F_A(f, fn, an, ...) REVERSE_REPEAT_F_A_SEP(f, fn, an, COMMA_M, ##__VA_ARGS__)
-#define REVERSE_REPEAT_F_A_ZERO(f, fn, an, ...) REVERSE_REPEAT_F_A_SEP_ZERO(f, fn, an, COMMA_M, ##__VA_ARGS__)
+#define REPEAT_F_A_ZERO(f, fn, an, ...) REPEAT_F_A_SEP_ZERO(f, fn, an, COMMA_M, ##__VA_ARGS__)					  //
+#define REVERSE_REPEAT_F_A(f, fn, an, ...) REVERSE_REPEAT_F_A_SEP(f, fn, an, COMMA_M, ##__VA_ARGS__)			  //
+#define REVERSE_REPEAT_F_A_ZERO(f, fn, an, ...) REVERSE_REPEAT_F_A_SEP_ZERO(f, fn, an, COMMA_M, ##__VA_ARGS__)	  
 
 #define REPEAT_F_SEP(f, fn, sep, ...) REPEAT_F_A_SEP(f, fn, 0, sep, ##__VA_ARGS__)								  //
-#define REPEAT_F_SEP_ZERO(f, fn, sep, ...) REPEAT_F_A_SEP_ZERO(f, fn, 0, sep, ##__VA_ARGS__)
+#define REPEAT_F_SEP_ZERO(f, fn, sep, ...) REPEAT_F_A_SEP_ZERO(f, fn, 0, sep, ##__VA_ARGS__)					  //
 #define REVERSE_REPEAT_F_SEP(f, fn, sep, ...) REVERSE_REPEAT_F_A_SEP(f, fn, 0, sep, ##__VA_ARGS__)
 #define REVERSE_REPEAT_F_SEP_ZERO(f, fn, sep, ...) REVERSE_REPEAT_F_A_SEP_ZERO(f, fn, 0, sep, ##__VA_ARGS__)
 
-#define REPEAT_A_SEP(f, an, sep, ...) REPEAT_F_A_SEP(f, 1, an, sep, ##__VA_ARGS__)
+#define REPEAT_A_SEP(f, an, sep, ...) REPEAT_F_A_SEP(f, 1, an, sep, ##__VA_ARGS__)								  //
 #define REPEAT_A_SEP_ZERO(f, an, sep, ...) REPEAT_F_A_SEP_ZERO(f, 1, an, sep, ##__VA_ARGS__)
 #define REVERSE_REPEAT_A_SEP(f, an, sep, ...) REVERSE_REPEAT_F_A_SEP(f, 1, an, sep, ##__VA_ARGS__)
 #define REVERSE_REPEAT_A_SEP_ZERO(f, an, sep, ...) REVERSE_REPEAT_F_A_SEP_ZERO(f, 1, an, sep, ##__VA_ARGS__)
@@ -796,10 +796,17 @@ int main()
 	//cout << TO_STRING(REPEAT_F_SEP(F31, 3, SEM_M, a, b, c, d, e, f, g)) << endl;
 	cout << "4..........................................................................." << endl;
 
-#define F4(n, W, X, Y, Z) COMB(Z, UDRL_M(COMB(COMB(W, X), n)))
-#define F4(n, W, X, Y, Z) COMB(COMB(Y, Z), UDRL_M(COMB(COMB(W, X), n)))
-#define F4(n, W, X, Y, Z) COMB(COMB(Y, Z), UDRL_M(COMB(COMB(W, X), n)))
-#define F4(n, W, X, Y, Z) COMB(COMB(Y, Z), UDRL_M(COMB(COMB(W, X), n)))
+#define F41(n, W, X, Y, Z) COMB(COMB(COMB(COMB(W, X), Y), Z), n)
+#define F42(n, W, X, Y, Z) COMB(Z, UDRL_M(COMB(COMB(COMB(W, X), Y), n)))
+#define F43(n, W, X, Y, Z) COMB(COMB(Y, Z), UDRL_M(COMB(COMB(W, X), n)))
+#define F44(n, W, X, Y, Z) COMB(COMB(X, COMB(Y, Z)), UDRL_M(COMB(W, n)))
+	cout << TO_STRING(REPEAT_F_SEP_ZERO) << endl;
+	cout << TO_STRING(REPEAT_F_SEP_ZERO(F41, 4, SEM_M, a, b, c, d, e, f, g, h, i)) << endl;
+	cout << TO_STRING(REPEAT_F_A_ZERO¡¢REVERSE_REPEAT_F_A) << endl;
+	cout << TO_STRING(REPEAT_F_A_ZERO(F42, 3, 1, A, a, b, c, d, e, f, g)) << endl;
+	cout << TO_STRING(REVERSE_REPEAT_F_A(F43, 2, 2, A, B, a, b, c, d, e)) << endl;
+	cout << TO_STRING(REPEAT_A_SEP) << endl;
+	cout << TO_STRING(REPEAT_A_SEP(F44, 3, SEM_M, A, B, C, a, b, c)) << endl;
 	//cout << TO_STRING(REPEAT_1(1, 1, 1, F4, 2, 2, RIS, COMMA_M, T, R, a, b)) << endl;
 	//cout << TO_STRING(COMMA_M(COMB(REPEAT_, DEC(2))(RIS(1), SWITCH_CASE(LE(1, 1), DEC(1), 1), DEC(2), F4, 2, 2, RIS, sep, SWITCH_CASE_ARGS_N_R(GT(1, 1), 2, ADD(2, 2), T, R, a, b)))) << endl;
 	//cout << TO_STRING(COMB(EXPAND_F(F4, 1, EXPAND(CUTARGS_B(ADD(2, 2), EXPAND(CUTARGS_B(2, CUTARGS(2, T, R, a, b))), CUTARGS_B(2, T, R, a, b)))), COMMA_M(COMB(REPEAT_, DEC(2))(RIS(1), SWITCH_CASE(LE(1, 1), DEC(1), 1), DEC(2), F4, 2, 2, RIS, sep, SWITCH_CASE_ARGS_N_R(GT(1, 1), 2, ADD(2, 2), T, R, a, b))))) << endl;
