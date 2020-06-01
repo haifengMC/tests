@@ -1,16 +1,17 @@
 #pragma once
+#include "vcommon.h"
 #include "uValueMacro.h"
 
-enum class uValueType
+enum uValueType
 {
 	uValueType_Void,
 	uValueType_Int,
 	uValueType_Uint,
-	uValueType_Int64, 
+	uValueType_Int64,
 	uValueType_Uint64,
 	uValueType_Float,
 	uValueType_Double,
-	uValueType_String,
+	uValueType_String
 };
 
 union _uValue
