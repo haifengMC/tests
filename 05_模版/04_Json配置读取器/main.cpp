@@ -83,7 +83,7 @@ void test2()
 	{
 		ShaderCfg s(0.5f, 0.6f, 1.0f, 0.0f, 1.0f);
 		std::cout << s << std::endl;
-
+		
 		JsonWriter writer;
 		writer& s;
 		json = writer.GetString();
@@ -105,7 +105,7 @@ void test3()
 	// Serialize
 	{
 		ShaderCfg s(0.5f, 0.6f, 1.0f, 0.0f, 1.0f);
-
+		
 		JsonWriter writer;
 		writer& s;
 		stream << writer;
@@ -148,13 +148,43 @@ void test5()
 	stream1 << writer;
 }
 
+Json::JsonRW& operator&(Json::JsonRW& ar, Student& s) {
+	using namespace Json;
+	return ar &
+		begObj &
+			mem("name", s.name) &
+			mem("age", s.age) &
+			mem("height", s.height) &
+			mem("canSwim", s.canSwim) &
+		endObj;
+}
+
+void test6()
+{
+	using namespace Json;
+	Json::JsonRW rw;
+	std::string json;
+	{
+		Student s("Lua", 9, 150.5, true);
+		rw(Json::JsonRWMode::JsonRWMode_Write)(json) & s & end;
+		std::cout << json << std::endl;
+	}
+
+	{
+		Student s;
+		rw(Json::JsonRWMode::JsonRWMode_Read)(json) & s & end;
+		std::cout << s << std::endl;
+	}
+}
+
 int main()
 {
-	test1();
-	test2();
-	test3();
-	test4();
-	test5();
+	//test1();
+	//test2();
+	//test3();
+	//test4();
+	//test5();
+	test6();
 
 	return 0;
 }

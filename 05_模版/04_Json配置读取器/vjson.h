@@ -120,6 +120,103 @@ private:
     bool needFilter = true;
 };
 
+namespace Json
+{
+    class JsonRW;
+	JsonRW& begObj(JsonRW& rw);
+	JsonRW& endObj(JsonRW& rw);
+    JsonRW& end(JsonRW& rw);
+	//JsonRW& null(JsonRW& rw)
+	//{
+    //    return rw;
+	//}
+
+    template <typename T> struct JsonMem;
+    template <typename T> JsonMem<T> mem(const char* const& name, T& t);
+	template <typename T>
+	struct JsonMem
+	{
+		const char* const& name;
+		T& t;
+    private:
+		JsonMem(const char* const& name, T& t) : name(name), t(t) {}
+		friend JsonMem mem<>(const char* const& name, T& t);
+	};
+
+	template <typename T>
+    JsonMem<T> mem(const char* const& name, T& t)
+	{
+		return JsonMem <T>(name, t);
+	}
+
+    enum class JsonRWMode
+    {
+        JsonRWMode_Read,
+        JsonRWMode_Write
+    };
+    class JsonRW
+    {
+        friend JsonRW& end(JsonRW& rw);
+    public:
+	    JsonRW() {}
+	    JsonRW(const JsonRW&) = delete;
+	    JsonRW& operator=(const JsonRW&) = delete;
+
+        void setMode(const JsonRWMode& m) { mode = m; }
+
+	    JsonRW& member(const char* name);
+	    bool hasMember(const char* name) const;
+
+	    JsonRW& beginObject();
+	    JsonRW& endObject();
+	    JsonRW& beginArray(size_t* size = NULL);
+	    JsonRW& endArray();
+
+
+        operator bool() const { return !mError; }
+        JsonRW& operator()(const JsonRWMode& m);
+	    JsonRW& operator()(const std::string& json);
+	    JsonRW& operator()(std::string& json);
+        JsonRW& operator[](const char* name) { return member(name); }
+
+	    JsonRW& operator&(bool& b);
+	    JsonRW& operator&(unsigned& u);
+	    JsonRW& operator&(int& i);
+	    JsonRW& operator&(float& f);
+	    JsonRW& operator&(double& d);
+	    JsonRW& operator&(void* v);
+	    JsonRW& operator&(std::string& s);
+		JsonRW& operator&(JsonRW& (*func)(JsonRW&));
+		template<typename T>
+        JsonRW& operator&(const JsonMem<T>& mem) { return (*this)[mem.name] & mem.t; }
+
+        JsonRW& setNull();
+    private:
+	    bool init(const char* json = NULL);
+	    bool reset(const char* json = NULL);
+	    void clear();
+
+        void next();
+
+	    //ReaderData
+	    // PIMPL
+	    void* mDocument = NULL;              ///< DOM result of parsing.
+	    void* mStack = NULL;                 ///< Stack for iterating the DOM
+	    bool mError = true;                  ///< Whether an error has occurred.
+
+	    //WriterData
+	    // PIMPL idiom
+	    void* mWriter = NULL;                ///< JSON writer.
+	    void* mStream = NULL;                ///< Stream buffer.
+        void* mBuffer = NULL;
+	    JsonRWMode mode = JsonRWMode::JsonRWMode_Read;
+
+	    void* filterObj = NULL;
+	    bool needFilter = false;
+    };
+}
+
+
 class JsonStream
 {
 	std::string fileName;
