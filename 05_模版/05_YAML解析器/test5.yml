@@ -1,0 +1,5 @@
+key: 
+    - complexvalue1
+    - complexvalue2
+    - ~
+    - [1,2,3]

@@ -1,0 +1,15 @@
+name: frank
+sex: male
+age: 19
+skills:
+  c++: 1
+  java: 1
+  android: 1
+  python: 1
+score: 99
+seq:
+  - 1
+  - 2
+  - 3
+scl: [a, b]
+map1: {a: 1, b: 2}
