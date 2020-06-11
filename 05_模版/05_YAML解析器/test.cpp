@@ -9,8 +9,8 @@
 
 using namespace std;
 
-#define TEST_FUNC_BEG(X) void X(){ cout << "------" << endl; cout << TO_STRING(X) << endl;
-#define TEST_FUNC_END() }
+#define TEST_FUNC_BEG(X) void X(){ cout << "------" << endl; cout << TO_STRING(X) << endl; cout << "------" << endl; 
+#define TEST_FUNC_END(X) }
 
 void printCfg(const YAML::Node& config, byte deep = 0)
 {
@@ -33,7 +33,7 @@ void printCfg(const YAML::Node& config, byte deep = 0)
 	case YAML::NodeType::Sequence:
 		for (YAML::const_iterator it = config.begin(); it != config.end(); ++it)
 		{
-			cout << string(deep, ' ') << typeNm(it->Type()) << "." << it->Style() << ": ";
+			cout << string(deep, ' ') << typeNm(it->Type()) << "." << it->Style() << "." << it->Mark().pos << "." << it->Mark().line << "." << it->Mark().column << ": ";
 			if (it->IsMap() || it->IsSequence())
 				cout << endl;
 			printCfg(*it, deep + 1);
@@ -42,7 +42,7 @@ void printCfg(const YAML::Node& config, byte deep = 0)
 	case YAML::NodeType::Map:
 		for (YAML::const_iterator it = config.begin(); it != config.end(); ++it)
 		{
-			cout << string(deep, ' ') << it->first.as<string>() << "." << typeNm(it->second.Type()) << "." << it->second.Style() << ": ";
+			cout << string(deep, ' ') << it->first.as<string>() << "." << typeNm(it->second.Type()) << "." << it->second.Style() << "." << it->second.Mark().pos << "." << it->second.Mark().line << "." << it->second.Mark().column << ": ";
 			if (it->second.IsMap() || it->second.IsSequence())
 				cout << endl;
 			printCfg(it->second, deep + 1);
@@ -70,14 +70,14 @@ cout << "skills python:" << "[" << config["skills"]["python"].Type() << "]" << c
 
 cout << endl;
 for (YAML::const_iterator it = config["skills"].begin(); it != config["skills"].end(); ++it)
-	cout << it->first.as<string>() << ":" << "[" << it->second.Type() << "]" << it->second.as<int>() << endl;
+cout << it->first.as<string>() << ":" << "[" << it->second.Type() << "]" << it->second.as<int>() << endl;
 
 TEST_FUNC_END(test1)
 
 TEST_FUNC_BEG(test2)
 
 YAML::Node config = YAML::LoadFile("test1.yml");
-printCfg(config);
+cout << config << endl;
 
 TEST_FUNC_END(test2)
 
@@ -101,9 +101,22 @@ YAML::Node config = YAML::LoadFile("test1.yml");
 
 config["score"] = 99;
 config["age"] = 19;
-config["seq"].push_back(1);
-config["seq"].push_back(2);
-config["seq"].push_back(3);
+YAML::Node tmpSeqNode1;
+tmpSeqNode1.push_back(1);
+tmpSeqNode1.push_back(2);
+tmpSeqNode1.push_back(3);
+tmpSeqNode1.SetStyle(YAML::EmitterStyle::Flow);
+config["seq"].push_back(tmpSeqNode1);
+YAML::Node tmpSeqNode2;
+tmpSeqNode2.push_back(1);
+tmpSeqNode2.push_back(2);
+tmpSeqNode2.push_back(3);
+config["seq"].push_back(tmpSeqNode2);
+YAML::Node tmpSeqNode3;
+tmpSeqNode3.push_back(1);
+tmpSeqNode3.push_back(2);
+tmpSeqNode3.push_back(3);
+config["seq"].push_back(tmpSeqNode3);
 config["seq"].SetStyle(YAML::EmitterStyle::Block);
 config["scl"].push_back("a");
 config["scl"].push_back("b");
@@ -114,6 +127,7 @@ tmpNode["b"] = 2;
 config["map1"] = tmpNode;
 config["map1"].SetStyle(YAML::EmitterStyle::Flow);
 
+//cout << config << endl;;
 printCfg(config);
 fout << config;
 
@@ -124,8 +138,9 @@ TEST_FUNC_END(test4)
 TEST_FUNC_BEG(test5)
 YAML::Node config = YAML::LoadFile("test5.yml");
 cout << config["key"] << endl;
+cout << config << endl;
 cout << config["key"][0] << " " << config["key"][1] << " " << config["key"][2] << " [" << config["key"][20] << "] " << config["key"][3] << " " << config["key"][4] << endl;
-printCfg(config);
+cout << config << endl;
 TEST_FUNC_END(test5)
 
 
