@@ -1,8 +1,9 @@
-peter:
+!<hello_world>
+peter: !<world>
   idx: 1001
   sex: male
-  hight: 175
-  pos: [0.300000012, 0.600000024]
+  hight: 185
+  pos: !<target> [0.300000012, 0.600000024]
 jone:
   - true
   - 3.14

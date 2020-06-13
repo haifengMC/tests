@@ -5,6 +5,8 @@ namespace YAML
 {
 	inline NodeEx::NodeEx() {}
 
+	inline NodeEx::NodeEx(const NodeType::value& type) : Node(type) {}
+
 	template <typename T>
 	NodeEx::NodeEx(const T& rhs)
 	{
@@ -114,10 +116,10 @@ namespace YAML
 	template<typename T, size_t N>
 	NodeEx& NodeEx::operator=(const T(&rhs)[N])
 	{
-		if (!IsSequence())
-			reset();
+		Node node(NodeType::Sequence);
 		for (const T& element : rhs)
-			this->push_back(element);
+			node.push_back(element);
+		Assign(node);
 		return *this;
 	}
 
@@ -139,9 +141,84 @@ namespace YAML
 		SetTag(tag);
 		return *this;
 	}
-	NodeEx& NodeEx::operator()(const const EmitterStyle::value& style)
+
+	NodeEx& NodeEx::operator()(const EmitterStyle::value& style)
 	{
-		SetStyle(style);
+		if (!IsSequence() && !IsMap())
+			return *this;
+
+		for (iterator it = begin(); it != end(); ++it)
+		{
+			const NodeType::value& type = IsSequence() ? it->Type() : it->second.Type();
+			Node node = IsSequence() ? *it : it->second;
+			node.SetStyle(style);
+		}
+		return *this;
+	}
+
+	NodeEx& NodeEx::operator()(const IOType::value& io)
+	{
+		m_io = io;
+		return *this;
+	}
+
+	template <typename T>
+	NodeEx& NodeEx::operator&(T& rhs)
+	{
+		switch (m_io)
+		{
+		case IOType::PutIn:
+			rhs = as<T>();
+			break;
+		case IOType::PutOut:
+			operator=(rhs);
+			break;
+		default:
+			break;
+		}
+		return *this;
+	}
+
+	template <typename T>
+	NodeEx& NodeEx::operator&(const T& rhs)
+	{
+		if (YAML::IOType::PutIn == m_io)
+			return *this;
+	
+		operator=(rhs);
+		return *this;
+	}
+
+	template<typename T, size_t N>
+	NodeEx& NodeEx::operator&(T(&rhs)[N])
+	{
+		switch (m_io)
+		{
+		case YAML::IOType::PutIn:
+			{
+				if (!IsSequence())
+					break;
+				size_t count = 0;
+				for (iterator it = begin(); it != end() && count < N; ++it)
+					rhs[count++] = it->as<T>();
+			}
+			break;
+		case YAML::IOType::PutOut:
+			operator=(rhs);
+			break;
+		default:
+			break;
+		}
+		return *this;
+	}
+
+	template<typename T, size_t N>
+	NodeEx& NodeEx::operator&(const T(&rhs)[N])
+	{
+		if (YAML::IOType::PutIn == m_io)
+			return *this;
+
+		operator=(rhs);
 		return *this;
 	}
 
@@ -154,13 +231,15 @@ namespace YAML
 	template <typename Key>
 	inline const NodeEx NodeEx::operator[](const Key& key) const
 	{ 
-		return Node::operator[](key); 
+		NodeEx node = Node::operator[](key);
+		return node(m_io);
 	}
 
 	template <typename Key>
 	inline NodeEx NodeEx::operator[](const Key& key)
 	{ 
-		return Node::operator[](key); 
+		NodeEx node = Node::operator[](key);
+		return node(m_io);
 	}
 
 	bool operator<<(std::string fileName, const NodeEx& node)
@@ -168,6 +247,7 @@ namespace YAML
 		std::ofstream fout(fileName);
 		if (!fout) return false;
 		fout << node;
+		fout.close();
 		return true;
 	}
 
@@ -178,12 +258,13 @@ namespace YAML
 		try
 		{
 			node = Load(fin);
+			fin.close();
 		}
 		catch (const ParserException&)
 		{
+			fin.close();
 			return false;
 		}
-
 		return true;
 	}
 }

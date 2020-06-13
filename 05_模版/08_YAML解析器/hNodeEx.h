@@ -2,10 +2,17 @@
 
 namespace YAML
 {
+	struct IOType 
+	{
+		enum value { PutIn, PutOut };
+	};
+
 	class NodeEx : public Node
 	{
+		mutable IOType::value m_io = IOType::PutIn;
 	public:
 		NodeEx();
+		NodeEx(const NodeType::value& type);
 		template <typename T>
 		NodeEx(const T& rhs);
 		template <typename T>
@@ -31,7 +38,17 @@ namespace YAML
 		NodeEx& operator=(const Node& rhs);
 
 		NodeEx& operator()(const std::string& tag);
-		NodeEx& operator()(const const EmitterStyle::value& style);
+		NodeEx& operator()(const EmitterStyle::value& style);
+		NodeEx& operator()(const IOType::value& io);
+
+		template <typename T>
+		NodeEx& operator&(T& rhs);
+		template <typename T>
+		NodeEx& operator&(const T& rhs);
+		template<typename T, size_t N>
+		NodeEx& operator&(T(&rhs)[N]);
+		template<typename T, size_t N>
+		NodeEx& operator&(const T(&rhs)[N]);
 
 		//sequence
 		void push_back(const NodeEx& rhs);
