@@ -367,13 +367,13 @@ TEST(Tst, Tst8)
 #define  CFG_MEM(type, ...) COMB(EXPAND(CUTARGS_B(3, type, ##__VA_ARGS__, type())), COMMA_M(1))
 #define  CFG_ARR(type, va, N) type, va, {}, N
 
-#define CFG_STRUCT_F1(n, type, va, init, size) type  SWITCH_CASE(EQ(size, 1), va[size], va) = init
-#define CFG_STRUCT_F2(n, type, va, init, size) node[TO_STRING(va)] & rhs.va
-#define CFG_STRUCT_F3(n, type, va, init, size) node[TO_STRING(va)] & va
-#define CFG_STRUCT(className, ...) \
+#define CFG_STRUCT_1_F1(n, type, va, init, size) type  SWITCH_CASE(EQ(size, 1), va[size], va) = init
+#define CFG_STRUCT_1_F2(n, type, va, init, size) node[TO_STRING(va)] & rhs.va
+#define CFG_STRUCT_1_F3(n, type, va, init, size) node[TO_STRING(va)] & va
+#define CFG_STRUCT_1(className, ...) \
 	struct className\
 	{\
-		REPEAT_F_SEP(CFG_STRUCT_F1, 4, SEM_M, ##__VA_ARGS__);\
+		REPEAT_F_SEP(CFG_STRUCT_1_F1, 4, SEM_M, ##__VA_ARGS__);\
 	};\
 	template <>\
 	struct YAML::convert<className> {\
@@ -381,7 +381,7 @@ TEST(Tst, Tst8)
 		{\
 			NodeEx node(NodeType::Map);\
 			node(IOType::PutOut);\
-			REPEAT_F_SEP(CFG_STRUCT_F2, 4, SEM_M, ##__VA_ARGS__); \
+			REPEAT_F_SEP(CFG_STRUCT_1_F2, 4, SEM_M, ##__VA_ARGS__); \
 			return node;\
 		}\
 		static bool decode(const Node& n, className& rhs)\
@@ -390,15 +390,15 @@ TEST(Tst, Tst8)
 				return false;\
 			NodeEx node = n;\
 			node(IOType::PutIn); \
-			REPEAT_F_SEP(CFG_STRUCT_F2, 4, SEM_M, ##__VA_ARGS__); \
+			REPEAT_F_SEP(CFG_STRUCT_1_F2, 4, SEM_M, ##__VA_ARGS__); \
 			return true;\
 		}\
 	};
 
-#define CFG_DATA(className, ...) \
+#define CFG_DATA_1(className, ...) \
 	struct className : public CfgData\
 	{\
-		REPEAT_F_SEP(CFG_STRUCT_F1, 4, SEM_M, ##__VA_ARGS__); \
+		REPEAT_F_SEP(CFG_STRUCT_1_F1, 4, SEM_M, ##__VA_ARGS__); \
 		className(const std::string& fileName) :CfgData(fileName) {}\
 		bool loadCfg()\
 		{\
@@ -407,26 +407,26 @@ TEST(Tst, Tst8)
 				return false;\
 			node(YAML::IOType::PutIn);\
 			checkMarks(node);\
-			REPEAT_F_SEP(CFG_STRUCT_F3, 4, SEM_M, ##__VA_ARGS__); \
+			REPEAT_F_SEP(CFG_STRUCT_1_F3, 4, SEM_M, ##__VA_ARGS__); \
 			return true;\
 		}\
 		bool saveCfg()\
 		{\
 			YAML::NodeEx node;\
 			node(YAML::IOType::PutOut);\
-			REPEAT_F_SEP(CFG_STRUCT_F3, 4, SEM_M, ##__VA_ARGS__); \
+			REPEAT_F_SEP(CFG_STRUCT_1_F3, 4, SEM_M, ##__VA_ARGS__); \
 			setMarks(node);\
 			return fileName << node;\
 		}\
 	};
 
 
-CFG_STRUCT(Tst9PeterCfg,
+CFG_STRUCT_1(Tst9PeterCfg,
 	CFG_MEM(size_t, idx),
 	CFG_MEM(std::string, sex),
 	CFG_MEM(int, hight),
 	CFG_ARR(float, pos, 2));
-CFG_DATA(Tst9DataCfg,
+CFG_DATA_1(Tst9DataCfg,
 	CFG_MEM(Tst9PeterCfg, peter),
 	CFG_MEM(std::vector<std::string>, jone));
 
@@ -441,6 +441,91 @@ TEST(Tst, Tst9)
 	cfg.peter.idx = 1111;
 	cfg.peter.sex = "aaaa";
 	cfg.peter.hight = 2222;
+	cfg.saveCfg();
+}
+
+#define CFGSTRUCT_2_F(n, va) node[TO_STRING(va)] & rhs.va
+#define CFGDATA_2_F(n, va) node[TO_STRING(va)] & va
+#define BEG_CFGSTRUCT_2(className) \
+	struct className
+#define END_CFGSTRUCT_2(className, ...) ;\
+	template <>\
+	struct YAML::convert<className>\
+	{\
+		static Node encode(const className& rhs)\
+		{\
+			NodeEx node(NodeType::Map);\
+			node(IOType::PutOut);\
+			REPEAT_SEP(CFGSTRUCT_2_F, SEM_M, ##__VA_ARGS__); \
+			return node;\
+		}\
+		static bool decode(const Node& n, className& rhs)\
+		{\
+			if (!n.IsMap())\
+				return false;\
+			NodeEx node = n;\
+			node(IOType::PutIn); \
+			REPEAT_SEP(CFGSTRUCT_2_F, SEM_M, ##__VA_ARGS__); \
+			return true;\
+		}\
+	};
+
+#define DECL_CFGDATA(className) \
+	className(const std::string & fileName);\
+	bool loadCfg();\
+	bool saveCfg();
+
+#define BEG_CFGDATA_2(className) \
+	struct className : public CfgData 
+#define END_CFGDATA_2(className, ...) ;\
+	className::className(const std::string& fileName) :CfgData(fileName) {}\
+	bool className::loadCfg()\
+	{\
+		YAML::NodeEx node;\
+		if (!(fileName >> node))\
+			return false;\
+		node(YAML::IOType::PutIn);\
+		checkMarks(node);\
+		REPEAT_SEP(CFGDATA_2_F, SEM_M, ##__VA_ARGS__); \
+		return true;\
+	}\
+	bool className::saveCfg()\
+	{\
+		YAML::NodeEx node;\
+		node(YAML::IOType::PutOut);\
+		REPEAT_SEP(CFGDATA_2_F, SEM_M, ##__VA_ARGS__); \
+		setMarks(node);\
+		return fileName << node;\
+	}
+
+BEG_CFGSTRUCT_2(Tst10PeterCfg)
+{
+	size_t idx = 0;
+	std::string sex = "";
+	int hight = 0;
+	float pos[2] = {};
+}
+END_CFGSTRUCT_2(Tst10PeterCfg, idx, sex, hight, pos)
+
+BEG_CFGDATA_2(Tst10DataCfg)
+{
+	DECL_CFGDATA(Tst10DataCfg);
+	Tst10PeterCfg peter;
+	std::vector<std::string> jone;
+}
+END_CFGDATA_2(Tst10DataCfg, peter, jone)
+
+TEST(Tst, Tst10)
+{
+	//cout << TO_STRING(REPEAT_SEP(CFG_STRUCT_2_F1, SEM_M, idx, sex, hight, pos);) << endl;
+	Tst10DataCfg cfg("Tst10.yml");
+	cfg.loadCfg();
+	cout << cfg.peter.idx << " " << cfg.peter.sex << " " << cfg.peter.hight << " " << cfg.peter.pos[0] << " " << cfg.peter.pos[1] << endl;
+	for (std::string& s : cfg.jone)
+		cout << s << endl;
+	cfg.peter.idx = 333;
+	cfg.peter.sex = "bbb";
+	cfg.peter.hight = 444;
 	cfg.saveCfg();
 }
 
