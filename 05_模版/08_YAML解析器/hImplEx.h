@@ -130,6 +130,22 @@ namespace YAML
 		return *this;
 	}
 
+
+	template<typename T, size_t N, size_t M>
+	NodeEx& NodeEx::operator=(const T(&rhs)[N][M])
+	{
+		Node node(NodeType::Sequence);
+		for (const T(&t1)[M] : rhs)
+		{
+			Node tnode(NodeType::Sequence);
+			for (const T& t2 : t1)
+				tnode.push_back(t2);
+			node.push_back(tnode);
+		}
+		Assign(node);
+		return *this;
+	}
+
 	NodeEx& NodeEx::operator=(const Node& rhs)
 	{
 		AssignNode(rhs);
@@ -199,8 +215,9 @@ namespace YAML
 				if (!IsSequence())
 					break;
 				size_t count = 0;
-				for (iterator it = begin(); it != end() && count < N; ++it)
-					rhs[count++] = it->as<T>();
+				for (iterator it = begin(); it != end() && count < N; ++it, ++count)
+					if (it->IsScalar()) 
+						rhs[count] = it->as<T>();
 			}
 			break;
 		case YAML::IOType::PutOut:
@@ -214,6 +231,49 @@ namespace YAML
 
 	template<typename T, size_t N>
 	NodeEx& NodeEx::operator&(const T(&rhs)[N])
+	{
+		if (YAML::IOType::PutIn == m_io)
+			return *this;
+
+		operator=(rhs);
+		return *this;
+	}
+
+
+	template<typename T, size_t N, size_t M>
+	NodeEx& NodeEx::operator&(T(&rhs)[N][M])
+	{
+		switch (m_io)
+		{
+		case YAML::IOType::PutIn:
+			{
+				if (!IsSequence())
+					break;
+				size_t nCnt = 0;
+				for (Node::const_iterator it1 = begin(); it1 != end() && nCnt < N; ++it1, ++nCnt)
+				{
+					T(&t1)[M] = rhs[nCnt];
+					if (!it1->IsSequence())
+						continue;
+					size_t mCnt = 0;
+					for (Node::const_iterator it2 = it1->begin(); it2 != it1->end() && mCnt < M; ++it2, ++mCnt)
+						if (it2->IsScalar()) 
+							t1[mCnt] = it2->as<T>();
+				}
+			}
+			break;
+		case YAML::IOType::PutOut:
+			operator=(rhs);
+			break;
+		default:
+			break;
+		}
+		return *this;
+	}
+
+
+	template<typename T, size_t N, size_t M>
+	NodeEx& NodeEx::operator&(const T(&rhs)[N][M])
 	{
 		if (YAML::IOType::PutIn == m_io)
 			return *this;

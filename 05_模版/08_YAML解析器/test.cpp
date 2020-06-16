@@ -529,6 +529,21 @@ TEST(Tst, Tst10)
 	cfg.saveCfg();
 }
 
+BEG_CFGDATA_2(AsyncBufferMapTestCfg)
+{
+	DECL_CFGDATA(AsyncBufferMapTestCfg);
+	float pointSize = 0.0f;
+	float vertice[3][2] = {};
+	float colors[3][3] = {};
+}
+END_CFGDATA_2(AsyncBufferMapTestCfg, pointSize, vertice, colors)
+
+TEST(Tst, Tst11)
+{
+	AsyncBufferMapTestCfg cfg("AsyncBufferMapData.yml");
+	cfg.loadCfg();
+}
+
 #undef NODE_TEST
 #undef NODEEX_TEST
 

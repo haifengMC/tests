@@ -36,6 +36,8 @@ namespace YAML
 		template<size_t N>
 		NodeEx& operator=(const char(&rhs)[N]);
 		NodeEx& operator=(const Node& rhs);
+		template<typename T, size_t N, size_t M>
+		NodeEx& operator=(const T(&rhs)[N][M]);
 
 		NodeEx& operator()(const std::string& tag);
 		NodeEx& operator()(const EmitterStyle::value& style);
@@ -49,6 +51,10 @@ namespace YAML
 		NodeEx& operator&(T(&rhs)[N]);
 		template<typename T, size_t N>
 		NodeEx& operator&(const T(&rhs)[N]);
+		template<typename T, size_t N, size_t M>
+		NodeEx& operator&(T(&rhs)[N][M]);
+		template<typename T, size_t N, size_t M>
+		NodeEx& operator&(const T(&rhs)[N][M]);
 
 		//sequence
 		void push_back(const NodeEx& rhs);
