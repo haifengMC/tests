@@ -542,6 +542,7 @@ TEST(Tst, Tst11)
 {
 	AsyncBufferMapTestCfg cfg("AsyncBufferMapData.yml");
 	cfg.loadCfg();
+	cfg.saveCfg();
 }
 
 #undef NODE_TEST

@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02_数组赋值", "02_数�
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03_重载操作符读取数组", "03_重载操作符读取数组\03_重载操作符读取数组.vcxproj", "{6F573350-0858-4980-9F9B-E9AAC1D93165}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04_一维数组指针的赋值", "04_一维数组指针的赋值\04_一维数组指针的赋值.vcxproj", "{3A9B8A39-C417-4DF9-A592-F4DD38F1980E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -41,6 +43,14 @@ Global
 		{6F573350-0858-4980-9F9B-E9AAC1D93165}.Release|x64.Build.0 = Release|x64
 		{6F573350-0858-4980-9F9B-E9AAC1D93165}.Release|x86.ActiveCfg = Release|Win32
 		{6F573350-0858-4980-9F9B-E9AAC1D93165}.Release|x86.Build.0 = Release|Win32
+		{3A9B8A39-C417-4DF9-A592-F4DD38F1980E}.Debug|x64.ActiveCfg = Debug|x64
+		{3A9B8A39-C417-4DF9-A592-F4DD38F1980E}.Debug|x64.Build.0 = Debug|x64
+		{3A9B8A39-C417-4DF9-A592-F4DD38F1980E}.Debug|x86.ActiveCfg = Debug|Win32
+		{3A9B8A39-C417-4DF9-A592-F4DD38F1980E}.Debug|x86.Build.0 = Debug|Win32
+		{3A9B8A39-C417-4DF9-A592-F4DD38F1980E}.Release|x64.ActiveCfg = Release|x64
+		{3A9B8A39-C417-4DF9-A592-F4DD38F1980E}.Release|x64.Build.0 = Release|x64
+		{3A9B8A39-C417-4DF9-A592-F4DD38F1980E}.Release|x86.ActiveCfg = Release|Win32
+		{3A9B8A39-C417-4DF9-A592-F4DD38F1980E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
