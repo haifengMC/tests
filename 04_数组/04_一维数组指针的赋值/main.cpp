@@ -10,6 +10,9 @@ int main()
 	cout << parr[1][0] << " " << parr[1][1] << endl;
 	cout << parr[2][0] << " " << parr[2][1] << endl;
 
+	int(&refarr)[3][2] = (int(&)[3][2])arr;
+	for (int(&refa)[2] : refarr)
+		cout << refa[0] << " " << refa[1] << endl;
 
 	return 0;
 }
