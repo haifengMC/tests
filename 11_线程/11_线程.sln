@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "05_检测是否可join", "0
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "06_线程分离", "06_线程分离\06_线程分离.vcxproj", "{1FFBA7E4-8F75-4701-88B2-A4DE9F9076C9}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "07_线程交换", "07_线程交换\07_线程交换.vcxproj", "{ADC92357-E5D9-4E3D-A208-222E6DE90CB5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -71,6 +73,14 @@ Global
 		{1FFBA7E4-8F75-4701-88B2-A4DE9F9076C9}.Release|x64.Build.0 = Release|x64
 		{1FFBA7E4-8F75-4701-88B2-A4DE9F9076C9}.Release|x86.ActiveCfg = Release|Win32
 		{1FFBA7E4-8F75-4701-88B2-A4DE9F9076C9}.Release|x86.Build.0 = Release|Win32
+		{ADC92357-E5D9-4E3D-A208-222E6DE90CB5}.Debug|x64.ActiveCfg = Debug|x64
+		{ADC92357-E5D9-4E3D-A208-222E6DE90CB5}.Debug|x64.Build.0 = Debug|x64
+		{ADC92357-E5D9-4E3D-A208-222E6DE90CB5}.Debug|x86.ActiveCfg = Debug|Win32
+		{ADC92357-E5D9-4E3D-A208-222E6DE90CB5}.Debug|x86.Build.0 = Debug|Win32
+		{ADC92357-E5D9-4E3D-A208-222E6DE90CB5}.Release|x64.ActiveCfg = Release|x64
+		{ADC92357-E5D9-4E3D-A208-222E6DE90CB5}.Release|x64.Build.0 = Release|x64
+		{ADC92357-E5D9-4E3D-A208-222E6DE90CB5}.Release|x86.ActiveCfg = Release|Win32
+		{ADC92357-E5D9-4E3D-A208-222E6DE90CB5}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
