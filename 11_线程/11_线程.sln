@@ -29,6 +29,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "12_互斥锁", "12_互斥�
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "13_定时互斥锁", "13_定时互斥锁\13_定时互斥锁.vcxproj", "{A80703D5-F60C-4EF2-AB3A-9DC19CE8773A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "14_定时互斥锁", "14_定时互斥锁\14_定时互斥锁.vcxproj", "{44CE92D5-8722-43FC-9548-300EBFF60D03}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -141,6 +143,14 @@ Global
 		{A80703D5-F60C-4EF2-AB3A-9DC19CE8773A}.Release|x64.Build.0 = Release|x64
 		{A80703D5-F60C-4EF2-AB3A-9DC19CE8773A}.Release|x86.ActiveCfg = Release|Win32
 		{A80703D5-F60C-4EF2-AB3A-9DC19CE8773A}.Release|x86.Build.0 = Release|Win32
+		{44CE92D5-8722-43FC-9548-300EBFF60D03}.Debug|x64.ActiveCfg = Debug|x64
+		{44CE92D5-8722-43FC-9548-300EBFF60D03}.Debug|x64.Build.0 = Debug|x64
+		{44CE92D5-8722-43FC-9548-300EBFF60D03}.Debug|x86.ActiveCfg = Debug|Win32
+		{44CE92D5-8722-43FC-9548-300EBFF60D03}.Debug|x86.Build.0 = Debug|Win32
+		{44CE92D5-8722-43FC-9548-300EBFF60D03}.Release|x64.ActiveCfg = Release|x64
+		{44CE92D5-8722-43FC-9548-300EBFF60D03}.Release|x64.Build.0 = Release|x64
+		{44CE92D5-8722-43FC-9548-300EBFF60D03}.Release|x86.ActiveCfg = Release|Win32
+		{44CE92D5-8722-43FC-9548-300EBFF60D03}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
