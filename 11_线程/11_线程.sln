@@ -21,6 +21,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "08_检测硬件并发数目
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "09_获取当前线程id", "09_获取当前线程id\09_获取当前线程id.vcxproj", "{64247F63-30DF-4FCE-BE88-B0DD1C8B27AD}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "10_重新调度各执行线程", "10_重新调度各执行线程\10_重新调度各执行线程.vcxproj", "{2D3F180C-E1B9-418B-AECC-FE3DAA2305FB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -101,6 +103,14 @@ Global
 		{64247F63-30DF-4FCE-BE88-B0DD1C8B27AD}.Release|x64.Build.0 = Release|x64
 		{64247F63-30DF-4FCE-BE88-B0DD1C8B27AD}.Release|x86.ActiveCfg = Release|Win32
 		{64247F63-30DF-4FCE-BE88-B0DD1C8B27AD}.Release|x86.Build.0 = Release|Win32
+		{2D3F180C-E1B9-418B-AECC-FE3DAA2305FB}.Debug|x64.ActiveCfg = Debug|x64
+		{2D3F180C-E1B9-418B-AECC-FE3DAA2305FB}.Debug|x64.Build.0 = Debug|x64
+		{2D3F180C-E1B9-418B-AECC-FE3DAA2305FB}.Debug|x86.ActiveCfg = Debug|Win32
+		{2D3F180C-E1B9-418B-AECC-FE3DAA2305FB}.Debug|x86.Build.0 = Debug|Win32
+		{2D3F180C-E1B9-418B-AECC-FE3DAA2305FB}.Release|x64.ActiveCfg = Release|x64
+		{2D3F180C-E1B9-418B-AECC-FE3DAA2305FB}.Release|x64.Build.0 = Release|x64
+		{2D3F180C-E1B9-418B-AECC-FE3DAA2305FB}.Release|x86.ActiveCfg = Release|Win32
+		{2D3F180C-E1B9-418B-AECC-FE3DAA2305FB}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
