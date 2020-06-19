@@ -25,6 +25,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "10_重新调度各执行线
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "11_线程让步", "11_线程让步\11_线程让步.vcxproj", "{EFF72715-F9B7-4390-B170-976A6CDE7E41}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "12_互斥锁", "12_互斥锁\12_互斥锁.vcxproj", "{4A8B16D5-40AC-4D28-98EA-E0CE0BA6ED83}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -121,6 +123,14 @@ Global
 		{EFF72715-F9B7-4390-B170-976A6CDE7E41}.Release|x64.Build.0 = Release|x64
 		{EFF72715-F9B7-4390-B170-976A6CDE7E41}.Release|x86.ActiveCfg = Release|Win32
 		{EFF72715-F9B7-4390-B170-976A6CDE7E41}.Release|x86.Build.0 = Release|Win32
+		{4A8B16D5-40AC-4D28-98EA-E0CE0BA6ED83}.Debug|x64.ActiveCfg = Debug|x64
+		{4A8B16D5-40AC-4D28-98EA-E0CE0BA6ED83}.Debug|x64.Build.0 = Debug|x64
+		{4A8B16D5-40AC-4D28-98EA-E0CE0BA6ED83}.Debug|x86.ActiveCfg = Debug|Win32
+		{4A8B16D5-40AC-4D28-98EA-E0CE0BA6ED83}.Debug|x86.Build.0 = Debug|Win32
+		{4A8B16D5-40AC-4D28-98EA-E0CE0BA6ED83}.Release|x64.ActiveCfg = Release|x64
+		{4A8B16D5-40AC-4D28-98EA-E0CE0BA6ED83}.Release|x64.Build.0 = Release|x64
+		{4A8B16D5-40AC-4D28-98EA-E0CE0BA6ED83}.Release|x86.ActiveCfg = Release|Win32
+		{4A8B16D5-40AC-4D28-98EA-E0CE0BA6ED83}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
