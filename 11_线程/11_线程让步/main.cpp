@@ -4,10 +4,13 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include <mutex>
 
 // "busy sleep" while suggesting that other threads run 
 // for a small amount of time
 size_t gCnt = 0;
+uint64_t totalElapsed = 0;
+std::mutex elapsedMutex;
 
 void little_sleep(int i, std::chrono::microseconds us)
 {
@@ -22,7 +25,13 @@ void little_sleep(int i, std::chrono::microseconds us)
 		std::this_thread::yield();
 	} while (std::chrono::high_resolution_clock::now() < end);
 
-	sprintf_s(buf, "yield %d, elapsed=%llu\n", i, std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count());
+	uint64_t elapsed = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count();
+	{
+		std::lock_guard<std::mutex> lock(elapsedMutex);
+		totalElapsed += elapsed;
+	}
+
+	sprintf_s(buf, "yield %d, elapsed=%llu\n", i, elapsed);
 	std::cout << buf;
 }
 
@@ -43,5 +52,5 @@ int main()
 	std::cout << "waited for "
 		<< std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count()
 		<< " microseconds\n";
-	std::cout << gCnt << std::endl;
+	std::cout << gCnt << " " << totalElapsed << std::endl;
 }
