@@ -12,15 +12,17 @@ public:
 	size_t rdCnt = 0;
 	size_t wtCnt = 0;
 
-	std::mutex m;
+	bool isDiscard = false;
+	bool isWriting = false;
+	bool isWaiting = false;
 
-	std::mutex rdM;
-	std::mutex wtM;
-	std::mutex rwM;
+	std::mutex m;//×ÔËø
+
+	std::mutex rwM;//¶ÁÐ´Ëø
+	std::mutex wtM;//Ð´µÈ´ýËø
 
 	std::condition_variable rdCv;
-	std::condition_variable wt1Cv;
-	std::condition_variable wt2Cv;
+	std::condition_variable wtCv;
 public:
 	bool read_lock();
 	bool write_lock();

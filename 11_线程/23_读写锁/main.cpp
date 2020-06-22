@@ -13,47 +13,46 @@ string s = "hello";
 read_write_mutex m;
 mutex coutM;
 
-#define COUT_LOCK(x) { lock_guard<mutex> lk(coutM); cout << x << endl; }
+#define COUT_LOCK(x) { lock_guard<mutex> lk(coutM); cout << "[" << this_thread::get_id() << "]" << #x << endl; }
 void readFunc()
 {
 
-	COUT_LOCK(m.wtCnt << " read lock")
+	COUT_LOCK(read lock);
 	m.read_lock();
 
-	COUT_LOCK(m.wtCnt << " read")
+	COUT_LOCK(read)
 
 	m.read_unlock();
-	COUT_LOCK(m.wtCnt << " read unlock")
+	COUT_LOCK(read unlock)
 }
 
 void writeFunc()
 {
 
-	COUT_LOCK(m.rdCnt << "write lock");
+	COUT_LOCK(write lock);
 
 	if (m.write_lock())
 	{
 		std::this_thread::sleep_for(chrono::seconds(1));
 
-		COUT_LOCK(m.wtCnt << "write success");
+		COUT_LOCK(write success);
 
 		m.write_unlock();
-		COUT_LOCK(m.wtCnt << "write unlock");
+		COUT_LOCK(write unlock);
 	}
 	else
-		COUT_LOCK(m.wtCnt << "write failed");
+		COUT_LOCK(write failed);
 
 }
 
 int main()
 {
 	vector<thread> rwVec;
-	for (int i = 1; i <= 3; ++i)
+	for (int i = 1; i <= 10; ++i)
 		rwVec.emplace_back(readFunc);
 	vector<thread> wtVec;
-	for (int i = 1; i <= 3; ++i)
+	for (int i = 1; i <= 10; ++i)
 		wtVec.emplace_back(writeFunc);
-	
 	
 	for (thread& thd : rwVec)
 		thd.join();
