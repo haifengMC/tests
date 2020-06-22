@@ -92,3 +92,5 @@ bool read_write_mutex::write_unlock()
 
 	return true;
 }
+
+#undef LOCK
