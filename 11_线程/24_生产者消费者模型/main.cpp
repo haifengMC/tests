@@ -9,7 +9,7 @@ using namespace std;
 
 #define LOCK lock_guard<mutex> lk(m)
 
-class Manager
+class PhilosopherMgr
 {
 public:
 	size_t producer = 0, consumer = 0, product = 0, productMax = 0;
@@ -18,10 +18,10 @@ public:
 
 	vector<thread> pdcrThd, csmrThd;
 public:
-	Manager(const size_t& producer, const size_t& consumer, const size_t& productMax);
+	PhilosopherMgr(const size_t& producer, const size_t& consumer, const size_t& productMax);
 	void join();
 };
-Manager::Manager(const size_t& producer, const size_t& consumer, const size_t& productMax) :
+PhilosopherMgr::PhilosopherMgr(const size_t& producer, const size_t& consumer, const size_t& productMax) :
 	producer(producer), consumer(consumer), productMax(productMax)
 {
 	auto produce = [&]
@@ -78,7 +78,7 @@ Manager::Manager(const size_t& producer, const size_t& consumer, const size_t& p
 		csmrThd.emplace_back(consume);
 }
 
-void Manager::join()
+void PhilosopherMgr::join()
 {
 	for (thread& t : pdcrThd)
 		t.join();
@@ -88,7 +88,7 @@ void Manager::join()
 
 int main()
 {
-	Manager m(8, 8, 8);
+	PhilosopherMgr m(8, 8, 8);
 	m.join();
 
 	return 0;
