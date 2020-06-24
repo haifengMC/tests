@@ -10,17 +10,17 @@ using namespace std;
 mutex coutM;
 #define COUT_LK(x) { lock_guard<mutex> lk(coutM); cout << x << endl; }
 
-class Manager;
+class PhilosopherMgr;
 class Philosopher
 {
-	Manager& mgr;
+	PhilosopherMgr& mgr;
 	size_t id = 0;
 	mutex *left, *right, *last, *self;
-	condition_variable* cv, *thCv;
+	condition_variable* runCv, *thCv;
 
 	bool isRecord = false;
 public:
-	Philosopher(Manager& mgr, const size_t& id, mutex* left, mutex* right, mutex* last, mutex* self, condition_variable* cv, condition_variable* thCv) :
+	Philosopher(PhilosopherMgr& mgr, const size_t& id, mutex* left, mutex* right, mutex* last, mutex* self, condition_variable* cv, condition_variable* thCv) :
 		mgr(mgr), id(id), left(left), right(right), last(last), self(self), cv(cv), thCv(thCv) {}
 	
 	void setLast(mutex* last) { this->last = last; }
@@ -31,43 +31,43 @@ public:
 	void operator()();
 };
 
-class Manager
+class PhilosopherMgr
 {
 	size_t cnt = 0, thCnt = 0;
 	vector<mutex*> vecM;
-	vector <mutex*> vecCV;
+	vector <mutex*> vecRunCv;
 	vector<Philosopher*> vecP;
 	vector<thread> vecT;
 	condition_variable runCV, thdCV;
 
-	bool m_isRun = false;
+	bool m_isBeg = false;
 public:
-	Manager(const size_t& cnt) : cnt(cnt) 
+	PhilosopherMgr(const size_t& cnt) : cnt(cnt) 
 	{
 		vecM.reserve(cnt);
-		vecCV.reserve(cnt);
+		vecRunCv.reserve(cnt);
 		vecP.reserve(cnt);
 
 		vecM.push_back(new mutex);
-		vecCV.push_back(new mutex);
+		vecRunCv.push_back(new mutex);
 		for (size_t i = 0; i < cnt; ++i)
 		{
 			if (i + 1 < cnt)
 			{
 				vecM.push_back(new mutex);
-				vecCV.push_back(new mutex);
+				vecRunCv.push_back(new mutex);
 			}
-			mutex* last = i ? vecCV[i - 1] : NULL;
-			vecP.push_back(new Philosopher(*this, i, vecM[(i) % cnt], vecM[(i + 1) % cnt], last, vecCV[i], &runCV, &thdCV));
+			mutex* last = i ? vecRunCv[i - 1] : NULL;
+			vecP.push_back(new Philosopher(*this, i, vecM[(i) % cnt], vecM[(i + 1) % cnt], last, vecRunCv[i], &runCV, &thdCV));
 		}
-		vecP.front()->setLast(vecCV.back());
+		vecP.front()->setLast(vecRunCv.back());
 	}
 
-	~Manager()
+	~PhilosopherMgr()
 	{
 		for (auto& pM : vecM)
 			delete pM;
-		for (auto& pMLk : vecCV)
+		for (auto& pMLk : vecRunCv)
 			delete pMLk;
 		for (auto& pP : vecP)
 			delete pP;
@@ -98,10 +98,10 @@ public:
 				return thCnt + 1 >= cnt;
 			});
 
-		m_isRun = true;
+		m_isBeg = true;
 		runCV.notify_all();
 	}
-	const bool& isRun() const { return m_isRun; }
+	const bool& isBeg() const { return m_isBeg; }
 
 	void join()
 	{
@@ -123,7 +123,7 @@ void Philosopher::operator()()
 		right->lock();
 		//COUT_LK(id << " lock right");
 
-		cv->wait(lk, [&] 
+		runCv->wait(lk, [&] 
 			{ 
 				if (!isRecord)
 				{
@@ -131,7 +131,7 @@ void Philosopher::operator()()
 					mgr.recordRunThread();
 					thCv->notify_one();
 				}
-				return mgr.isRun(); 
+				return mgr.isBeg(); 
 			});
 
 		left->lock();
@@ -154,7 +154,7 @@ void Philosopher::operator()()
 
 int main()
 {
-	Manager m(100);
+	PhilosopherMgr m(100);
 
 	m.run();
 	m.join();
