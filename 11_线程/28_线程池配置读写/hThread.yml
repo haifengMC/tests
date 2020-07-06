@@ -1,0 +1,6 @@
+base:
+  minThd: 3
+  initThd: 5
+  runThd: 10
+  maxThd: 15
+t: 2
