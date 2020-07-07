@@ -1,4 +1,6 @@
 #include <iostream>
+#include <map>
+#include <string>
 
 using namespace std;
 
@@ -22,10 +24,18 @@ ENUM_END(E)
 int main()
 {
 	E e = E::a;
+	E e2 = E::b;
 	int i = (int)e;
 	cout << i << endl;
 	cout << e << endl;
-
+	cout << (e < e2) << endl;
+	map<E, string> m;
+	m[e] = "e";
+	m[e2] = "e2";
+	for (pair<E, const string>p : m)
+	{
+		cout << p.first << " " << p.second << endl;
+	}
 
 	return 0;
 }
