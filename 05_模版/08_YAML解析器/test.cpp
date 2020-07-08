@@ -196,7 +196,8 @@ bool CfgData::checkMarks(const YAML::NodeEx& node, std::list<std::string> title)
 			size_t count = 0;
 			for (YAML::const_iterator it = node.begin(); it != node.end(); ++it, ++count)
 			{
-				std::string buf = std::to_string(count);
+				std::string buf = "seq:";
+				buf.append(std::to_string(count));
 				title.back().swap(buf);
 				checkMarks(YAML::Node(*it), title);
 			}
@@ -224,7 +225,16 @@ bool CfgData::setMarks(YAML::NodeEx& node)
 	{
 		YAML::NodeEx n = node;
 		for (const std::string& tt : mark.title)
-			n.reset(n[tt]);
+		{
+			std::string seq = "seq:";
+			if (tt.compare(0, seq.size(), seq))
+				n.reset(n[tt]);
+			else
+			{
+				size_t idx = std::stoul(tt.substr(seq.size()));
+				n.reset(n[idx]);
+			}
+		}
 
 		n.SetStyle(mark.style);
 		n.SetTag(mark.tag);
@@ -243,11 +253,6 @@ bool CfgData::addMark(const YAML::NodeEx& node, const std::list<std::string>& ti
 
 	return true;
 }
-
-struct MapCfgData
-{
-	virtual const size_t& index() const = 0;
-};
 
 struct PeterCfg
 {
@@ -485,9 +490,9 @@ TEST(Tst, Tst9)
 		if (!(fileName >> node))\
 			return false;\
 		node(YAML::IOType::PutIn);\
-		checkMarks(node);\
 		REPEAT_SEP(CFGDATA_2_F, SEM_M, ##__VA_ARGS__); \
-		return true;\
+		checkMarks(node);\
+		return true; \
 	}\
 	bool className::saveCfg()\
 	{\
@@ -495,9 +500,8 @@ TEST(Tst, Tst9)
 		node(YAML::IOType::PutOut);\
 		REPEAT_SEP(CFGDATA_2_F, SEM_M, ##__VA_ARGS__); \
 		setMarks(node);\
-		return fileName << node;\
+		return fileName << node; \
 	}
-
 BEG_CFGSTRUCT_2(Tst10PeterCfg)
 {
 	size_t idx = 0;
@@ -526,7 +530,7 @@ TEST(Tst, Tst10)
 	cfg.peter.idx = 333;
 	cfg.peter.sex = "bbb";
 	cfg.peter.hight = 444;
-	cfg.saveCfg();
+	//cfg.saveCfg();
 }
 
 BEG_CFGDATA_2(AsyncBufferMapTestCfg)
@@ -541,6 +545,114 @@ END_CFGDATA_2(AsyncBufferMapTestCfg, pointSize, vertice, colors)
 TEST(Tst, Tst11)
 {
 	AsyncBufferMapTestCfg cfg("AsyncBufferMapData.yml");
+	cfg.loadCfg();
+	//cfg.saveCfg();
+}
+
+BEG_CFGSTRUCT_2(MapCfgData)
+{
+	size_t id;
+	const size_t& index() const { return id; }
+}
+END_CFGSTRUCT_2(MapCfgData, id)
+
+template <>
+struct YAML::convert<std::map<size_t, MapCfgData>>
+{
+	static Node encode(const std::map<size_t, MapCfgData>& rhs)
+	{
+		Node node(NodeType::Sequence);
+		for (typename std::map<size_t, MapCfgData>::const_iterator it = rhs.begin();
+			it != rhs.end(); ++it)
+			node.push_back(it->second);
+		return node;
+	}
+
+	static bool decode(const Node& node, std::map<size_t, MapCfgData>& rhs)
+	{
+		if (!node.IsSequence())
+			return false;
+
+		rhs.clear();
+		for (const_iterator it = node.begin(); it != node.end(); ++it)
+		{
+			MapCfgData tmp;
+			if (convert<MapCfgData>::decode(*it, tmp))
+				rhs[tmp.index()] = tmp;
+		}
+		return true;
+	}
+};
+
+BEG_CFGDATA_2(Tst12DataCfg)
+{
+	DECL_CFGDATA(Tst12DataCfg);
+	Tst10PeterCfg peter;
+	std::vector<std::string> jone;
+	std::map<size_t, MapCfgData> lucy;
+}
+END_CFGDATA_2(Tst12DataCfg, peter, jone, lucy)
+
+TEST(Tst, Tst12)
+{
+	Tst12DataCfg cfg("Tst12.yml");
+	cfg.loadCfg();
+	cfg.saveCfg();
+}
+
+#define DECL_CFGMAP(KTy, KVa) \
+	const KTy& index() const { return KVa; }
+#define BEG_CFGMAP(className) \
+	BEG_CFGSTRUCT_2(className)
+#define ENd
+#define END_CFGMAP(className, KTy, KVa, ...) ;\
+	END_CFGSTRUCT_2(className,  KVa, ##__VA_ARGS__)\
+	template <>\
+	struct YAML::convert<std::map<KTy, className>>\
+	{\
+		static Node encode(const std::map<KTy, className>& rhs)\
+		{\
+			Node node(NodeType::Sequence);\
+			for (typename std::map<KTy, className>::const_iterator it = rhs.begin();\
+				it != rhs.end(); ++it)\
+				node.push_back(it->second);\
+			return node;\
+		}\
+		static bool decode(const Node& node, std::map<KTy, className>& rhs)\
+		{\
+			if (!node.IsSequence())\
+				return false;\
+			rhs.clear();\
+			for (const_iterator it = node.begin(); it != node.end(); ++it)\
+			{\
+				className tmp;\
+				if (convert<className>::decode(*it, tmp))\
+					rhs[tmp.index()] = tmp;\
+			}\
+			return true;\
+		}\
+	};
+
+BEG_CFGMAP(Tst13MapCfgData)
+{
+	DECL_CFGMAP(size_t, id);
+
+	size_t id;
+}
+END_CFGMAP(Tst13MapCfgData, size_t, id)
+
+BEG_CFGDATA_2(Tst13DataCfg)
+{
+	DECL_CFGDATA(Tst13DataCfg);
+	Tst10PeterCfg peter;
+	std::vector<std::string> jone;
+	std::map<size_t, Tst13MapCfgData> lucy;
+}
+END_CFGDATA_2(Tst13DataCfg, peter, jone, lucy)
+
+TEST(Tst, Tst13)
+{
+	Tst13DataCfg cfg("Tst13.yml");
 	cfg.loadCfg();
 	cfg.saveCfg();
 }
