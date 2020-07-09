@@ -9,16 +9,24 @@ namespace A
 	public:
 		void func();
 	};
+
+	class C;
 }
 
 
 
 namespace B
 {
+
 	void ::A::A1::func()
 	{
 		cout << "B ::A::A1::func" << endl;
 	}
+
+	class ::A::C
+	{
+
+	};
 }
 
 
