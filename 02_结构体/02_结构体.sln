@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01_初始化列表", "01_�
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02_枚举", "02_枚举\02_枚举.vcxproj", "{B00F168B-2E54-4215-96E5-52087582FD42}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03_没有默认构造函数的类类型成员初始化", "03_没有默认构造函数的类类型成员初始化\03_没有默认构造函数的类类型成员初始化.vcxproj", "{C99B91CD-52A2-4CC5-A33E-70C848039748}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{B00F168B-2E54-4215-96E5-52087582FD42}.Release|x64.Build.0 = Release|x64
 		{B00F168B-2E54-4215-96E5-52087582FD42}.Release|x86.ActiveCfg = Release|Win32
 		{B00F168B-2E54-4215-96E5-52087582FD42}.Release|x86.Build.0 = Release|Win32
+		{C99B91CD-52A2-4CC5-A33E-70C848039748}.Debug|x64.ActiveCfg = Debug|x64
+		{C99B91CD-52A2-4CC5-A33E-70C848039748}.Debug|x64.Build.0 = Debug|x64
+		{C99B91CD-52A2-4CC5-A33E-70C848039748}.Debug|x86.ActiveCfg = Debug|Win32
+		{C99B91CD-52A2-4CC5-A33E-70C848039748}.Debug|x86.Build.0 = Debug|Win32
+		{C99B91CD-52A2-4CC5-A33E-70C848039748}.Release|x64.ActiveCfg = Release|x64
+		{C99B91CD-52A2-4CC5-A33E-70C848039748}.Release|x64.Build.0 = Release|x64
+		{C99B91CD-52A2-4CC5-A33E-70C848039748}.Release|x86.ActiveCfg = Release|Win32
+		{C99B91CD-52A2-4CC5-A33E-70C848039748}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
