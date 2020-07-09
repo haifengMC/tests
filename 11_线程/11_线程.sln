@@ -59,6 +59,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "27_线程池", "27_线程�
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "28_线程池配置读写", "28_线程池配置读写\28_线程池配置读写.vcxproj", "{B880DF33-8D8C-4981-9828-9DE21737B008}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "29_线程池静态库", "29_线程池静态库\29_线程池静态库.vcxproj", "{B2223277-FAF3-4D5F-A0D8-CAFE77FEE48B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -291,6 +293,14 @@ Global
 		{B880DF33-8D8C-4981-9828-9DE21737B008}.Release|x64.Build.0 = Release|x64
 		{B880DF33-8D8C-4981-9828-9DE21737B008}.Release|x86.ActiveCfg = Release|Win32
 		{B880DF33-8D8C-4981-9828-9DE21737B008}.Release|x86.Build.0 = Release|Win32
+		{B2223277-FAF3-4D5F-A0D8-CAFE77FEE48B}.Debug|x64.ActiveCfg = Debug|x64
+		{B2223277-FAF3-4D5F-A0D8-CAFE77FEE48B}.Debug|x64.Build.0 = Debug|x64
+		{B2223277-FAF3-4D5F-A0D8-CAFE77FEE48B}.Debug|x86.ActiveCfg = Debug|Win32
+		{B2223277-FAF3-4D5F-A0D8-CAFE77FEE48B}.Debug|x86.Build.0 = Debug|Win32
+		{B2223277-FAF3-4D5F-A0D8-CAFE77FEE48B}.Release|x64.ActiveCfg = Release|x64
+		{B2223277-FAF3-4D5F-A0D8-CAFE77FEE48B}.Release|x64.Build.0 = Release|x64
+		{B2223277-FAF3-4D5F-A0D8-CAFE77FEE48B}.Release|x86.ActiveCfg = Release|Win32
+		{B2223277-FAF3-4D5F-A0D8-CAFE77FEE48B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
