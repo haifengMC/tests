@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03_没有默认构造函数
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04_构造函数中的return", "04_构造函数中的return\04_构造函数中的return.vcxproj", "{C9121A27-4587-472D-9AF0-6BED6FF16905}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "05_命名空间中定义其他命名空间成员函数", "05_命名空间中定义其他命名空间成员函数\05_命名空间中定义其他命名空间成员函数.vcxproj", "{707EAD4E-DBF6-45F1-B694-86E203961508}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -51,6 +53,14 @@ Global
 		{C9121A27-4587-472D-9AF0-6BED6FF16905}.Release|x64.Build.0 = Release|x64
 		{C9121A27-4587-472D-9AF0-6BED6FF16905}.Release|x86.ActiveCfg = Release|Win32
 		{C9121A27-4587-472D-9AF0-6BED6FF16905}.Release|x86.Build.0 = Release|Win32
+		{707EAD4E-DBF6-45F1-B694-86E203961508}.Debug|x64.ActiveCfg = Debug|x64
+		{707EAD4E-DBF6-45F1-B694-86E203961508}.Debug|x64.Build.0 = Debug|x64
+		{707EAD4E-DBF6-45F1-B694-86E203961508}.Debug|x86.ActiveCfg = Debug|Win32
+		{707EAD4E-DBF6-45F1-B694-86E203961508}.Debug|x86.Build.0 = Debug|Win32
+		{707EAD4E-DBF6-45F1-B694-86E203961508}.Release|x64.ActiveCfg = Release|x64
+		{707EAD4E-DBF6-45F1-B694-86E203961508}.Release|x64.Build.0 = Release|x64
+		{707EAD4E-DBF6-45F1-B694-86E203961508}.Release|x86.ActiveCfg = Release|Win32
+		{707EAD4E-DBF6-45F1-B694-86E203961508}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
