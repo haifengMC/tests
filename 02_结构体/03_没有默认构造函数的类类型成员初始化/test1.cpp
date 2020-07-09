@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include "test2.h"
 #include "test1.h"
 
@@ -9,4 +10,8 @@ A::~A() { delete b; }
 void A::printB()
 {
 	VA_B->printB();
+}
+void A::printS()
+{
+	std::cout << s << std::endl;
 }
