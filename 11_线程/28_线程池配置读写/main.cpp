@@ -42,12 +42,12 @@ END_CFGMAP(TaskMgrCfg, TaskMgrPriority, priority, tType)
 
 BEG_CFGDATA(TreadPoolCfg)
 {
-	DECL_CFGDATA(TreadPoolCfg);
+	DECL_CFGDATA(TreadPoolCfg, baseCfg, taskMgrCfg);
 
 	TreadBaseCfg baseCfg;
 	TaskMgrCfg taskMgrCfg;
 }
-END_CFGDATA(TreadPoolCfg, baseCfg, taskMgrCfg)
+END_CFGDATA()
 
 
 using namespace std;
