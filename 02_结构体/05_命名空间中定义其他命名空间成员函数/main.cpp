@@ -4,37 +4,24 @@ using namespace std;
 
 namespace A
 {
-	class A1
-	{
-	public:
-		void func();
-	};
-
-	class C;
+	void func() { cout << "A" << endl; }
 }
-
-
-
 namespace B
 {
-
-	void ::A::A1::func()
+	namespace A
 	{
-		cout << "B ::A::A1::func" << endl;
+		void func() { cout << "B A" << endl; }
 	}
-
-	class ::A::C
+	void printFunc()
 	{
-
-	};
+		A::func();
+		::A::func();
+	}
 }
-
-
-
 
 int main()
 {
-
+	B::printFunc();
 
 	return 0;
 }
