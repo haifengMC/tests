@@ -40,9 +40,9 @@ BEG_CFGMAP(TaskMgrCfg)
 }
 END_CFGMAP(TaskMgrCfg, TaskMgrPriority, priority, tType)
 
-BEG_CFGDATA(TreadPoolCfg)
+BEG_CFGDATA(ThreadPoolCfg)
 {
-	DECL_CFGDATA(TreadPoolCfg, baseCfg, taskMgrCfg);
+	DECL_CFGDATA(ThreadPoolCfg, baseCfg, taskMgrCfg);
 
 	TreadBaseCfg baseCfg;
 	TaskMgrCfg taskMgrCfg;
@@ -54,7 +54,7 @@ using namespace std;
 
 int main()
 {
-	TreadPoolCfg t("hThread.yml");
+	ThreadPoolCfg t("hThread.yml");
 	t.loadCfg();
 
 	//TaskMgrCfg2 c2("hThread.yml");
