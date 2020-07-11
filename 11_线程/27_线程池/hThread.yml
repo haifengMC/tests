@@ -1,0 +1,13 @@
+baseCfg:
+  minThd: 3
+  initThd: 5
+  runThd: 10
+  maxThd: 15
+taskMgrCfg:   
+  - {tType: 1, priority: 0}
+  - {tType: 1, priority: 1}
+  - {tType: 1, priority: 2}
+  - {tType: 1, priority: 3}
+  - {tType: 1, priority: 4}
+  - {tType: 1, priority: 5}
+  - {tType: 1, priority: 6}

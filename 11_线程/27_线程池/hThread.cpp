@@ -1,25 +1,12 @@
+#include "global.h"
 #include "hThread.h"
+#include "hThreadPoolMgr.h"
 
-namespace hTread
+DECL_ENUM(TaskMgrType, None, Initiative, Passive)
+DECL_ENUM(TaskMgrPriority, Max, Highest, Higher, High, Normal, Low, Lower, Lowest)
+
+namespace hThread
 {
-	void hTread::TreadPool::init()
-	{
-		for (size_t p = TaskMgrPriority::Highest; p < TaskMgrPriority::Max; ++p)
-		{
-			TaskMgrBase(p, 1);
-		}
-	}
 
-	void hTread::TreadPool::final()
-	{
-	}
-
-	void hTread::TreadPool::run()
-	{
-	}
-
-	void hTread::TreadPool::stop()
-	{
-	}
 }
 
