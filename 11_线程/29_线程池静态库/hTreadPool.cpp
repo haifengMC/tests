@@ -3,13 +3,14 @@
 
 namespace hThread
 {
-	TreadPool::TreadPool() : _invalid(false), busyThd(0)//, cfgData("hThread.yml")
+	TreadPool::TreadPool() : _invalid(false), busyThd(0), cfgData("hThread.yml")
 	{
-		//if (!cfgData.loadCfg())
+		if (!cfgData.loadCfg())
 		{//Err
+			_invalid = true;
 			return;
 		}
-		//init();
+		init();
 	}
 
 	void TreadPool::init()

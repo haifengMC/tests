@@ -1,5 +1,4 @@
 #pragma once
-#include "hConfig.h"
 
 BEG_CFGSTRUCT(TreadBaseCfg)
 {
@@ -40,12 +39,12 @@ END_CFGSTRUCT(TreadBaseCfg, minThd, initThd, runThd, maxThd)
 //}
 //END_CFGMAP(TaskMgrCfg, TaskMgrPriority, priority, tType)
 
-BEG_CFGDATA(TreadPoolCfg)
+BEG_CFGDATA(ThreadPoolCfg)
 {
-	DECL_CFGDATA(TreadPoolCfg);
+	DECL_CFGDATA(ThreadPoolCfg);
 
 	TreadBaseCfg baseCfg;
 	//TaskMgrCfg taskMgrCfg;
 }
-END_CFGDATA(TreadPoolCfg, baseCfg)
+END_CFGDATA(ThreadPoolCfg, baseCfg)
 

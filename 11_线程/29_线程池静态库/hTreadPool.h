@@ -9,7 +9,7 @@ namespace hThread
 		size_t busyThd;
 		std::vector<TaskMgr> taskMgrs;
 
-		//TreadPoolCfg cfgData;
+		ThreadPoolCfg cfgData;
 	public:
 		TreadPool();
 		void init();
