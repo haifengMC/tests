@@ -9,5 +9,5 @@ TEST_INIT(Tst, testAll)
 
 TEST(Tst, Tst1)
 {
-	hThread::TreadPool& pPool = sTreadPool;
+	hThread::ThreadPool& pPool = sThreadPool;
 }

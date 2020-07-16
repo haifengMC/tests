@@ -108,7 +108,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>E:\opengl\routines\lib;E:\yaml\yaml-cpp-master\bin\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>yaml-cppd.lib;hYaml_d.lib;vermilion_d.lib;opengl32.lib;glu32.lib;glfw3_d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>yaml-cppd.lib;hYaml_d.lib;hTool_d.lib;vermilion_d.lib;opengl32.lib;glu32.lib;glfw3_d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClInclude Include="hTask.h" />
     <ClInclude Include="hTaskMgr.h" />
+    <ClInclude Include="hTaskMgrImpl.h" />
     <ClInclude Include="hTaskNode.h" />
     <ClInclude Include="hThread.h" />
     <ClInclude Include="hThreadCfg.h" />
