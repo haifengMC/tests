@@ -52,9 +52,12 @@ int main()
 	c(m) << endl;
 #endif
 	Container c(cout);
+
 	vector<int> v = { 1, 2, 3, 4, 5, 6 };
 	c(v) << endl;
 	swap(v[2], v[4]);
+	c(v) << endl;
+	swap(v.front(), v.back());
 	c(v) << endl;
 
 	return 0;
