@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04_一维数组指针的赋
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "05_打印二维数组", "05_打印二维数组\05_打印二维数组.vcxproj", "{8CC7E713-E847-4C31-BBCB-D84BE5192FCA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "06_数组初始化", "06_数组初始化\06_数组初始化.vcxproj", "{3BEF28EC-B456-45A9-8027-3C6DB0C52E84}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -61,6 +63,14 @@ Global
 		{8CC7E713-E847-4C31-BBCB-D84BE5192FCA}.Release|x64.Build.0 = Release|x64
 		{8CC7E713-E847-4C31-BBCB-D84BE5192FCA}.Release|x86.ActiveCfg = Release|Win32
 		{8CC7E713-E847-4C31-BBCB-D84BE5192FCA}.Release|x86.Build.0 = Release|Win32
+		{3BEF28EC-B456-45A9-8027-3C6DB0C52E84}.Debug|x64.ActiveCfg = Debug|x64
+		{3BEF28EC-B456-45A9-8027-3C6DB0C52E84}.Debug|x64.Build.0 = Debug|x64
+		{3BEF28EC-B456-45A9-8027-3C6DB0C52E84}.Debug|x86.ActiveCfg = Debug|Win32
+		{3BEF28EC-B456-45A9-8027-3C6DB0C52E84}.Debug|x86.Build.0 = Debug|Win32
+		{3BEF28EC-B456-45A9-8027-3C6DB0C52E84}.Release|x64.ActiveCfg = Release|x64
+		{3BEF28EC-B456-45A9-8027-3C6DB0C52E84}.Release|x64.Build.0 = Release|x64
+		{3BEF28EC-B456-45A9-8027-3C6DB0C52E84}.Release|x86.ActiveCfg = Release|Win32
+		{3BEF28EC-B456-45A9-8027-3C6DB0C52E84}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
