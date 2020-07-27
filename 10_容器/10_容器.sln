@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04_array测试", "04_array�
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "05_交换容器中的两个值", "05_交换容器中的两个值\05_交换容器中的两个值.vcxproj", "{1B2C3FFE-719F-40E5-A128-360E863D9C04}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "06_mutable与容器", "06_mutable与容器\06_mutable与容器.vcxproj", "{8C2A3619-775F-4EBA-A6B5-F97BB35B12D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -61,6 +63,14 @@ Global
 		{1B2C3FFE-719F-40E5-A128-360E863D9C04}.Release|x64.Build.0 = Release|x64
 		{1B2C3FFE-719F-40E5-A128-360E863D9C04}.Release|x86.ActiveCfg = Release|Win32
 		{1B2C3FFE-719F-40E5-A128-360E863D9C04}.Release|x86.Build.0 = Release|Win32
+		{8C2A3619-775F-4EBA-A6B5-F97BB35B12D8}.Debug|x64.ActiveCfg = Debug|x64
+		{8C2A3619-775F-4EBA-A6B5-F97BB35B12D8}.Debug|x64.Build.0 = Debug|x64
+		{8C2A3619-775F-4EBA-A6B5-F97BB35B12D8}.Debug|x86.ActiveCfg = Debug|Win32
+		{8C2A3619-775F-4EBA-A6B5-F97BB35B12D8}.Debug|x86.Build.0 = Debug|Win32
+		{8C2A3619-775F-4EBA-A6B5-F97BB35B12D8}.Release|x64.ActiveCfg = Release|x64
+		{8C2A3619-775F-4EBA-A6B5-F97BB35B12D8}.Release|x64.Build.0 = Release|x64
+		{8C2A3619-775F-4EBA-A6B5-F97BB35B12D8}.Release|x86.ActiveCfg = Release|Win32
+		{8C2A3619-775F-4EBA-A6B5-F97BB35B12D8}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
