@@ -144,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="hRWLock.cpp" />
     <ClCompile Include="hTaskMgr.cpp" />
     <ClCompile Include="hThread.cpp" />
     <ClCompile Include="hThreadPoolMgr.cpp" />
@@ -152,6 +153,7 @@
     <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="hRWLock.h" />
     <ClInclude Include="hTask.h" />
     <ClInclude Include="hTaskMgr.h" />
     <ClInclude Include="hTaskMgrImpl.h" />
