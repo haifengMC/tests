@@ -35,6 +35,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "15_唯一ID生成器", "15_
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "16_可变参模版函数应用", "16_可变参模版函数应用\16_可变参模版函数应用.vcxproj", "{9204B1DB-4E07-4DFE-AB40-94157879F148}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "17_模拟任务链", "17_模拟任务链\17_模拟任务链.vcxproj", "{EE932927-CD05-42C3-AF87-5F0AEA56EE53}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -171,6 +173,14 @@ Global
 		{9204B1DB-4E07-4DFE-AB40-94157879F148}.Release|x64.Build.0 = Release|x64
 		{9204B1DB-4E07-4DFE-AB40-94157879F148}.Release|x86.ActiveCfg = Release|Win32
 		{9204B1DB-4E07-4DFE-AB40-94157879F148}.Release|x86.Build.0 = Release|Win32
+		{EE932927-CD05-42C3-AF87-5F0AEA56EE53}.Debug|x64.ActiveCfg = Debug|x64
+		{EE932927-CD05-42C3-AF87-5F0AEA56EE53}.Debug|x64.Build.0 = Debug|x64
+		{EE932927-CD05-42C3-AF87-5F0AEA56EE53}.Debug|x86.ActiveCfg = Debug|Win32
+		{EE932927-CD05-42C3-AF87-5F0AEA56EE53}.Debug|x86.Build.0 = Debug|Win32
+		{EE932927-CD05-42C3-AF87-5F0AEA56EE53}.Release|x64.ActiveCfg = Release|x64
+		{EE932927-CD05-42C3-AF87-5F0AEA56EE53}.Release|x64.Build.0 = Release|x64
+		{EE932927-CD05-42C3-AF87-5F0AEA56EE53}.Release|x86.ActiveCfg = Release|Win32
+		{EE932927-CD05-42C3-AF87-5F0AEA56EE53}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
