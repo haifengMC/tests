@@ -17,22 +17,22 @@ mutex coutM;
 void readFunc()
 {
 
-	COUT_LOCK(read lock   :, m.rdCnt << " " << m.wtCnt << " " << m.waiting);
+	COUT_LOCK(read lock---:, m.rdCnt << " " << m.wtCnt << " " << m.waiting);
 	m.readLock();
-	COUT_LOCK(read        :, m.rdCnt << " " << m.wtCnt << " " << m.waiting);
+	COUT_LOCK(read--------:, m.rdCnt << " " << m.wtCnt << " " << m.waiting);
 	m.readUnlock();
-	COUT_LOCK(read unlock :, m.rdCnt << " " << m.wtCnt << " " << m.waiting)
+	COUT_LOCK(read unlock-:, m.rdCnt << " " << m.wtCnt << " " << m.waiting)
 }
 
 void writeFunc()
 {
 
-	COUT_LOCK(write lock   :, m.rdCnt << " " << m.wtCnt << " " << m.waiting);
+	COUT_LOCK(write lock---:, m.rdCnt << " " << m.wtCnt << " " << m.waiting);
 	m.writeLock();
-	std::this_thread::sleep_for(chrono::seconds(1));
-	COUT_LOCK(write        :, m.rdCnt << " " << m.wtCnt << " " << m.waiting);
+	std::this_thread::sleep_for(chrono::microseconds(20));
+	COUT_LOCK(write--------:, m.rdCnt << " " << m.wtCnt << " " << m.waiting);
 	m.writeUnlock();
-	COUT_LOCK(write unlock :, m.rdCnt << " " << m.wtCnt << " " << m.waiting);
+	COUT_LOCK(write unlock-:, m.rdCnt << " " << m.wtCnt << " " << m.waiting);
 
 }
 
@@ -49,4 +49,9 @@ TEST(Tst, Tst1)
 		thd.join();
 	for (thread& thd : wtVec)
 		thd.join();
+}
+
+TEST(Tst, Tst1)
+{
+
 }

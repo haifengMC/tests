@@ -3,7 +3,7 @@
 
 namespace hThread
 {
-	TreadPool::TreadPool() : _invalid(false), busyThd(0), cfgData("hThread.yml")
+	ThreadPool::ThreadPool() : _invalid(false), busyThd(0), cfgData("hThread.yml")
 	{
 		if (!cfgData.loadCfg())
 		{//Err
@@ -13,21 +13,21 @@ namespace hThread
 		init();
 	}
 
-	void TreadPool::init()
+	void ThreadPool::init()
 	{
 		//for (const TaskMgrCfgItem& item : cfgData.taskMgrCfg)
 		//	taskMgrs.emplace_back(item.second);
 	}
 
-	void TreadPool::final()
+	void ThreadPool::final()
 	{
 	}
 
-	void TreadPool::run()
+	void ThreadPool::run()
 	{
 	}
 
-	void TreadPool::stop()
+	void ThreadPool::stop()
 	{
 	}
 }

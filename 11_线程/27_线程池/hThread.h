@@ -5,4 +5,5 @@
 #include "hTask.h"
 #include "hTaskMgr.h"
 #include "hTaskMgrImpl.h"
+#include "hRWLock.h"
 #include "hThreadPool.h"

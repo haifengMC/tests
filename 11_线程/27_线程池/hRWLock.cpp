@@ -66,7 +66,7 @@ namespace hThread
 			rwM.unlock();
 
 			if (waiting)
-				wtCv.notify_one();
+				wtCv.notify_all();
 			else if (rdCnt)
 				rdCv.notify_all();
 		}
