@@ -37,3 +37,14 @@ TEST(Tst, Tst2)
 	RANDOM(hTool::RandomType::Normal, randNum, 1, 6);
 	printRand(randNum);
 }
+
+TEST(Tst, Tst3)
+{
+	int i = 0;
+	for (size_t n = 20; n > 0; --n)
+	{
+		RANDOM(hTool::RandomType::UniformInt, &i, 1, 1, n);
+		std::cout << i << " ";
+	}
+	std::cout << std::endl;
+}

@@ -7,8 +7,34 @@ namespace hTool
 	enum class RandomType : size_t
 	{
 		UniformInt,		//平均分布(整数)
+		UniformIntDe,	//平均分布(整数去重)
 		UniformReal,	//平均分布(实数)
 		Normal,			//正态分布
+	};
+
+	template <typename T>
+	class hRWeight
+	{
+		
+		const size_t weight;
+		std::vector<T> tVec;
+
+		size_t total = 0;
+	public:
+		hRWeight(const size_t& weight);
+
+		size_t& getTotal() const { return total; }
+		bool getRandVal(T* pT, size_t& idx, const size_t& randWeight);
+	};
+
+	template <typename T>
+	class hRWeightMap
+	{
+		size_t total = 0;
+		std::map<size_t, hRWeight> weights;
+	public:
+		size_t& getTotal() const { return total; }
+		bool getRandVal(T* pT, size_t& idx, const size_t& randWeight);
 	};
 
 	class hRandom : public Singleton<hRandom>
@@ -26,6 +52,8 @@ namespace hTool
 		size_t operator()(const RandomType& type, T* buf, size_t n, const double& min, const double& max);
 		template <typename T, size_t N>
 		size_t operator()(const RandomType& type, T (&buf)[N], const double& min, const double& max);
+		template <typename T>
+		size_t operator()(const RandomType& type, T* buf, size_t bufN, hRWeightMap<T>& weightM);
 	};
 #define RANDOM hTool::hRandom::getMe()
 }
