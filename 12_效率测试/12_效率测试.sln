@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01_if与switch比较", "01_
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02_整体拷贝和分步拷贝", "02_整体拷贝和分步拷贝\02_整体拷贝和分步拷贝.vcxproj", "{0A211E47-8C7F-430B-8B21-CC4643667BDA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03_前置++与后置++", "03_前置++与后置++\03_前置++与后置++.vcxproj", "{478C905C-B27C-4304-8C15-9D3125334231}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{0A211E47-8C7F-430B-8B21-CC4643667BDA}.Release|x64.Build.0 = Release|x64
 		{0A211E47-8C7F-430B-8B21-CC4643667BDA}.Release|x86.ActiveCfg = Release|Win32
 		{0A211E47-8C7F-430B-8B21-CC4643667BDA}.Release|x86.Build.0 = Release|Win32
+		{478C905C-B27C-4304-8C15-9D3125334231}.Debug|x64.ActiveCfg = Debug|x64
+		{478C905C-B27C-4304-8C15-9D3125334231}.Debug|x64.Build.0 = Debug|x64
+		{478C905C-B27C-4304-8C15-9D3125334231}.Debug|x86.ActiveCfg = Debug|Win32
+		{478C905C-B27C-4304-8C15-9D3125334231}.Debug|x86.Build.0 = Debug|Win32
+		{478C905C-B27C-4304-8C15-9D3125334231}.Release|x64.ActiveCfg = Release|x64
+		{478C905C-B27C-4304-8C15-9D3125334231}.Release|x64.Build.0 = Release|x64
+		{478C905C-B27C-4304-8C15-9D3125334231}.Release|x86.ActiveCfg = Release|Win32
+		{478C905C-B27C-4304-8C15-9D3125334231}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
