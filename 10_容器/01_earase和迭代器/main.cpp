@@ -22,16 +22,16 @@ ostream& operator<<(ostream& os, const vector<T>& list)
 
 int main()
 {
-	list<int> l = { 1, 2, 3, 4, 5 };
-	cout << l << endl;
-	for (auto it = l.begin(); it != l.end();)
+	list<int> l1 = { 1, 2, 3, 4, 5 };
+	cout << l1 << endl;
+	for (auto it = l1.begin(); it != l1.end();)
 	{
 		if (2 == *it || 4 == *it)
-			it = l.erase(it);
+			it = l1.erase(it);
 		else
 			++it;
 	}
-	cout << l << endl;
+	cout << l1 << endl;
 
 	vector<int> v = { 1, 2, 3, 4, 5 };
 	cout << v << endl;
@@ -43,4 +43,15 @@ int main()
 			++it;
 	}
 	cout << v << endl;
+
+	list<int> l2 = { 1, 2, 3, 4, 5 };
+	cout << l2 << endl;
+	for (auto it = l2.begin();
+		it != l2.end();
+		2 == *it || 3 == *it ? it = l2.erase(it) : ++it)
+	{
+		//do something
+	}
+
+	cout << l2 << endl;
 }
