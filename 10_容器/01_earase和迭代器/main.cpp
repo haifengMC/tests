@@ -51,6 +51,8 @@ int main()
 		2 == *it || 3 == *it ? it = l2.erase(it) : ++it)
 	{
 		//do something
+		if (4 == *it)
+			*it = 3;
 	}
 
 	cout << l2 << endl;
