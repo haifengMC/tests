@@ -40,6 +40,27 @@ TEST(Tst, Tst2)
 
 TEST(Tst, Tst3)
 {
+	hTool::hRWeight<int> hrw1(10);
+	hrw1 += {1, 2, 3};
+	hTool::hRWeight<int> hrw2(40);
+	hrw2 += {10, 20, 30};
+	hTool::hRWeight<int> hrw3(160);
+	hrw3 += {100, 200, 300};
+
+	hTool::hRWeightMap<int> hrwm = { hrw1 ,hrw2 ,hrw3 };
+	std::cout << hrwm << std::endl;
+
+	int buf[11] = {};
+	std::cout << RANDOM(hTool::RandomType::UniformDeInt, buf, hrwm) << std::endl;
+	for (int& i : buf)
+		std::cout << i << " ";
+	std::cout << std::endl;
+
+	std::cout << hrwm << std::endl;
+}
+
+TEST(Tst, Tst4)
+{
 	int i = 0;
 	for (size_t n = 20; n > 0; --n)
 	{
