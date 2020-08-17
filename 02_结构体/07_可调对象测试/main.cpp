@@ -7,14 +7,16 @@ using namespace std;
 
 map<string, function<int(int, int)>> funMap;
 
-int add(int a, int b) { return a + b; }
-
-class Mul
-{
-	int operator()(int a, int b) const { return a * b; }
-};
+int add(int a, int b) { return a + b; };
 
 int mul(int a, int b) { return a * b; }
+
+
+class Div
+{
+public:
+	int operator()(int a, int b) const { return a / b; }
+};
 
 int main()
 {
@@ -23,10 +25,15 @@ int main()
 	//Mul mul;
 	int (*pMul)(int, int) = mul;
 	funMap["mul"] = mul;
+	Div div;
+	funMap["div"] = div;
 
-	cout << funMap["add"](10, 20) << endl;
-	cout << funMap["sub"](10, 20) << endl;
-	cout << funMap["mul"](10, 20) << endl;
+	cout << funMap["add"](10, 20) << " " << (bool)funMap["add"] << endl;
+	cout << funMap["sub"](10, 20) << " " << (bool)funMap["sub"]<< endl;
+	cout << funMap["mul"](10, 20) << " " << (bool)funMap["mul"]<< endl;
+	cout << funMap["div"](10, 20) << " " << (bool)funMap["div"]<< endl;
+	cout << (bool)(funMap["fail"] = funMap["add"]) << " " << 
+		(bool)funMap["fail"] << endl;
 
 	return 0;
 }
