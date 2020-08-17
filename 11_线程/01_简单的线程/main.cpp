@@ -30,8 +30,20 @@ void f2(int& n)
 	}
 }
 
+class A
+{
+	function<void()> fa;
+	std::thread t;
+public:
+	A() : fa([&]() { cout << "A" << endl; }), t(fa) {}
+	~A() { t.join(); }
+
+};
+
 int main()
 {
+	A a;
+
 	int n = 0;
 	std::thread t1; // t1 is not a thread
 	std::thread t2(f1, n + 1); // pass by value
