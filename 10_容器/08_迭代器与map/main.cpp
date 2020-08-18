@@ -15,7 +15,7 @@ public:
 	map<int, A>& mapA;
 	map<int, A>::iterator it;
 
-	A(int id, map<int, A>& mapA) : id(id), mapA(mapA) {}
+	A(int id, map<int, A>& mapA) : id(id), mapA(mapA), it(mapA.end()) { cout << (it == mapA.end()) << endl; }
 	A(const A& a) : id(a.id), mapA(a.mapA), it(a.it) {}
 
 	void erase() { mapA.erase(it); }
