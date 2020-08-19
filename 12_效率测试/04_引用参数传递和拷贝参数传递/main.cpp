@@ -16,15 +16,15 @@ class A
 	int i6;
 	int i7;
 	int i8;
-} a;
+} *a;
 
-void func1(const A& i) {}
-void func2(A i) {}
+void func1(int64_t* & i) {}
+void func2(int64_t* i) {}
 
-int64_t i = 0;
+int64_t* p = 0;
 
 #define CNT 5
-#define REPEAT_F(n, X) COMB(func, X)(a)
+#define REPEAT_F(n, X) COMB(func, X)(p)
 
 TEST(Tst, Tst0)
 {
