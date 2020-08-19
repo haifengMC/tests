@@ -21,6 +21,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "08_迭代器与map", "08_�
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "09_优化唯一id生成器", "09_优化唯一id生成器\09_优化唯一id生成器.vcxproj", "{13FF4174-6346-4784-995F-1F99BB7D9357}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "10_swap测试", "10_swap测试\10_swap测试.vcxproj", "{C7F4D611-006D-4FD9-9F40-68AA8536A586}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -101,6 +103,14 @@ Global
 		{13FF4174-6346-4784-995F-1F99BB7D9357}.Release|x64.Build.0 = Release|x64
 		{13FF4174-6346-4784-995F-1F99BB7D9357}.Release|x86.ActiveCfg = Release|Win32
 		{13FF4174-6346-4784-995F-1F99BB7D9357}.Release|x86.Build.0 = Release|Win32
+		{C7F4D611-006D-4FD9-9F40-68AA8536A586}.Debug|x64.ActiveCfg = Debug|x64
+		{C7F4D611-006D-4FD9-9F40-68AA8536A586}.Debug|x64.Build.0 = Debug|x64
+		{C7F4D611-006D-4FD9-9F40-68AA8536A586}.Debug|x86.ActiveCfg = Debug|Win32
+		{C7F4D611-006D-4FD9-9F40-68AA8536A586}.Debug|x86.Build.0 = Debug|Win32
+		{C7F4D611-006D-4FD9-9F40-68AA8536A586}.Release|x64.ActiveCfg = Release|x64
+		{C7F4D611-006D-4FD9-9F40-68AA8536A586}.Release|x64.Build.0 = Release|x64
+		{C7F4D611-006D-4FD9-9F40-68AA8536A586}.Release|x86.ActiveCfg = Release|Win32
+		{C7F4D611-006D-4FD9-9F40-68AA8536A586}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
