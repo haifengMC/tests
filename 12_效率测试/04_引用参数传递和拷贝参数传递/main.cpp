@@ -18,13 +18,13 @@ class A
 	int i8;
 } *a;
 
-void func1(int64_t* & i) {}
-void func2(int64_t* i) {}
+void func1(A* & i) {}
+void func2(A* i) {}
 
 int64_t* p = 0;
 
 #define CNT 5
-#define REPEAT_F(n, X) COMB(func, X)(p)
+#define REPEAT_F(n, X) COMB(func, X)(a)
 
 TEST(Tst, Tst0)
 {
