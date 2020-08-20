@@ -25,5 +25,10 @@ int main()
 	a1->pt();
 	a2->pt();
 
+	A a3;
+	cout << dynamic_cast<B1*>(&a3) << endl;
+
+	B1 b1(3);
+
 	return 0;
 }
