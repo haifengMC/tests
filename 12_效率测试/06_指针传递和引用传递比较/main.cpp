@@ -4,7 +4,7 @@
 using namespace std;
 TEST_INIT(Tst, testAll)
 
-#define CNT 1000
+#define CNT 2000
 
 void func1(int& i) 
 {
