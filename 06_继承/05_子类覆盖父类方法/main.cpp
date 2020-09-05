@@ -13,8 +13,8 @@ public:
 class B : public A
 {
 public:
-	void func1() { cout << "B1" << endl; }
-	void func2() { cout << "B2" << endl; }
+	void func1() { A::func1(); cout << "B1" << endl; }
+	void func2() { A::func2(); cout << "B2" << endl; }
 };
 
 int main()
