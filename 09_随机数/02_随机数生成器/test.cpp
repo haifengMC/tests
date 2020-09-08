@@ -1,8 +1,9 @@
 #include "global.h"
 #include "hSingleton.h"
 #include "hTest.h"
-#include "hRandom.h"
-#include "hRandomImpl.h"
+#include "hTool.h"
+//#include "hRandom.h"
+//#include "hRandomImpl.h"
 #include "test.h"
 
 TEST_INIT(Tst, testAll)
@@ -68,4 +69,25 @@ TEST(Tst, Tst4)
 		std::cout << i << " ";
 	}
 	std::cout << std::endl;
+}
+
+TEST(Tst, Tst5)
+{
+	hTool::hRWeight<int> hrw1(10);
+	hrw1 += {1, 2, 3};
+	hTool::hRWeight<int> hrw2(40);
+	hrw2 += {10, 20, 30};
+	hTool::hRWeight<int> hrw3(160);
+	hrw3 += {100, 200, 300};
+
+	hTool::hRWeightMap<int> hrwm = { hrw1 ,hrw2 ,hrw3 };
+	std::cout << hrwm << std::endl;
+
+	std::vector<int> buf;
+	std::cout << RANDOM(hTool::RandomType::UniformDeInt, buf, 8, hrwm) << std::endl;
+	for (int& i : buf)
+		std::cout << i << " ";
+	std::cout << std::endl;
+
+	std::cout << hrwm << std::endl;
 }
