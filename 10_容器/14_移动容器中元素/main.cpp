@@ -31,6 +31,11 @@ public:
 	{
 		l.splice(l.end(), other.l, it);
 	}
+
+	void spliceBack(DataList& other)
+	{
+		l.splice(l.end(), other.l);
+	}
 };
 
 
@@ -46,6 +51,12 @@ int main()
 	l1.spliceBack(l2, l2.l.begin());
 	ct(l1.l);
 	ct(l2.l);
+	cout << endl;
+
+	l2.spliceBack(l1);
+	ct(l1.l);
+	ct(l2.l);
+
 
 	return 0;
 }
