@@ -22,6 +22,7 @@ int main()
 	cout << (it2 == l2.begin()) << endl;
 	cout << *++it2 << endl;
 
+	l1.splice(l1.begin(), l2, l2.end());
 
 	return 0;
 }
