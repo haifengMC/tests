@@ -31,6 +31,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "13_操作引用的类中的
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "14_移动容器中元素", "14_移动容器中元素\14_移动容器中元素.vcxproj", "{EBD92DED-220B-4F86-9FAC-94780BDD7441}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "15_容器增删对迭代器的影响", "15_容器增删对迭代器的影响\15_容器增删对迭代器的影响.vcxproj", "{FCFA8744-0F38-4B05-A145-14E0936F317A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -151,6 +153,14 @@ Global
 		{EBD92DED-220B-4F86-9FAC-94780BDD7441}.Release|x64.Build.0 = Release|x64
 		{EBD92DED-220B-4F86-9FAC-94780BDD7441}.Release|x86.ActiveCfg = Release|Win32
 		{EBD92DED-220B-4F86-9FAC-94780BDD7441}.Release|x86.Build.0 = Release|Win32
+		{FCFA8744-0F38-4B05-A145-14E0936F317A}.Debug|x64.ActiveCfg = Debug|x64
+		{FCFA8744-0F38-4B05-A145-14E0936F317A}.Debug|x64.Build.0 = Debug|x64
+		{FCFA8744-0F38-4B05-A145-14E0936F317A}.Debug|x86.ActiveCfg = Debug|Win32
+		{FCFA8744-0F38-4B05-A145-14E0936F317A}.Debug|x86.Build.0 = Debug|Win32
+		{FCFA8744-0F38-4B05-A145-14E0936F317A}.Release|x64.ActiveCfg = Release|x64
+		{FCFA8744-0F38-4B05-A145-14E0936F317A}.Release|x64.Build.0 = Release|x64
+		{FCFA8744-0F38-4B05-A145-14E0936F317A}.Release|x86.ActiveCfg = Release|Win32
+		{FCFA8744-0F38-4B05-A145-14E0936F317A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
