@@ -10,12 +10,15 @@ int main()
 
 	auto it1 = l2.begin();
 	auto it2 = it1;
+	auto it3 = it1;
 	++it2;
 	cout << *it1 << " " << *it2 << endl;
 
 	l1.splice(l1.begin(), l2, it1);
 	cout << *it1 << endl;
+	cout << *it3 << endl;
 	cout << *++it1 << endl;
+	cout << *++it3 << endl;
 	cout << (it2 == l2.begin()) << endl;
 	cout << *++it2 << endl;
 
