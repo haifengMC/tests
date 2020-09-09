@@ -7,6 +7,7 @@ int main()
 {
 	list<int> l1 = { 1, 2, 3 };
 	list<int> l2 = { 4, 5, 6 };
+	list<int> l3;
 
 	auto it1 = l2.begin();
 	auto it2 = it1;
@@ -22,7 +23,8 @@ int main()
 	cout << (it2 == l2.begin()) << endl;
 	cout << *++it2 << endl;
 
-	l1.splice(l1.begin(), l2, l2.end());
+	//l1.splice(l1.begin(), l2, l2.end());
+	l1.splice(l1.begin(), l3);
 
 	return 0;
 }
