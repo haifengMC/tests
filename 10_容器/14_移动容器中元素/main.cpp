@@ -63,7 +63,7 @@ int main()
 	ct(l2.l);
 	cout << endl;
 	for (auto it = l2.l.begin(); it != itOld2; ++it)
-		cout << *it << " ";
+		cout << it->it->i << " ";
 
 
 	return 0;
