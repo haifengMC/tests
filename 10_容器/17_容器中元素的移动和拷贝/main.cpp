@@ -1,28 +1,28 @@
-#include <iostream>
-#include <map>
+#include "global.h"
+#include "hTool.h"
 
 using namespace std;
 
+hTool::Container ctor(cout);
+
 class A
 {
+	int i = 0;
+	friend ostream& operator<<(ostream& os, const A& a);
 public:
-	A(int) {}
+	A(int i) : i(i) {}
 	A(const A&) = delete;
+	A(A&&) = default;
 };
 
-ostream& operator<<(ostream& os, const A& a) { return os << "A"; }
+ostream& operator<<(ostream& os, const A& a) { return os << "A " << a.i; }
 
 int main()
 {
 	map<int, A> m;
-	map<int, int> intM;
-	A a(1);
-	//m[1] = a; //ok
-	//m.insert({ 1, a });
-	//m.insert(p);
+	A a(10);
+	m.insert(make_pair(1, move(a)));
+	ctor(m);
 
-	//m.insert(p);
-	
-	
 	return 0;
 }
