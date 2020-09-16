@@ -21,7 +21,7 @@ int main()
 {
 	map<int, A> m;
 	A a(10);
-	m.insert(make_pair(1, move(a)));
+	m.insert(make_pair(1, forward<A>(a)));
 	ctor(m);
 
 	return 0;
