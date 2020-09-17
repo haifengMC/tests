@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "07_可调对象测试", "07
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "08_智能指针实现", "08_智能指针实现\08_智能指针实现.vcxproj", "{15D9BB0F-C1F1-4A2A-9FF9-BBFEC06C8D1A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "09_判断类是否有移动或拷贝构造", "09_判断类是否有移动或拷贝构造\09_判断类是否有移动或拷贝构造.vcxproj", "{FFCE1736-69F7-45C6-A49F-50514A035D25}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -91,6 +93,14 @@ Global
 		{15D9BB0F-C1F1-4A2A-9FF9-BBFEC06C8D1A}.Release|x64.Build.0 = Release|x64
 		{15D9BB0F-C1F1-4A2A-9FF9-BBFEC06C8D1A}.Release|x86.ActiveCfg = Release|Win32
 		{15D9BB0F-C1F1-4A2A-9FF9-BBFEC06C8D1A}.Release|x86.Build.0 = Release|Win32
+		{FFCE1736-69F7-45C6-A49F-50514A035D25}.Debug|x64.ActiveCfg = Debug|x64
+		{FFCE1736-69F7-45C6-A49F-50514A035D25}.Debug|x64.Build.0 = Debug|x64
+		{FFCE1736-69F7-45C6-A49F-50514A035D25}.Debug|x86.ActiveCfg = Debug|Win32
+		{FFCE1736-69F7-45C6-A49F-50514A035D25}.Debug|x86.Build.0 = Debug|Win32
+		{FFCE1736-69F7-45C6-A49F-50514A035D25}.Release|x64.ActiveCfg = Release|x64
+		{FFCE1736-69F7-45C6-A49F-50514A035D25}.Release|x64.Build.0 = Release|x64
+		{FFCE1736-69F7-45C6-A49F-50514A035D25}.Release|x86.ActiveCfg = Release|Win32
+		{FFCE1736-69F7-45C6-A49F-50514A035D25}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
