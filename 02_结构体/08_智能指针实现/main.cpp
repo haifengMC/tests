@@ -14,14 +14,22 @@ public:
 
 	void printA() { cout << "A" << i << endl; }
 };
-
 class B
 {
-	hAutoPtr<A> a1;
-	hAutoPtr<A> a2;
+	int i = 0;
+public:
+	B(int i) : i(i) {}
+
+	void printB() { cout << "B" << i << endl; }
+};
+
+class C
+{
+	hAutoPtr<A> a;
+	hAutoPtr<B> b;
 
 public:
-	B() { a1.emplace(1); a2.emplace(2); }
+	C() { a.emplace(1); b.emplace(2); }
 };
 
 int main()
@@ -41,11 +49,13 @@ int main()
 		a1 = move(a4);
 		a4.emplace(20);
 		a2 = a4;
+
+		C c;
 	}
 	//hAutoPtr<A> a2(1);
 
 	{
-		B b;
+		
 	}
 
 	cout << "³ÌÐò½áÊø" << endl;
