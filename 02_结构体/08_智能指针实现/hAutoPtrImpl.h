@@ -77,6 +77,12 @@ namespace hTool
 	}
 
 	template<typename T>
+	hAutoPtr<T>::operator bool () const
+	{
+		return pT;
+	}
+
+	template<typename T>
 	T* hAutoPtr<T>::operator->() {
 		if (!pT)
 			abort();

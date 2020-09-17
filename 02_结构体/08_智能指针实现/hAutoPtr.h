@@ -23,7 +23,7 @@ namespace hTool
 		template< typename... Args>
 		void emplace(Args... args);
 
-
+		operator bool() const;
 		T* operator->();
 
 	private:

@@ -37,7 +37,8 @@ int main()
 	{
 		hAutoPtr<A> a1;
 		a1.emplace(10);
-		a1->printA();
+		if (a1) 
+			a1->printA();
 
 		hAutoPtr<A> a2;
 		a2 = a1;
