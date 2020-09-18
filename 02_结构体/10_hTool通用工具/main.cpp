@@ -16,11 +16,18 @@ struct A
 struct B 
 { 
 	B() = default; 
+	B(int) {}
 	B(const B&) = delete; 
 	B(const B&&) { cout << "move B" << endl; }
 };
 struct C { C(const C&) = default; C(C&&) = default; };
 struct D { D(const D&) = delete; D(D&&) = delete; };
+struct E
+{
+	E() = default;
+	E(const E&) = delete;
+	E(E&&) { cout << "move E" << endl; }
+};
 
 TEST(Tst, 判断构造器是否可构造)
 {
@@ -66,6 +73,25 @@ void insert_3(map<int, T>& m, const T& t)
 	cout << __FUNCTION__ << endl;
 	m.insert(make_pair(3, move(t)));
 }
+template <typename T>
+void insert_4(map<int, T>& m, T&& t)
+{
+	cout << __FUNCTION__ << " T&& t" << endl;
+	m.insert(make_pair(4, move(t)));
+}
+template <typename T>
+void insert_4(map<int, T>& m, T& t)
+{
+	cout << __FUNCTION__ << " T& t" << endl;
+	m.insert(make_pair(4, move(t)));
+}
+template <typename T>
+void insert_4(map<int, T>& m, const T& t)
+{
+	cout << __FUNCTION__ << " const T& t" << endl;
+	m.insert(make_pair(4, t));
+}
+
 
 TEST(Tst, 将元素正确拷贝或移入容器)
 {
@@ -82,6 +108,12 @@ TEST(Tst, 将元素正确拷贝或移入容器)
 	cout << string(10, '-') << endl;
 	insert_3(mA, a);
 	insert_3(mB, move(b));
+	cout << string(10, '-') << endl;
+	insert_4(mA, a);
+	cout << string(3, '.') << endl;
+	insert_4(mB, b);
+	cout << string(3, '.') << endl;
+	insert_4(mB, move(b));
 }
 
 int main()
