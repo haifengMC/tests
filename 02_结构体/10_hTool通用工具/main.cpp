@@ -7,8 +7,18 @@ using namespace hTool;
 
 TEST_INIT(Tst, testAll)
 
-struct A { A(const A&) = default; A(A&&) = delete; };
-struct B { B() = default; B(const B&) = delete; B(B&&) = default; };
+struct A 
+{ 
+	A() = default;
+	A(const A&) { cout << "copy A" << endl; }
+	A(A&&) = delete;
+};
+struct B 
+{ 
+	B() = default; 
+	B(const B&) = delete; 
+	B(const B&&) { cout << "move B" << endl; }
+};
 struct C { C(const C&) = default; C(C&&) = default; };
 struct D { D(const D&) = delete; D(D&&) = delete; };
 
@@ -32,17 +42,46 @@ TEST(Tst, 判断构造器是否可构造)
 		"mov " << isConstructible<D>(Constructible::Move) << endl;
 }
 
-void insert(map<int, B>& m, B& b)
+template <typename T>
+void insert_1(map<int, remove_reference_t<T>>& m, T t)
 {
-	cout << "insert B" << endl;
-	m.insert(make_pair(1, move(b)));
+	cout << __FUNCTION__ << endl;
+	m.insert(make_pair(1, move(t)));
+}
+template <typename T>
+void insert_2(map<int, remove_reference_t<T>>& m, const T& t)
+{
+	cout << __FUNCTION__ << endl;
+	m.insert(make_pair(2, t));
+}
+template <typename T>
+void insert_2(map<int, remove_reference_t<T>>& m, T&& t)
+{
+	cout << __FUNCTION__ << endl;
+	m.insert(make_pair(2, move(t)));
+}
+template <typename T>
+void insert_3(map<int, T>& m, const T& t)
+{
+	cout << __FUNCTION__ << endl;
+	m.insert(make_pair(3, move(t)));
 }
 
 TEST(Tst, 将元素正确拷贝或移入容器)
 {
+	A a;
+	map<int, A> mA;
 	B b;
-	map<int, B> m;
-	insert(m, b);
+	map<int, B> mB;
+
+	insert_1(mA, a);
+	insert_1(mB, move(b));
+	cout << string(10, '-') << endl;
+	insert_2(mA, a);
+	insert_2(mB, move(b));
+	cout << string(10, '-') << endl;
+	insert_3(mA, a);
+	insert_3(mB, move(b));
 }
 
 int main()
