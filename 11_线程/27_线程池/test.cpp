@@ -29,7 +29,7 @@ void writeFunc()
 
 	COUT_LOCK(write lock---:, m.rdCnt << " " << m.wtCnt << " " << m.waiting);
 	m.writeLock();
-	std::this_thread::sleep_for(chrono::microseconds(20));
+	//std::this_thread::sleep_for(chrono::microseconds(20));
 	COUT_LOCK(write--------:, m.rdCnt << " " << m.wtCnt << " " << m.waiting);
 	m.writeUnlock();
 	COUT_LOCK(write unlock-:, m.rdCnt << " " << m.wtCnt << " " << m.waiting);
@@ -51,7 +51,8 @@ TEST(Tst, Tst1)
 		thd.join();
 }
 
-TEST(Tst, Tst1)
+TEST(Tst, Tst2)
 {
-
+	hThread::ThreadPool& pool = sThreadPool;
+	this_thread::sleep_for(chrono::seconds(20));
 }

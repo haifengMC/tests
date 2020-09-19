@@ -4,10 +4,10 @@ baseCfg:
   runThd: 10
   maxThd: 15
 taskMgrCfg:   
-  - {tType: 1, priority: 0}
-  - {tType: 1, priority: 1}
-  - {tType: 1, priority: 2}
-  - {tType: 1, priority: 3}
-  - {tType: 1, priority: 4}
-  - {tType: 1, priority: 5}
-  - {tType: 1, priority: 6}
+  - {tType: 1, priority: 0, maxBusyThd: 5}
+  - {tType: 1, priority: 1, maxBusyThd: 5}
+  - {tType: 1, priority: 2, maxBusyThd: 5}
+  - {tType: 1, priority: 3, maxBusyThd: 5}
+  - {tType: 1, priority: 4, maxBusyThd: 5}
+  - {tType: 1, priority: 5, maxBusyThd: 5}
+  - {tType: 1, priority: 6, maxBusyThd: 5}

@@ -10,56 +10,124 @@ namespace hThread
 #define WT_UNLOCK sThreadPool.writeUnlock()
 
 	std::mutex coutM;
-#define COUT_LK(x) { std::lock_guard<std::mutex> lk(coutM); std::cout << x << std::endl; }
+#define	_PUTOUT_D
+#define COUT_LK(x)
+#ifdef _PUTOUT_D 
+#define COUT_LK(x) \
+	{ \
+		std::lock_guard<std::mutex> lk(coutM); \
+		std::cout << x << std::endl; \
+	}
+#endif // _PUTOUT_D 
 
-	void ThreadMemFunc::operator() ()
-	{
-		std::mutex m;
-		std::unique_lock<std::mutex> lk(m);
-
-		while (!isClose())
+	ThreadMem::ThreadMem(const size_t& id) : id(id),
+		func([&]()
 		{
-			runCv.wait(lk, [&]
-				{
-					if (!pTask)
-						return false;
+			COUT_LK(this->id << " 线程启动...");
 
-					return true;
-				});
-			TaskNode* pNode = NULL;
-			while (pNode = pTask->getNextNode())
+			std::mutex m;
+			std::unique_lock<std::mutex> lk(m);
+
+			while (!isClose())
 			{
-				if (pNode->preProcess())
-					pNode->onProcess();
-				pNode->afterProcess();
-			}
+				TaskNode* pNode = NULL;
 
-		}
-		sThreadPool.removeThrd(id);
+				COUT_LK(this->id << " 线程等待执行任务...");
+				runCv.wait(lk, [&]
+					{
+						if (!pTask || !pNext || !pRwLock)
+							return false;
+
+						pRwLock->readLock();
+						bool isFailed = pTask->failed;
+						pRwLock->readUnlock();
+
+						pRwLock->writeLock();
+						pNode = pTask->getNextNode();
+						pRwLock->writeUnlock();
+
+						if (!pNode)//获取节点失败
+							isFailed = true;
+
+						if (isFailed)//任务失效释放内存
+						{
+							pRwLock->writeLock();
+							DEL(pTask);
+							pNext = NULL;
+							pRwLock->writeUnlock();
+							return false;
+						}
+
+						return true;
+					});
+
+				while (pNode)
+				{
+					if (!pNode->initProc())
+					{
+						pRwLock->writeLock();
+						pTask->running = false;
+						pTask->failed = true;
+						pRwLock->writeUnlock();
+						break;
+					}
+
+					pRwLock->readLock();
+					bool preRet = pNode->preProc();
+					pRwLock->readUnlock();
+
+					if (!preRet)//预处理失败，做后续处理
+					{
+						pNode->finalProc();
+						break;
+					}
+
+					runCv.wait(lk, [&]//等待
+						{
+							pRwLock->readLock();
+							bool canProcV = pNode->canProc(nodeId);
+							pRwLock->readUnlock();
+
+							return canProcV;
+						});
+
+					pRwLock->writeLock();
+
+					TaskNode* pCurNode = pNode;
+					pNode = pTask->getNextNode();
+					if (pNode)
+						nodeId = pNode->getId();
+					pCurNode->onProc();
+
+					pRwLock->writeUnlock();
+
+					pCurNode->finalProc();
+					this->pNext->notify();
+				}
+
+			}
+			sThreadPool.removeThrd(id);
+		}),
+		thrd(func)
+	{
+		COUT_LK(id << " 线程创建...");
+		thrd.detach();
+	}
+
+	ThreadMem::~ThreadMem()
+	{
+		COUT_LK(id << " 线程释放...");
 	}
 #undef COUT_LK
-
-	ThreadMem::ThreadMem(const size_t& id) : id(id), 
-		func(this->id, this->pTask, runCv), thrd(func)
-	{ 
-		thrd.detach(); 
-	}
-
 
 	void ThreadMem::runTask(Task* const& task)
 	{
 		WT_LOCK;
 		pTask = task;
-		task->insertThrd(id);
+		task->addThrd(this);
 		WT_UNLOCK;
-		func.runCv.notify_one();
+		runCv.notify_one();//应当为本线程打开自锁，在任务锁前打开，任务锁应在添加完任务后由任务打开
 	}
-
-	const bool& ThreadMemFunc::isClose() const
-	{
-		return sThreadPool.memMgr[id]->isClose();
-	}
-
 
 	ThreadPool::ThreadPool() : 
 		_invalid(sTreadPoolMgr), 
@@ -93,13 +161,35 @@ namespace hThread
 	{
 	}
 
+	bool ThreadPool::commitTasks(Task** const& task, const size_t& num, TaskMgrPriority priority)
+	{
+		if (!task || TaskMgrPriority::Max <= priority)
+			return false;
+
+		taskMgr[(size_t)priority].pushTasks(task, num);
+	}
+
+	hRWLock* ThreadPool::getRWLock(Task* pTask)
+	{
+		if (!pTask)
+			return NULL;
+
+		auto it = taskLock.find(pTask);
+		if (it != taskLock.end())
+			return it->second;
+
+		return taskLock[pTask] = new hRWLock;
+	}
+
 	void ThreadPool::createThrd(const size_t& num)
 	{
 		rwLock.writeLock();
 		for (size_t i = 0; i < num; ++i)
+		{
 			memMgr.push_back(new ThreadMem(memMgr.size()));
+			readyThd.insert(memMgr.back()->getId());
+		}
 
-		readyThd.insert(memMgr.back()->getId());
 		rwLock.writeUnlock();
 	}
 	void ThreadPool::closeThrd(const size_t& id)
@@ -111,30 +201,36 @@ namespace hThread
 
 	void ThreadPool::runThrd(const size_t& num)
 	{
-		if (!num)
-			return;
-
 		rwLock.readLock();
 		size_t needNum = readyThd.size() < num ? readyThd.size() : num;
 		rwLock.readUnlock();
-		Task** pTasks = new Task*[needNum];
+		//预期运行任务数为0或没有可用线程不处理
+		if (!needNum)
+			return;
+
+		//Task** pTasks = new Task*[needNum];
+		//size_t begNum = 0;
 
 		for (auto& mgr : taskMgr)
 		{
 			rwLock.writeLock();
-			size_t canNum = mgr.popTasks(pTasks, needNum);
+			size_t canNum = mgr.readyTasks(needNum, busyThd.size());
 			rwLock.writeUnlock();
-			
+
 			if (!canNum)
 				continue;
 
 			rwLock.readLock();
-			size_t canRate = readyThd.size() * 3 / canNum / 2;
+			//任务可以获取线程的倍率
+			size_t canRate = 1.5 * readyThd.size() / canNum;
 			rwLock.readUnlock();
-			size_t useNum = runTasks(pTasks, canNum, canRate);
-			if (needNum <= useNum)
+			//已运行的任务数
+			size_t runNum = mgr.runTasks(canNum, canRate);
+
+			if (needNum <= runNum)//需求任务都运行则不再运行新的
 				break;
-			needNum -= useNum;
+
+			needNum -= runNum;
 		}
 	}
 
@@ -149,19 +245,6 @@ namespace hThread
 		readyThd.erase(id);
 
 		rwLock.writeUnlock();
-	}
-
-	size_t ThreadPool::runTasks(Task**& pTasks, const size_t& num, const size_t& rate)
-	{
-		if (!pTasks || !num || !rate)
-			return 0;
-
-		size_t ret = 0;
-
-		for (size_t n = 0; n < num; ++n)
-			ret += pTasks[n]->runTask(rate);
-
-		return ret;
 	}
 
 #undef RD_LOCK

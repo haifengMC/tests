@@ -4,37 +4,30 @@
 namespace hThread
 {
 	class ThreadPool;
-	class ThreadMem;
-	class ThreadMemFunc
-	{
-		friend class ThreadMem;
-
-		const size_t& id;
-		Task*& pTask;
-		std::condition_variable& runCv;//运行条件
-
-	public:
-		ThreadMemFunc(const size_t& id, Task*& pTask, std::condition_variable& runCv) :
-			id(id), pTask(pTask), runCv(runCv) {}
-		void operator()();
-
-		const bool& isClose() const;
-	};
-
 	class Task;
 	class ThreadMem
 	{
+		friend class Task;
+
 		size_t id = 0;
 		std::condition_variable runCv;
-		ThreadMemFunc func; 
 
+		std::function<void()> func;
 		std::thread thrd;
 
+		size_t nodeId = 0;//当前执行节点id
 		Task* pTask = NULL;
+		ThreadMem* pNext = NULL;//下个处理线程
+		std::list<ThreadMem*>::iterator itMem;//任务中线程链表中自己的迭代器
+		hRWLock* pRwLock = NULL;//任务锁(由线程池提供)
+
 		bool shouldBeClosed = false;
 
 	public:
 		ThreadMem(const size_t& id);
+		~ThreadMem();
+
+		void notify() { runCv.notify_all(); }
 
 		void runTask(Task* const& task);
 
@@ -47,7 +40,7 @@ namespace hThread
 
 	class ThreadPool : public Singleton<ThreadPool>
 	{
-		friend class ThreadMemFunc;
+		friend class ThreadMem;
 		friend class Task;
 
 		bool _invalid;
@@ -59,7 +52,8 @@ namespace hThread
 
 		size_t waitTask = 0;//等待任务数
 		std::vector<TaskMgr> taskMgr;
-
+		std::map<Task*, hRWLock*> taskLock;//任务锁
+	
 		hRWLock rwLock;//自锁
 	public:
 		operator bool() { return _invalid; }
@@ -71,18 +65,21 @@ namespace hThread
 		void run();
 		void stop();
 
+		//提交任务
+		bool commitTasks(Task** const& task, const size_t& num = 1, TaskMgrPriority priority = TaskMgrPriority::Normal);
+		hRWLock* getRWLock(Task* pTask);//获取任务锁
+
 		void createThrd(const size_t& num);
 		void closeThrd(const size_t& id);
 
+		//自锁
 		void readLock() { rwLock.readLock(); }
 		void readUnlock() { rwLock.readUnlock(); }
 		void writeLock() { rwLock.writeLock(); }
 		void writeUnlock() { rwLock.writeUnlock(); }
 	private:
-		void runThrd(const size_t& num);
+		void runThrd(const size_t& num);//使至多num个任务在线程上工作
 		void removeThrd(const size_t& id);
-
-		size_t runTasks(Task** &pTasks, const size_t& num, const size_t& rate);
 	};
 #define sThreadPool hThread::ThreadPool::getMe()
 }

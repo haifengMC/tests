@@ -1,5 +1,6 @@
 #pragma once
 
+#include "hTool.h"
 #include "hThreadCfg.h"
 #include "hTaskNode.h"
 #include "hTask.h"

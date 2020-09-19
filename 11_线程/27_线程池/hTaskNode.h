@@ -8,7 +8,7 @@ namespace hThread
 		size_t id = 0;
 		bool needDel = false;
 		uint64_t totalElapsed = 0;
-		map<size_t, uint64_t> elapsedRecord;//id-time
+		std::map<size_t, uint64_t> elapsedRecord;//id-time
 
 		NodeData() {}
 		NodeData(const size_t& id) : id(id) {}
@@ -25,9 +25,12 @@ namespace hThread
 		NodeData* data = NULL;
 	public:
 		virtual ~TaskNode() {}
-		
-		virtual bool preProcess() { return true; }//预处理
-		virtual bool onProcess() { return true; }//处理函数
-		virtual bool afterProcess() { return true; }//
+		const size_t& getId() const { return id; }
+
+		virtual bool canProc(const size_t& id) { return this->id == id; }
+		virtual bool initProc() { return true; }//初始化处理，读配置，分配内存等
+		virtual bool preProc() { return true; }//预处理，上读锁，检测节点数据，设置下个节点数据
+		virtual bool onProc() { return true; }//处理函数，上写锁
+		virtual bool finalProc() { return true; }//
 	};
 }

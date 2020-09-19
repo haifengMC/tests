@@ -10,11 +10,23 @@ BEG_CFGSTRUCT(TreadBaseCfg)
 }
 END_CFGSTRUCT(TreadBaseCfg, minThd, initThd, runThd, maxThd)
 
+BEG_ENUM(TaskStateType)
+{
+	Init,
+	Wait,
+	Ready,
+	Run,
+	Finish,
+	Error,
+	Max
+}
+END_ENUM(TaskStateType, Init, Wait, Ready, Run, Finish, Error, Max)
+
 BEG_ENUM(TaskMgrType)
 {
 	None,
-	Initiative,	//运行，busyThd到达某值阻塞
-	Passive,//阻塞，busyThd不足某值运行
+	Initiative,	//运行，主动线程到达某值阻塞，运行不可被阻塞
+	Passive,//阻塞，主动线程不足某值运行，运行可被主动线程阻塞
 }
 END_ENUM(TaskMgrType, None, Initiative, Passive)
 
@@ -37,8 +49,9 @@ BEG_CFGMAP(TaskMgrCfg)
 
 	TaskMgrType tType = TaskMgrType::None;
 	TaskMgrPriority priority = TaskMgrPriority::Max;
+	size_t maxBusyThd = 0;//忙碌线程超过最大上限，则不可分配任务
 }
-END_CFGMAP(TaskMgrCfg, TaskMgrPriority, priority, tType)
+END_CFGMAP(TaskMgrCfg, TaskMgrPriority, priority, tType, maxBusyThd)
 
 BEG_CFGDATA(ThreadPoolCfg)
 {
