@@ -100,20 +100,23 @@ TEST(Tst, 将元素正确拷贝或移入容器)
 	B b;
 	map<int, B> mB;
 
-	insert_1(mA, a);
-	insert_1(mB, move(b));
-	cout << string(10, '-') << endl;
-	insert_2(mA, a);
-	insert_2(mB, move(b));
-	cout << string(10, '-') << endl;
-	insert_3(mA, a);
-	insert_3(mB, move(b));
-	cout << string(10, '-') << endl;
-	insert_4(mA, a);
-	cout << string(3, '.') << endl;
-	insert_4(mB, b);
-	cout << string(3, '.') << endl;
+	//insert_1(mA, a);
+	//insert_1(mB, move(b));
+	//cout << string(10, '-') << endl;
+	//insert_2(mA, a);
+	//insert_2(mB, move(b));
+	//cout << string(10, '-') << endl;
+	//insert_3(mA, a);
+	//insert_3(mB, move(b));
+	//cout << string(10, '-') << endl;
+	//insert_4(mA, a);
+	//cout << string(3, '.') << endl;
+	//insert_4(mB, b);
+	//cout << string(3, '.') << endl;
 	insert_4(mB, move(b));
+	cout << string(3, '.') << endl;
+	B&& bRRef = move(b);
+	insert_4(mB, bRRef);
 }
 
 int main()
