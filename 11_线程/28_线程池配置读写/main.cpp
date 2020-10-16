@@ -18,20 +18,20 @@ BEG_ENUM(TaskMgrType)
 }
 END_ENUM(TaskMgrType, None, Initiative, Passive)
 
-#if 0
+#if 1
 BEG_ENUM(TaskMgrPriority)
 {
 	Highest,
-		Higher,
-		High,
-		Normal,
-		Low,
-		Lower,
-		Lowest,
-		Max
+	Higher,
+	High,
+	Normal,
+	Low,
+	Lower,
+	Lowest,
+	Max
 }
 END_ENUM(TaskMgrPriority, Max, Highest, Higher, High, Normal, Low, Lower, Lowest)
-#endif
+#else
 struct TaskMgrPriority
 {
 	enum
@@ -83,6 +83,7 @@ struct YAML::convert<TaskMgrPriority>
 		return true;
 	}
 };
+#endif
 
 BEG_CFGMAP(TaskMgrCfg)
 {
@@ -107,6 +108,10 @@ using namespace std;
 
 int main()
 {
+//#define STRUCTENUM_F(n, em, nm, va) case nm::em: va = nm::em; break
+//	cout << TO_STRING(REPEAT_A_SEP(STRUCTENUM_F, 2, SEM_M, TaskMgrPriority, value, Highest, Higher)) << endl;
+//#undef STRUCTENUM_F
+
 	ThreadPoolCfg t("hThread.yml");
 	t.loadCfg();
 
