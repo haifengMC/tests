@@ -44,11 +44,15 @@ int main()
 	ctor(k1.keys);
 	Key k2 = { 1, 2 };
 	ctor(k2.keys);
+	Key k3 = { 1, 2, 4 };
+	ctor(k3.keys);
+	Key k4 = { 1, 3 };
+	ctor(k4.keys);
 
 	cout << endl;
 	cout << (k1 < k2) << " " << (k1 > k2) << endl;
 
-	set<Key> kSet = { k1, k2 };
+	set<Key> kSet = { k4, k3, k1, k2 };
 	ctor(kSet);
 
 	return 0;
