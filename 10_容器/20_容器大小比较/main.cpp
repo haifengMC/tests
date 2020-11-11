@@ -48,12 +48,29 @@ int main()
 	ctor(k3.keys);
 	Key k4 = { 1, 3 };
 	ctor(k4.keys);
+	Key k5 = { 1, 4 };
+	ctor(k5.keys);
+	Key k6 = { 1 };
+	ctor(k6.keys);
 
 	cout << endl;
 	cout << (k1 < k2) << " " << (k1 > k2) << endl;
 
-	set<Key> kSet = { k4, k3, k1, k2 };
+	set<Key> kSet = { k5, k4, k3, k1, k2, k6 };
 	ctor(kSet);
+
+	cout << endl;
+	auto pair1 = kSet.equal_range(k2);
+	for (auto it = pair1.first; it != pair1.second; ++it)
+		cout << *it << endl;
+
+	cout << "----" << endl;
+
+	auto beg1 = kSet.find(k2);
+	auto end1 = kSet.find(k4);
+	for (auto it = kSet.find(k2); it != kSet.find(k4); ++it)
+		cout << *it << endl;
+
 
 	return 0;
 }
