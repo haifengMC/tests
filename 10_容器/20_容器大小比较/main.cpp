@@ -34,6 +34,14 @@ struct Key
 	{
 		return k < *this;
 	}
+
+	//bool operator==(const Key& k) const
+	//{
+	//	if (keys.size() != k.keys.size())
+	//		return false;
+	//
+	//	return !memcmp(keys.data(), k.keys.data(), keys.size() * sizeof(Key));
+	//}
 };
 
 ostream& operator<<(ostream& os, const Key& k) { return ctor(k.keys); }
@@ -68,7 +76,24 @@ int main()
 
 	auto beg1 = kSet.find(k2);
 	auto end1 = kSet.find(k4);
-	for (auto it = kSet.find(k2); it != kSet.find(k4); ++it)
+	for (auto it = beg1; it != end1; ++it)
+		cout << *it << endl;
+
+	cout << "----" << endl;
+	
+	//cout << (k1 == k2) << (k2 == k2) << endl;
+
+	cout << "----" << endl;
+	for (auto it = beg1; it != kSet.end() && it != end1;)
+		kSet.erase(it++);
+	ctor(kSet);
+	cout << "----" << endl;
+	kSet.insert(k1);
+	kSet.insert(k3);
+	ctor(kSet) << endl;
+	auto beg2 = kSet.lower_bound(k2);
+	auto end2 = kSet.upper_bound(k4);
+	for (auto it = beg2; it != end2; ++it)
 		cout << *it << endl;
 
 
