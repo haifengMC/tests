@@ -43,6 +43,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "19_使用set存储pair", "1
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "20_容器大小比较", "20_容器大小比较\20_容器大小比较.vcxproj", "{BE5A2E4C-A4A7-4CCE-A4DA-B91C18E5277B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "21_使用vector存set迭代器并删除元素", "21_使用vector存set迭代器并删除元素\21_使用vector存set迭代器并删除元素.vcxproj", "{614EB70B-FBF6-4CF1-9DBA-C4BE26729B88}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -211,6 +213,14 @@ Global
 		{BE5A2E4C-A4A7-4CCE-A4DA-B91C18E5277B}.Release|x64.Build.0 = Release|x64
 		{BE5A2E4C-A4A7-4CCE-A4DA-B91C18E5277B}.Release|x86.ActiveCfg = Release|Win32
 		{BE5A2E4C-A4A7-4CCE-A4DA-B91C18E5277B}.Release|x86.Build.0 = Release|Win32
+		{614EB70B-FBF6-4CF1-9DBA-C4BE26729B88}.Debug|x64.ActiveCfg = Debug|x64
+		{614EB70B-FBF6-4CF1-9DBA-C4BE26729B88}.Debug|x64.Build.0 = Debug|x64
+		{614EB70B-FBF6-4CF1-9DBA-C4BE26729B88}.Debug|x86.ActiveCfg = Debug|Win32
+		{614EB70B-FBF6-4CF1-9DBA-C4BE26729B88}.Debug|x86.Build.0 = Debug|Win32
+		{614EB70B-FBF6-4CF1-9DBA-C4BE26729B88}.Release|x64.ActiveCfg = Release|x64
+		{614EB70B-FBF6-4CF1-9DBA-C4BE26729B88}.Release|x64.Build.0 = Release|x64
+		{614EB70B-FBF6-4CF1-9DBA-C4BE26729B88}.Release|x86.ActiveCfg = Release|Win32
+		{614EB70B-FBF6-4CF1-9DBA-C4BE26729B88}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
