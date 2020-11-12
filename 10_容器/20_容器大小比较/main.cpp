@@ -92,9 +92,14 @@ int main()
 	kSet.insert(k3);
 	ctor(kSet) << endl;
 	auto beg2 = kSet.lower_bound(k2);
-	auto end2 = kSet.upper_bound(k4);
-	for (auto it = beg2; it != end2; ++it)
-		cout << *it << endl;
+	auto end2_1 = kSet.lower_bound(k4);
+	auto end2_2 = kSet.upper_bound(k4);
+	cout << *end2_1 << " " << *end2_2 << endl;
+	for (auto it = beg2; it != end2_1; ++it)
+		cout << *it << " ";
+	cout << endl;
+	for (auto it = beg2; it != end2_2; ++it)
+		cout << *it << " ";
 
 
 	return 0;
