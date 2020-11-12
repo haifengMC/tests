@@ -64,6 +64,23 @@ public:
 	void init() { cout << "E" << endl; }
 };
 
+class FBase {};
+map<size_t, FBase& (*)()> m1;
+
+class F : public Singleton<F>, public FBase
+{
+public:
+	F();
+};
+
+struct regF
+{
+	regF() { m1.insert(make_pair(1, getInst)); }
+	static FBase& getInst() { return F::getMe(); }
+} f;
+
+F::F() { cout << "F" << pInst << endl; }
+
 int main()
 {
 	for (std::map<int, A& (*)()>::iterator it = m.begin(); it != m.end(); ++it)
