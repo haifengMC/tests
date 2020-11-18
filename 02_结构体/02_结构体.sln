@@ -31,6 +31,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "13_单例模式继承", "13
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "14_指向数组的指针", "14_指向数组的指针\14_指向数组的指针.vcxproj", "{33EADB6E-2E6E-4B6B-8026-5F28F6694755}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "15_静态成员数组的初始化", "15_静态成员数组的初始化\15_静态成员数组的初始化.vcxproj", "{B73B70F7-678E-4490-9095-94ADB1DF64C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -151,6 +153,14 @@ Global
 		{33EADB6E-2E6E-4B6B-8026-5F28F6694755}.Release|x64.Build.0 = Release|x64
 		{33EADB6E-2E6E-4B6B-8026-5F28F6694755}.Release|x86.ActiveCfg = Release|Win32
 		{33EADB6E-2E6E-4B6B-8026-5F28F6694755}.Release|x86.Build.0 = Release|Win32
+		{B73B70F7-678E-4490-9095-94ADB1DF64C8}.Debug|x64.ActiveCfg = Debug|x64
+		{B73B70F7-678E-4490-9095-94ADB1DF64C8}.Debug|x64.Build.0 = Debug|x64
+		{B73B70F7-678E-4490-9095-94ADB1DF64C8}.Debug|x86.ActiveCfg = Debug|Win32
+		{B73B70F7-678E-4490-9095-94ADB1DF64C8}.Debug|x86.Build.0 = Debug|Win32
+		{B73B70F7-678E-4490-9095-94ADB1DF64C8}.Release|x64.ActiveCfg = Release|x64
+		{B73B70F7-678E-4490-9095-94ADB1DF64C8}.Release|x64.Build.0 = Release|x64
+		{B73B70F7-678E-4490-9095-94ADB1DF64C8}.Release|x86.ActiveCfg = Release|Win32
+		{B73B70F7-678E-4490-9095-94ADB1DF64C8}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
