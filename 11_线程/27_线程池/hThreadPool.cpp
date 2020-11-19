@@ -9,6 +9,8 @@ namespace hThread
 #define WT_LOCK sThreadPool.writeLock()
 #define WT_UNLOCK sThreadPool.writeUnlock()
 
+#if 0
+
 	std::mutex coutM;
 #define	_PUTOUT_D
 #define COUT_LK(x)
@@ -35,11 +37,11 @@ namespace hThread
 				COUT_LK(this->id << " 线程等待执行任务...");
 				runCv.wait(lk, [&]
 					{
-						if (!pTask || !pNext || !pRwLock)
+						if (!pTask || !pNext || !pRwLock || !pTask->getStat())
 							return false;
 
 						pRwLock->readLock();
-						bool isFailed = pTask->failed;
+						bool isFailed = TaskStateType::Error == pTask->getStat()->state;
 						pRwLock->readUnlock();
 
 						pRwLock->writeLock();
@@ -52,7 +54,8 @@ namespace hThread
 						if (isFailed)//任务失效释放内存
 						{
 							pRwLock->writeLock();
-							DEL(pTask);
+							pTask->setStat(TaskStateType::Error);
+							pTask = NULL;
 							pNext = NULL;
 							pRwLock->writeUnlock();
 							return false;
@@ -66,8 +69,9 @@ namespace hThread
 					if (!pNode->initProc())
 					{
 						pRwLock->writeLock();
-						pTask->running = false;
-						pTask->failed = true;
+						pTask->setStat(TaskStateType::Error);
+						pTask = NULL;
+						pNext = NULL;
 						pRwLock->writeUnlock();
 						break;
 					}
@@ -161,12 +165,12 @@ namespace hThread
 	{
 	}
 
-	bool ThreadPool::commitTasks(Task** const& task, const size_t& num, TaskMgrPriority priority)
+	bool ThreadPool::commitTasks(Task* task, size_t num, TaskMgrPriority priority)
 	{
 		if (!task || TaskMgrPriority::Max <= priority)
 			return false;
 
-		taskMgr[(size_t)priority].pushTasks(task, num);
+		taskMgr[(size_t)priority].commitTasks(task, num);
 	}
 
 	hRWLock* ThreadPool::getRWLock(Task* pTask)
@@ -246,6 +250,7 @@ namespace hThread
 
 		rwLock.writeUnlock();
 	}
+#endif
 
 #undef RD_LOCK
 #undef RD_UNLOCK

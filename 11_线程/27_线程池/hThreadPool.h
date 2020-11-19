@@ -3,6 +3,8 @@
 
 namespace hThread
 {
+#if 0
+
 	class ThreadPool;
 	class Task;
 	class ThreadMem
@@ -66,7 +68,7 @@ namespace hThread
 		void stop();
 
 		//提交任务
-		bool commitTasks(Task** const& task, const size_t& num = 1, TaskMgrPriority priority = TaskMgrPriority::Normal);
+		bool commitTasks(Task* task, size_t num = 1, TaskMgrPriority priority = TaskMgrPriority::Normal);
 		hRWLock* getRWLock(Task* pTask);//获取任务锁
 
 		void createThrd(const size_t& num);
@@ -82,4 +84,5 @@ namespace hThread
 		void removeThrd(const size_t& id);
 	};
 #define sThreadPool hThread::ThreadPool::getMe()
+#endif
 }

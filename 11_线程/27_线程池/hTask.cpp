@@ -8,6 +8,7 @@ namespace hThread
 #define WT_LOCK sThreadPool.writeLock()
 #define WT_UNLOCK sThreadPool.writeUnlock()
 
+#if 0
 	size_t TaskData::errId = 0;
 
 	AllTasksData::AllTasksData() : tasksIdGen(tasks, 50) { tasksIdGen.resize(10000, 99999); }
@@ -122,6 +123,8 @@ namespace hThread
 
 			return ret;
 	}
+#endif
+
 
 	Task::Task(hTool::hAutoPtr<TaskAttr> attr) :
 		hTool::hUniqueMapVal<size_t, Task>(thisId, this) 
@@ -136,12 +139,16 @@ namespace hThread
 		stat = std::move(t.stat);
 	}
 
-	bool Task::init()
+	bool Task::init(/*TaskMgr* pMgr*/)
 	{
+		//if (!pMgr)
+		//	return false;
+
 		if (!attr)
 			return false;
 
 		stat.emplace();
+		//stat->pMgr = pMgr;
 		stat->state = TaskStateType::Init; 
 		stat->nodeIt = attr->nodeList.end();
 
@@ -150,14 +157,27 @@ namespace hThread
 
 	bool Task::setStat(TaskStateType state)
 	{
-		if (!stat)
-			return false;
-
 		if (TaskStateType::Max >= state)
 			return false;
 
+		if (!check())
+			return false;
+
+		if (stat->state == state)
+			return false;
+
+		Task* pThis = this;
+		//stat->pMgr->spliceTasks(stat->state, state, &pThis, 1);
 		stat->state = state;
 		return true;
+	}
+
+	size_t Task::getWeight() const
+	{
+		if (!check())
+			return 0;
+
+		return attr->weight;
 	}
 
 	TaskNode* Task::getNextNode()
@@ -187,6 +207,8 @@ namespace hThread
 			return *itRef;
 	}
 
+#if 0
+
 	void Task::addThrd(ThreadMem* pMem)
 	{
 		if (!pMem)
@@ -204,7 +226,7 @@ namespace hThread
 
 		auto itRBeg = thrdsRef.rbegin();
 		pMem->itMem = thrdsRef.insert(thrdsRef.end(), pMem);
-		auto itBeg = thrdsRef.begin();
+		ThrdListIt itBeg = thrdsRef.begin();
 
 		if (itRBeg != thrdsRef.rend())
 			(*itRBeg)->pNext = pMem;
@@ -217,12 +239,18 @@ namespace hThread
 		pMem->pRwLock = sThreadPool.getRWLock(this);
 		pMem->notify();
 	}
+#endif
+
+#if 0
 
 	//返回实际使用的线程数
 	size_t Task::runTask(const size_t& rate)
 	{
-		size_t needRate = thrdExpect < rate ? thrdExpect : rate;
+		if (!check())
+			return 0;
+
 		RD_LOCK;
+		size_t needRate = attr->thrdExpect < rate ? attr->thrdExpect : rate;
 		size_t canNum = needRate < sThreadPool.readyThd.size() ? needRate : sThreadPool.readyThd.size();
 		hRWLock* pRwLock = sThreadPool.getRWLock(this);
 		RD_UNLOCK;
@@ -248,14 +276,18 @@ namespace hThread
 
 		return n;
 	}
+#endif
 
-	bool Task::check()
+	bool Task::check() const
 	{
 		if (!attr)
 			return false;
 
 		if (!stat)
-			return init();
+			return false;
+
+		//if (!stat->pMgr)
+		//	return false;
 
 		return true;
 	}

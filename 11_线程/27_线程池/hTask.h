@@ -2,6 +2,10 @@
 
 namespace hThread
 {
+	class Task;
+	class TaskMgr;
+	class ThreadMem;
+#if 0
 	class AllTasksData
 	{
 		std::map<size_t, TaskData> tasks;//<id-Task>
@@ -23,13 +27,15 @@ namespace hThread
 		size_t pushTasks(Task** const& task, const size_t& num);
 		size_t popTasks(Task** const& task, const size_t& num);
 	};
+#endif
+
 
 	typedef std::list<TaskNode*> NodeList;
 	typedef NodeList::iterator NodeListIt;
 
-	typedef std::list<ThreadMem*> ThrdList;
-	typedef ThrdList::iterator ThrdListIt;
-
+	//typedef std::list<ThreadMem*> ThrdList;
+	//typedef ThrdList::iterator ThrdListIt;
+	
 	//任务属性(静态数据)
 	struct TaskAttr
 	{
@@ -42,14 +48,14 @@ namespace hThread
 
 		~TaskAttr() {}//需要实现析构
 	};
-
 	//任务状态(运行时数据)
 	struct TaskStat
 	{
 		TaskStateType state = TaskStateType::Max;//当前状态
 		std::list<Task*>::iterator stateIt;//指向当前状态的迭代器
 
-		ThrdList thrds;//当前运行该任务的线程
+		//TaskMgr* pMgr = NULL;//指向自己所在管理器
+		//ThrdList thrds;//当前运行该任务的线程
 		NodeListIt nodeIt;//指向当前在运行节点
 
 		~TaskStat() {}//需要实现析构
@@ -65,20 +71,21 @@ namespace hThread
 		Task(hTool::hAutoPtr<TaskAttr> attr);
 		Task(Task&& t);
 
-		bool init();
+		bool init(/*TaskMgr* pMgr*/);
 		bool setStat(TaskStateType state);
 
 		size_t getId() const { return thisId; }
+		size_t getWeight() const;
 		hTool::hAutoPtr<TaskAttr>& getAttr() { return attr; }
 		hTool::hAutoPtr<TaskStat>& getStat() { return stat; }
 
 		TaskNode* getNextNode();
 		//添加线程到任务,还未启用
-		void addThrd(ThreadMem* pMem);
+		//void addThrd(ThreadMem* pMem);
 		//返回实际使用的线程数
-		size_t runTask(const size_t& rate);
+		//size_t runTask(const size_t& rate);
 	private:
-		bool check();//一般性检测
+		bool check() const;//一般性检测
 	};
 
 }

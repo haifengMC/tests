@@ -4,12 +4,12 @@
 
 namespace hThread
 {
-	ThreadPoolMgr::ThreadPoolMgr() : _invalid(false), 
+	ThreadPoolMgr::ThreadPoolMgr() : _valid(true),
 		cfgData("hThread.yml")
 	{
 		if (!cfgData.loadCfg())
 		{//Err
-			_invalid = true;
+			_valid = false;
 			return;
 		}
 	}

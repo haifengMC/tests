@@ -19,7 +19,7 @@ namespace hThread
 
 	class TaskNode
 	{
-		friend class Task;
+		//friend class Task;
 	protected:
 		size_t id = 0;
 		NodeData* data = NULL;

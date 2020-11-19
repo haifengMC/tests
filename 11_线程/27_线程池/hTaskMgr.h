@@ -3,8 +3,12 @@
 
 namespace hThread
 {
+#if 0
+
 	class TaskMgr
 	{
+		friend class Task;
+
 		const TaskMgrCfgItem& base;
 
 		std::map <size_t, Task> tasks;//<id-Task>
@@ -21,13 +25,13 @@ namespace hThread
 		size_t readyTasks(size_t num, size_t busy);
 		//取消已准备任务,将就绪任务放回等待状态
 		void cancelReadyTasks();
+		//执行任务，就绪任务，返回实际执行的任务,numThr可用线程数
 		size_t runTasks(size_t numThr, size_t rate);
-		size_t pushTasks(Task** const& task, const size_t& num);
-		size_t popTasks(Task** task, size_t begNum, size_t num, size_t busy);
 	private:
 		void spliceTasks(TaskStateType from, TaskStateType to, Task** pTask, size_t num);
 		void spliceTasks(TaskStateType from, TaskStateType to, const std::vector<Task*>& tDataVec);
 		//移动所有任务
 		void spliceTasks(TaskStateType from, TaskStateType to);
 	};
+#endif
 }

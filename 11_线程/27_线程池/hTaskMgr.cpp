@@ -4,6 +4,8 @@
 
 namespace hThread
 {
+#if 0
+
 	TaskMgr::TaskMgr(const TaskMgrCfgItem& base) : 
 		base(base), tasksIdGen(tasks, 50)
 	{ 
@@ -17,7 +19,7 @@ namespace hThread
 		for (size_t n = 0; n < num; ++n)
 		{
 			Task&& taskRRef = std::move(task[n]);
-			if (!taskRRef.getStat() && !taskRRef.init())
+			if (!taskRRef.getStat() && !taskRRef.init(this))
 				continue;
 
 			if (TaskStateType::Init != taskRRef.getStat()->state)
@@ -36,7 +38,7 @@ namespace hThread
 			++ret;
 			weights.pushBack(taskRef.getWeight(), &taskRef);
 
-			std::list<Task*>& stRef = states[TaskStateType::Wait];
+			auto& stRef = states[TaskStateType::Wait];
 			auto rsState = stRef.insert(stRef.end(), &taskRef);
 			taskRef.getStat()->stateIt = rsState;
 		}
@@ -75,33 +77,45 @@ namespace hThread
 	//返回分配了线程的任务数
 	size_t TaskMgr::runTasks(size_t numThr, size_t rate)
 	{
-		size_t ret = allTasks.runTasks(numThr, rate);
-		allTasks.cancelReadyTasks();
-
-		return ret;
-	}
-
-	size_t TaskMgr::pushTasks(Task** const& task, const size_t& num)
-	{
-		return allTasks.pushTasks(task, num);
-	}
-
-	//返回弹出的可用任务数
-	size_t TaskMgr::popTasks(Task** task, size_t begNum, size_t num, size_t busy)
-	{
-		//忙碌线程超过最大忙碌限制
-		if (busy >= base.maxBusyThd)
+		if (!numThr || !rate)
 			return 0;
 
-		//需要弹出的任务
-		size_t needNum = 
-			base.maxBusyThd - busy < num - begNum ? 
-			base.maxBusyThd - busy : num - begNum;
-
-		if (!needNum)
+		if (states[TaskStateType::Ready].empty())
 			return 0;
 
-		size_t ret = allTasks.popTasks(task + begNum, needNum);
+		size_t ret = 0;
+
+		for (auto itTData = states[TaskStateType::Ready].begin();
+			itTData != states[TaskStateType::Ready].end(); ++itTData)
+		{
+			Task* pTask = *itTData;
+			if (!pTask)//如果任务不存在，移入错误状态
+			{
+				spliceTasks(TaskStateType::Ready, TaskStateType::Error, &pTask, 1);
+				continue;
+			}
+
+			//任务运行的线程
+			size_t runThr = pTask->runTask(rate);
+			if (!runThr)//无运行线程，移入等待状态
+			{
+				spliceTasks(TaskStateType::Ready, TaskStateType::Wait);
+				break;
+			}
+
+			++ret;
+			spliceTasks(TaskStateType::Ready, TaskStateType::Run, &pTask, 1);
+
+			if (runThr >= numThr)//可用线程已耗尽
+			{
+				spliceTasks(TaskStateType::Ready, TaskStateType::Wait);
+				break;
+			}
+
+			numThr -= runThr;
+		}
+
+		cancelReadyTasks();
 
 		return ret;
 	}
@@ -165,4 +179,5 @@ namespace hThread
 
 		states[to].splice(states[to].begin(), states[from]);
 	}
+#endif
 }

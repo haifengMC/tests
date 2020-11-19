@@ -20,7 +20,7 @@ BEG_ENUM(TaskStateType)
 	Error,
 	Max
 }
-END_ENUM(TaskStateType, Init, Wait, Ready, Run, Finish, Error, Max)
+END_ENUM(TaskStateType, Max, Init, Wait, Ready, Run, Finish, Error)
 
 BEG_ENUM(TaskMgrType)
 {
@@ -61,4 +61,3 @@ BEG_CFGDATA(ThreadPoolCfg)
 	TaskMgrCfg taskMgrCfg;
 }
 END_CFGDATA()
-

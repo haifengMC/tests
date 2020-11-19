@@ -151,7 +151,6 @@
     <ClCompile Include="hThreadPoolMgr.cpp" />
     <ClCompile Include="hThreadPool.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hRWLock.h" />
@@ -163,7 +162,6 @@
     <ClInclude Include="hThreadCfg.h" />
     <ClInclude Include="hThreadPool.h" />
     <ClInclude Include="hThreadPoolMgr.h" />
-    <ClInclude Include="test.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

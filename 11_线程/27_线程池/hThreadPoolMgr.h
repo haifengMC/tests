@@ -6,10 +6,10 @@ namespace hThread
 {
 	class ThreadPoolMgr : public Singleton<ThreadPoolMgr>
 	{
-		bool _invalid;
+		bool _valid;
 		ThreadPoolCfg cfgData;
 	public:
-		operator bool() { return _invalid; }
+		operator bool() { return _valid; }
 
 		ThreadPoolMgr();
 
