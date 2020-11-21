@@ -21,17 +21,38 @@ namespace hThread
 		static uint64_t addId(size_t type);
 	};
 
-	class hRWLock
+	struct hRWLockData
+	{
+		const size_t rwType = hWLockIdType::Max;//读写锁类型
+		bool error = false;	
+
+		uint8_t rdCnt = 0;//0读锁数量
+		uint64_t wtId = 0;//0写锁id
+		bool waiting = false;//正在等待的0写锁
+		bool writing = false;//正在写入的0写锁
+
+		std::vector<uint8_t> itemRdCnt;//读锁数量
+		std::vector<uint8_t> itemWaiting;//正在等待的写锁
+		std::vector<uint8_t> itemWriting;//正在写入的写锁
+
+		std::mutex m;//自锁
+
+		std::mutex rwM;//读写锁
+		std::mutex wtM;//写等待锁
+
+		std::condition_variable rdCv;
+		std::condition_variable wtCv;
+
+		hRWLockData(size_t rwType);
+	};
+
+	class hRWLockItem
 	{
 	public:
-		const size_t rwType = hWLockIdType::Max;//读写锁类型
+		const uint8_t id = 0;
 
-		size_t rdCnt = 0;
+		hRWLockData& data;
 		uint64_t wtId = 0;//写锁id
-
-		bool waiting = false;
-		bool writing = false;
-		bool error = false;
 
 		std::mutex m;//自锁
 
@@ -41,12 +62,34 @@ namespace hThread
 		std::condition_variable rdCv;
 		std::condition_variable wtCv;
 	public:
-		hRWLock(size_t rwType);
+		hRWLockItem(uint8_t id, hRWLockData& data);
 
 		bool readLock();
-		bool writeLock(uint64_t id = 0);
-
 		bool readUnlock();
+
+		bool writeLock(uint64_t id = 0);
 		bool writeUnlock();
+	private:
+		bool tryLockRwM();
+	};
+
+	class hRWLock
+	{
+	public:
+		hRWLockData data;
+		std::vector<uint8_t> none;//空值
+		std::vector<hRWLockItem*> items;
+	public:
+		hRWLock(size_t rwType, uint8_t n = 0);
+		~hRWLock();
+
+		bool readLock(uint8_t i = 0);
+		bool readUnlock(uint8_t i = 0);
+
+		bool writeLock(uint8_t i = 0);
+		bool writeUnlock(uint8_t i = 0);
+	private:
+		bool checkSize(uint8_t i);
+		bool resize(uint8_t n);
 	};
 }

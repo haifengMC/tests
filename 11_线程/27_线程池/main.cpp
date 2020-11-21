@@ -25,7 +25,7 @@ TEST(œﬂ≥Ã≥ÿ≈‰÷√º”‘ÿ)
 	ThreadPoolMgr& pool = sTreadPoolMgr;
 }
 
-hRWLock m(hWLockIdType::Test);
+hRWLockItem m(hWLockIdType::Test);
 
 void readFunc(int i)
 {

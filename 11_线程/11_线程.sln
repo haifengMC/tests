@@ -65,6 +65,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "30_线程池任务类", "30
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "31_线程间引用数据同步", "31_线程间引用数据同步\31_线程间引用数据同步.vcxproj", "{9663976B-504C-4535-8A5F-127D0016AECA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "32_vector管理带互斥锁的类类型", "32_vector管理带互斥锁的类类型\32_vector管理带互斥锁的类类型.vcxproj", "{EFDE4C8F-7B6A-4E08-81FD-C151C69D4D35}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -321,6 +323,14 @@ Global
 		{9663976B-504C-4535-8A5F-127D0016AECA}.Release|x64.Build.0 = Release|x64
 		{9663976B-504C-4535-8A5F-127D0016AECA}.Release|x86.ActiveCfg = Release|Win32
 		{9663976B-504C-4535-8A5F-127D0016AECA}.Release|x86.Build.0 = Release|Win32
+		{EFDE4C8F-7B6A-4E08-81FD-C151C69D4D35}.Debug|x64.ActiveCfg = Debug|x64
+		{EFDE4C8F-7B6A-4E08-81FD-C151C69D4D35}.Debug|x64.Build.0 = Debug|x64
+		{EFDE4C8F-7B6A-4E08-81FD-C151C69D4D35}.Debug|x86.ActiveCfg = Debug|Win32
+		{EFDE4C8F-7B6A-4E08-81FD-C151C69D4D35}.Debug|x86.Build.0 = Debug|Win32
+		{EFDE4C8F-7B6A-4E08-81FD-C151C69D4D35}.Release|x64.ActiveCfg = Release|x64
+		{EFDE4C8F-7B6A-4E08-81FD-C151C69D4D35}.Release|x64.Build.0 = Release|x64
+		{EFDE4C8F-7B6A-4E08-81FD-C151C69D4D35}.Release|x86.ActiveCfg = Release|Win32
+		{EFDE4C8F-7B6A-4E08-81FD-C151C69D4D35}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

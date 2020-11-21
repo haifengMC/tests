@@ -30,10 +30,10 @@
     <ClCompile Include="hThreadPool.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="hRWLock.cpp">
+    <ClCompile Include="hTask.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="hTask.cpp">
+    <ClCompile Include="hRWLock.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
