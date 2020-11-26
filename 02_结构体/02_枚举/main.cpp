@@ -21,6 +21,11 @@ ENUM_BEG(E)
 }
 ENUM_END(E)
 
+enum 
+{
+	//A = "a",
+};
+
 int main()
 {
 	E e = E::a;
