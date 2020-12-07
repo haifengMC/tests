@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01_文件读写", "01_文件读写\01_文件读写.vcxproj", "{80877ED9-D471-4714-99C0-85902F977A43}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02_标准输入输出", "02_标准输入输出\02_标准输入输出.vcxproj", "{081B7EF7-BAAD-4492-B7F1-19055D64B0DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{80877ED9-D471-4714-99C0-85902F977A43}.Release|x64.Build.0 = Release|x64
 		{80877ED9-D471-4714-99C0-85902F977A43}.Release|x86.ActiveCfg = Release|Win32
 		{80877ED9-D471-4714-99C0-85902F977A43}.Release|x86.Build.0 = Release|Win32
+		{081B7EF7-BAAD-4492-B7F1-19055D64B0DD}.Debug|x64.ActiveCfg = Debug|x64
+		{081B7EF7-BAAD-4492-B7F1-19055D64B0DD}.Debug|x64.Build.0 = Debug|x64
+		{081B7EF7-BAAD-4492-B7F1-19055D64B0DD}.Debug|x86.ActiveCfg = Debug|Win32
+		{081B7EF7-BAAD-4492-B7F1-19055D64B0DD}.Debug|x86.Build.0 = Debug|Win32
+		{081B7EF7-BAAD-4492-B7F1-19055D64B0DD}.Release|x64.ActiveCfg = Release|x64
+		{081B7EF7-BAAD-4492-B7F1-19055D64B0DD}.Release|x64.Build.0 = Release|x64
+		{081B7EF7-BAAD-4492-B7F1-19055D64B0DD}.Release|x86.ActiveCfg = Release|Win32
+		{081B7EF7-BAAD-4492-B7F1-19055D64B0DD}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
