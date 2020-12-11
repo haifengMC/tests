@@ -141,7 +141,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="hMemory.cpp" />
+    <ClCompile Include="hRWLock.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="test.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="hContainer.h" />
+    <ClInclude Include="hMemory.h" />
+    <ClInclude Include="hMemoryImpl.h" />
+    <ClInclude Include="hRWLock.h" />
+    <ClInclude Include="hVector.h" />
+    <ClInclude Include="hVectorImpl.h" />
+    <ClInclude Include="test.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

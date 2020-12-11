@@ -18,5 +18,37 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="hMemory.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="hRWLock.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="test.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="hMemory.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="hMemoryImpl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="hContainer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="hVector.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="hVectorImpl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="hRWLock.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
