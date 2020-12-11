@@ -107,7 +107,6 @@ ostream& operator<<(ostream& os, const AData2& data)
 
 void AItem2::pData(int i)
 {
-	lock_guard<mutex> lk(m);
 	cout << data << endl;
 	data = { i + 10, i + 20, i + 30 };
 	cout << data << endl;
@@ -116,11 +115,15 @@ void AItem2::pData(int i)
 void AMgr2::pData(size_t i)
 {
 	size_t size = items.size();
-	if (i >= size)
-		items.emplaceBack(data, m);
-		//items.resize(i + 1, data, m);
+	{
+		lock_guard<mutex> lk(m);
 
-	items[i].pData(i);
+		if (i >= size)
+			items.emplaceBack(data);
+			//items.resize(i + 1, data, m);
+
+		items[i].pData(i);
+	}
 }
 
 void f2(AMgr2* a, int i)

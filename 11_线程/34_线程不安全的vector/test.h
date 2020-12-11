@@ -72,9 +72,8 @@ ostream& operator<<(ostream& os, const AData2& data);
 struct AItem2
 {
 	AData2& data;
-	mutex& m;
 
-	AItem2(AData2& data, mutex& m) : data(data), m(m) {}
+	AItem2(AData2& data) : data(data) {}
 
 	void pData(int i);
 };
