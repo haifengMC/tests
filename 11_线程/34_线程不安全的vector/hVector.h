@@ -1,15 +1,7 @@
 #pragma once
 
 template<typename T>
-class hVecIterator
-{
-	bool _invaild = true;
-	size_t _size;
-public:
-	hVecIterator& operator++();
-	hVecIterator& operator++(int);
-};
-
+class hVecIterator;
 template <typename T>
 class hVector
 {
@@ -17,16 +9,16 @@ class hVector
 	size_t _size = 0;
 	size_t _capacity = 0;
 
-	hRWLock* lk = new hRWLock;
-
-	using iterator = hVecIterator<hVector<T>>;
+	hVector<T>** _pCont = new hVector<T>*(this);
 public:
+	using iterator = hVecIterator<T>;
+
 	hVector() {}
 	hVector(std::initializer_list<T> il);
 
 	hVector(const hVector& v);
 	hVector(hVector&& v);
-	~hVector() { delete lk; }
+	~hVector() { DEL(_pCont); }
 
 	size_t size() const { return _size; }
 	size_t capacity() const { return _capacity; }
@@ -50,5 +42,26 @@ public:
 
 	hVector<T>& operator=(std::initializer_list<T> il);
 private:
+	void rstPThis();
 	void checkCapacity();
+};
+
+template<typename T>
+class hVecIterator
+{
+	size_t _size = 0;
+	hVector<T>** _cont = NULL;
+public:
+	hVecIterator() {}
+	hVecIterator(size_t n, hVector<T>** cont) : _size(n), _cont(cont) {}
+
+	bool operator==(const hVecIterator& it);
+	bool operator!=(const hVecIterator& it);
+	T& operator*();
+	hVecIterator& operator++();
+	hVecIterator operator++(int);
+private:
+	void vertify();
+	void vertifyRange();
+	void vertifySame(const hVecIterator& it);
 };

@@ -41,10 +41,13 @@ public:
 };
 ostream& operator<<(ostream& os, const D& d);
 
+void readFunc(int i);
+void writeFunc(int i);
+
 struct AData1
 {
 	hRWLock lk;
-	vector<int> v = { 1, 2, 3 };
+	hVector<int> v = { 1, 2, 3 };
 	AData1& operator=(initializer_list<int> il);
 };
 ostream& operator<<(ostream& os, const AData1& data);

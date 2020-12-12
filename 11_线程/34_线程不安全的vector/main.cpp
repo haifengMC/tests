@@ -126,37 +126,30 @@ TEST(resize测试)
 
 TEST(迭代器测试)
 {
-	//vector<int> v = {1,2,3};
-	//
-	//auto beg = v.begin();
-	//cout << *beg << endl;
-	//v.push_back(4);
-	//++beg;
-	//cout << *beg << endl;
+	hVector<int> v = { 10,20,30,40 };
+	for (auto i : v)
+		cout << i << " ";
+	cout << endl;
 }
 
-hRWLock rwLk;
-void readFunc(int i)
+#define TRY(x)\
+	try { x }\
+	catch (std::exception& e) { cout << e.what() << endl; }
+TEST(迭代器异常测试)
 {
-
-	COUT_LOCK("read lock...:" << rwLk.rdCnt << " " << rwLk.wtCnt << " " << rwLk.writing);
-	rwLk.readLock();
-	COUT_LOCK("read........:" << rwLk.rdCnt << " " << rwLk.wtCnt << " " << rwLk.writing);
-	rwLk.readUnlock();
-	COUT_LOCK("read unlock.:" << rwLk.rdCnt << " " << rwLk.wtCnt << " " << rwLk.writing);
+	hVector<int>::iterator it;
+	TRY(*it;);//操作未知容器
+	hVector<int> v1 = { 10,20,30,40 };
+	auto beg = v1.begin();
+	v1.pushBack(1);
+	TRY(++beg;);//迭代器失效
+	auto end = v1.end();
+	TRY(++end;);//迭代器越界
+	hVector<int> v2 = { 10,20,30,40 };
+	TRY(v2.end() == end;);//迭代器来自不同容器
+	
 }
-
-void writeFunc(int i)
-{
-
-	COUT_LOCK("write lock...:" << rwLk.rdCnt << " " << rwLk.wtCnt << " " << rwLk.writing);
-	rwLk.writeLock();
-	//std::this_thread::sleep_for(chrono::microseconds(20));
-	COUT_LOCK("write........:" << rwLk.rdCnt << " " << rwLk.wtCnt << " " << rwLk.writing);
-	rwLk.writeUnlock();
-	COUT_LOCK("write unlock.:" << rwLk.rdCnt << " " << rwLk.wtCnt << " " << rwLk.writing);
-
-}
+#undef TRY
 
 TEST(读写锁测试)
 {
@@ -180,10 +173,8 @@ TEST(hVector管理含互斥锁类类型1)
 	for (int i = 0; i < 9; ++i)
 		v.emplaceBack(f1, &a, i);
 	//std::this_thread::sleep_for(chrono::seconds(20));
-	for (int i = 0; i < v.size(); ++i)
-		v[i].join();
-	//for (auto& t : v)
-	//	t.join();
+	for (auto& t : v)
+		t.join();
 
 }
 
@@ -194,10 +185,8 @@ TEST(hVector管理含互斥锁类类型2)
 	for (int i = 0; i < 9; ++i)
 		v.emplaceBack(f2, &a, i);
 	//std::this_thread::sleep_for(chrono::seconds(20));
-	for (int i = 0; i < v.size(); ++i)
-		v[i].join();
-	//for (auto& t : v)
-	//	t.join();
+	for (auto& t : v)
+		t.join();
 
 }
 

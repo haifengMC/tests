@@ -35,6 +35,29 @@ ostream& operator<<(ostream& os, const D& d)
 	return os << d.id << ":" << d.name;
 }
 
+hRWLock rwLk;
+void readFunc(int i)
+{
+
+	COUT_LOCK("read lock...:" << rwLk.rdCnt << " " << rwLk.wtCnt << " " << rwLk.writing);
+	rwLk.readLock();
+	COUT_LOCK("read........:" << rwLk.rdCnt << " " << rwLk.wtCnt << " " << rwLk.writing);
+	rwLk.readUnlock();
+	COUT_LOCK("read unlock.:" << rwLk.rdCnt << " " << rwLk.wtCnt << " " << rwLk.writing);
+}
+
+void writeFunc(int i)
+{
+
+	COUT_LOCK("write lock...:" << rwLk.rdCnt << " " << rwLk.wtCnt << " " << rwLk.writing);
+	rwLk.writeLock();
+	//std::this_thread::sleep_for(chrono::microseconds(20));
+	COUT_LOCK("write........:" << rwLk.rdCnt << " " << rwLk.wtCnt << " " << rwLk.writing);
+	rwLk.writeUnlock();
+	COUT_LOCK("write unlock.:" << rwLk.rdCnt << " " << rwLk.wtCnt << " " << rwLk.writing);
+
+}
+
 AData1& AData1::operator=(initializer_list<int> il)
 {
 	int id = 0;
@@ -107,23 +130,21 @@ ostream& operator<<(ostream& os, const AData2& data)
 
 void AItem2::pData(int i)
 {
-	cout << data << endl;
-	data = { i + 10, i + 20, i + 30 };
-	cout << data << endl;
+	//Ò°Ö¸Õë
+	//cout << data << endl;
+	//data = { i + 10, i + 20, i + 30 };
+	//cout << data << endl;
 }
 
 void AMgr2::pData(size_t i)
-{
-	size_t size = items.size();
-	{
-		lock_guard<mutex> lk(m);
-
-		if (i >= size)
-			items.emplaceBack(data);
-			//items.resize(i + 1, data, m);
-
-		items[i].pData(i);
-	}
+{	
+	//lock_guard<mutex> lk(m);
+	//size_t size = items.size();
+	//if (i >= size)
+	//	items.emplaceBack(data);
+	//	//items.resize(i + 1, data, m);
+	//
+	//items[i].pData(i);
 }
 
 void f2(AMgr2* a, int i)
