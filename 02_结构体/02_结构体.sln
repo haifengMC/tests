@@ -35,6 +35,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "15_静态成员数组的初
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "16_int与bool相加", "16_int与bool相加\16_int与bool相加.vcxproj", "{46920D83-EC23-4D67-8EE2-F19103F64F50}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "17_位移运算", "17_位移运算\17_位移运算.vcxproj", "{BBF1DA1C-0382-43DA-9471-F075125AD50C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -171,6 +173,14 @@ Global
 		{46920D83-EC23-4D67-8EE2-F19103F64F50}.Release|x64.Build.0 = Release|x64
 		{46920D83-EC23-4D67-8EE2-F19103F64F50}.Release|x86.ActiveCfg = Release|Win32
 		{46920D83-EC23-4D67-8EE2-F19103F64F50}.Release|x86.Build.0 = Release|Win32
+		{BBF1DA1C-0382-43DA-9471-F075125AD50C}.Debug|x64.ActiveCfg = Debug|x64
+		{BBF1DA1C-0382-43DA-9471-F075125AD50C}.Debug|x64.Build.0 = Debug|x64
+		{BBF1DA1C-0382-43DA-9471-F075125AD50C}.Debug|x86.ActiveCfg = Debug|Win32
+		{BBF1DA1C-0382-43DA-9471-F075125AD50C}.Debug|x86.Build.0 = Debug|Win32
+		{BBF1DA1C-0382-43DA-9471-F075125AD50C}.Release|x64.ActiveCfg = Release|x64
+		{BBF1DA1C-0382-43DA-9471-F075125AD50C}.Release|x64.Build.0 = Release|x64
+		{BBF1DA1C-0382-43DA-9471-F075125AD50C}.Release|x86.ActiveCfg = Release|Win32
+		{BBF1DA1C-0382-43DA-9471-F075125AD50C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
