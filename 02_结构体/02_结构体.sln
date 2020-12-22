@@ -39,6 +39,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "17_位移运算", "17_位�
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "18_成员函数指正类型转换", "18_成员函数指正类型转换\18_成员函数指正类型转换.vcxproj", "{7E52B7CB-DAF7-409B-B29C-4916F8B17490}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "19_bitset", "19_bitset\19_bitset.vcxproj", "{992E804A-07B1-459A-980C-1B49C3B271A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -191,6 +193,14 @@ Global
 		{7E52B7CB-DAF7-409B-B29C-4916F8B17490}.Release|x64.Build.0 = Release|x64
 		{7E52B7CB-DAF7-409B-B29C-4916F8B17490}.Release|x86.ActiveCfg = Release|Win32
 		{7E52B7CB-DAF7-409B-B29C-4916F8B17490}.Release|x86.Build.0 = Release|Win32
+		{992E804A-07B1-459A-980C-1B49C3B271A2}.Debug|x64.ActiveCfg = Debug|x64
+		{992E804A-07B1-459A-980C-1B49C3B271A2}.Debug|x64.Build.0 = Debug|x64
+		{992E804A-07B1-459A-980C-1B49C3B271A2}.Debug|x86.ActiveCfg = Debug|Win32
+		{992E804A-07B1-459A-980C-1B49C3B271A2}.Debug|x86.Build.0 = Debug|Win32
+		{992E804A-07B1-459A-980C-1B49C3B271A2}.Release|x64.ActiveCfg = Release|x64
+		{992E804A-07B1-459A-980C-1B49C3B271A2}.Release|x64.Build.0 = Release|x64
+		{992E804A-07B1-459A-980C-1B49C3B271A2}.Release|x86.ActiveCfg = Release|Win32
+		{992E804A-07B1-459A-980C-1B49C3B271A2}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
