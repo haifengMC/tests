@@ -55,6 +55,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "25_多线程对vector的不
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "26_使用范围查找变量map", "26_使用范围查找变量map\26_使用范围查找变量map.vcxproj", "{07788B89-27EA-49DE-A394-5F07171715E5}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "27_multimap基本使用", "27_multimap基本使用\27_multimap基本使用.vcxproj", "{0DFF50A8-4785-443E-AAD8-122B7A32275E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -271,6 +273,14 @@ Global
 		{07788B89-27EA-49DE-A394-5F07171715E5}.Release|x64.Build.0 = Release|x64
 		{07788B89-27EA-49DE-A394-5F07171715E5}.Release|x86.ActiveCfg = Release|Win32
 		{07788B89-27EA-49DE-A394-5F07171715E5}.Release|x86.Build.0 = Release|Win32
+		{0DFF50A8-4785-443E-AAD8-122B7A32275E}.Debug|x64.ActiveCfg = Debug|x64
+		{0DFF50A8-4785-443E-AAD8-122B7A32275E}.Debug|x64.Build.0 = Debug|x64
+		{0DFF50A8-4785-443E-AAD8-122B7A32275E}.Debug|x86.ActiveCfg = Debug|Win32
+		{0DFF50A8-4785-443E-AAD8-122B7A32275E}.Debug|x86.Build.0 = Debug|Win32
+		{0DFF50A8-4785-443E-AAD8-122B7A32275E}.Release|x64.ActiveCfg = Release|x64
+		{0DFF50A8-4785-443E-AAD8-122B7A32275E}.Release|x64.Build.0 = Release|x64
+		{0DFF50A8-4785-443E-AAD8-122B7A32275E}.Release|x86.ActiveCfg = Release|Win32
+		{0DFF50A8-4785-443E-AAD8-122B7A32275E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
