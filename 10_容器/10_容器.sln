@@ -57,6 +57,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "26_使用范围查找变量
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "27_multimap基本使用", "27_multimap基本使用\27_multimap基本使用.vcxproj", "{0DFF50A8-4785-443E-AAD8-122B7A32275E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "28_反序set", "28_反序set\28_反序set.vcxproj", "{45374EE2-7BE8-4216-816C-DC37BEAD7E97}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -281,6 +283,14 @@ Global
 		{0DFF50A8-4785-443E-AAD8-122B7A32275E}.Release|x64.Build.0 = Release|x64
 		{0DFF50A8-4785-443E-AAD8-122B7A32275E}.Release|x86.ActiveCfg = Release|Win32
 		{0DFF50A8-4785-443E-AAD8-122B7A32275E}.Release|x86.Build.0 = Release|Win32
+		{45374EE2-7BE8-4216-816C-DC37BEAD7E97}.Debug|x64.ActiveCfg = Debug|x64
+		{45374EE2-7BE8-4216-816C-DC37BEAD7E97}.Debug|x64.Build.0 = Debug|x64
+		{45374EE2-7BE8-4216-816C-DC37BEAD7E97}.Debug|x86.ActiveCfg = Debug|Win32
+		{45374EE2-7BE8-4216-816C-DC37BEAD7E97}.Debug|x86.Build.0 = Debug|Win32
+		{45374EE2-7BE8-4216-816C-DC37BEAD7E97}.Release|x64.ActiveCfg = Release|x64
+		{45374EE2-7BE8-4216-816C-DC37BEAD7E97}.Release|x64.Build.0 = Release|x64
+		{45374EE2-7BE8-4216-816C-DC37BEAD7E97}.Release|x86.ActiveCfg = Release|Win32
+		{45374EE2-7BE8-4216-816C-DC37BEAD7E97}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
