@@ -25,33 +25,29 @@ TEST(œﬂ≥Ã≥ÿ≈‰÷√º”‘ÿ)
 	ThreadPoolMgr& pool = sTreadPoolMgr;
 }
 
-hRWLockItem m(hWLockIdType::Test);
+hRWLock m(hWLockIdType::Test);
 
 void readFunc(int i)
 {
-
-	COUT_LOCK(rLk.....:, m.rdCnt << " " << m.wtId << " " << m.waiting << " " << m.writing);
 	m.readLock();
-	COUT_LOCK(r.......:, m.rdCnt << " " << m.wtId << " " << m.waiting << " " << m.writing);
+	COUT_LOCK(read, "");
 	m.readUnlock();
-	COUT_LOCK(rULk....:, m.rdCnt << " " << m.wtId << " " << m.waiting << " " << m.writing)
 }
 
 void writeFunc(int i)
 {
 	uint64_t id = hWLockId::addId(hWLockIdType::Test);
-
-	COUT_LOCK(wLk.....:, "[" << id << "]" << m.rdCnt << " " << m.wtId << " " << m.waiting << " " << m.writing);
+	
 	bool ret = m.writeLock(id);
-	if (ret)
+	if (!ret)
 	{
-		//this_thread::sleep_for(chrono::seconds(1));
-		COUT_LOCK(w.......:, "[" << id << "]" << m.rdCnt << " " << m.wtId << " " << m.waiting << " " << m.writing);
-		m.writeUnlock();
-		COUT_LOCK(wULk....:, "[" << id << "]" << m.rdCnt << " " << m.wtId << " " << m.waiting << " " << m.writing);
+		COUT_LOCK(wFail, "[" << id << "]");
+		return;
 	}
-	else
-		COUT_LOCK(wFail...:, "[" << id << "]" << m.rdCnt << " " << m.wtId << " " << m.waiting << " " << m.writing);
+
+	//this_thread::sleep_for(chrono::seconds(1));
+	COUT_LOCK(wSucc, "[" << id << "]");
+	m.writeUnlock();
 }
 
 TEST(∂¡–¥À¯≤‚ ‘)
