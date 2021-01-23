@@ -125,18 +125,40 @@ namespace hThread
 	}
 #endif
 
+	TaskAttr::TaskAttr(size_t weight, size_t thrdExpect, uint16_t attr)
+	{
+		_weight = weight;
+		_thrdExpect = thrdExpect;
+		_attr = attr;
+	}
+
+	bool TaskAttr::addNode(TaskNode* pNode)
+	{
+		if (!pNode)
+			return false;
+
+		pNode->init(++_incId, _nodeData);
+
+		_nodeList.push_back(hTool::hAutoPtr<TaskNode>(pNode));
+		return pNode;
+	}
+
+	Task::Task(size_t weight, size_t thrdExpect, uint16_t attr) :
+		hTool::hUniqueMapVal<size_t, Task>(_thisId, this), 
+		_attr(weight, thrdExpect, attr)
+	{
+	}
 
 	Task::Task(hTool::hAutoPtr<TaskAttr> attr) :
-		hTool::hUniqueMapVal<size_t, Task>(thisId, this) 
+		hTool::hUniqueMapVal<size_t, Task>(_thisId, this), 
+		_attr(attr)
 	{
-		this->attr = attr;
 	}
 
 	Task::Task(Task&& t) :
-		hTool::hUniqueMapVal<size_t, Task>(thisId, this)
+		hTool::hUniqueMapVal<size_t, Task>(_thisId, this), 
+		_attr(std::move(t._attr)), _stat(std::move(t._stat))
 	{
-		attr = std::move(t.attr);
-		stat = std::move(t.stat);
 	}
 
 	bool Task::init(/*TaskMgr* pMgr*/)
@@ -144,31 +166,31 @@ namespace hThread
 		//if (!pMgr)
 		//	return false;
 
-		if (!attr)
+		if (!_attr)
 			return false;
 
-		stat.emplace();
+		_stat.emplace();
 		//stat->pMgr = pMgr;
-		stat->state = TaskStateType::Init; 
-		stat->nodeIt = attr->nodeList.end();
+		_stat->state = TaskStatType::Init; 
+		_stat->nodeIt = _attr->_nodeList.end();
 
 		return true;
 	}
 
-	bool Task::setStat(TaskStateType state)
+	bool Task::setStat(TaskStatType state)
 	{
-		if (TaskStateType::Max >= state)
+		if (TaskStatType::Max >= state)
 			return false;
 
 		if (!check())
 			return false;
 
-		if (stat->state == state)
+		if (_stat->state == state)
 			return false;
 
 		Task* pThis = this;
 		//stat->pMgr->spliceTasks(stat->state, state, &pThis, 1);
-		stat->state = state;
+		_stat->state = state;
 		return true;
 	}
 
@@ -177,20 +199,20 @@ namespace hThread
 		if (!check())
 			return 0;
 
-		return attr->weight;
+		return _attr->_weight;
 	}
 
-	TaskNode* Task::getNextNode()
+	PTaskNode Task::getNextNode()
 	{
 		if (!check())
 			return NULL;
 
-		NodeList& listRef = attr->nodeList;
-		NodeListIt& itRef = stat->nodeIt;
+		NodeList& listRef = _attr->_nodeList;
+		NodeListIt& itRef = _stat->nodeIt;
 
 		if (itRef == listRef.end())
 		{
-			if (!attr->loop)
+			if (!(_attr->_attr & TaskAttrType::Loop))
 				return NULL;
 
 			itRef = listRef.begin();
@@ -280,10 +302,10 @@ namespace hThread
 
 	bool Task::check() const
 	{
-		if (!attr)
+		if (!_attr)
 			return false;
 
-		if (!stat)
+		if (!_stat)
 			return false;
 
 		//if (!stat->pMgr)

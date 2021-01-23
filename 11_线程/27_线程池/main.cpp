@@ -1,53 +1,29 @@
+//#define _D_AUTOPTR
+//#define _D_AUTOPTR_DETAIL
+
 #include "global.h"
 #include "hSingleton.h"
 #include "hThread.h"
 #include "hThreadPoolMgr.h"
 #include "hTest.h"
+#include "test.h"
 
 TEST_INIT()
 
 using namespace std;
 using namespace hThread;
 
-mutex coutM;
-#define COUT_LOCK(x, ret) { lock_guard<mutex> lk(coutM); cout << "[" << i << "]" << #x << ret << endl; }
-
 TEST(ÈÎÎñÃ¶¾ÙÀàÐÍ²âÊÔ)
 {
-	TaskStateType e;
+	TaskStatType e;
 	cout << e.getName() << " " << e << endl;
-	e = TaskStateType::Wait;
+	e = TaskStatType::Wait;
 	cout << e.getName() << " " << e << endl;
 }
 
 TEST(Ïß³Ì³ØÅäÖÃ¼ÓÔØ)
 {
 	ThreadPoolMgr& pool = sTreadPoolMgr;
-}
-
-hRWLock m(hWLockIdType::Test);
-
-void readFunc(int i)
-{
-	m.readLock();
-	COUT_LOCK(read, "");
-	m.readUnlock();
-}
-
-void writeFunc(int i)
-{
-	uint64_t id = hWLockId::addId(hWLockIdType::Test);
-	
-	bool ret = m.writeLock(id);
-	if (!ret)
-	{
-		COUT_LOCK(wFail, "[" << id << "]");
-		return;
-	}
-
-	//this_thread::sleep_for(chrono::seconds(1));
-	COUT_LOCK(wSucc, "[" << id << "]");
-	m.writeUnlock();
 }
 
 TEST(¶ÁÐ´Ëø²âÊÔ)
@@ -68,11 +44,37 @@ TEST(¶ÁÐ´Ëø²âÊÔ)
 		thd.join();
 }
 
-TEST(Tst2)
+TEST(ÖÇÄÜÖ¸Õë²âÊÔ1)
 {
-	//hThread::ThreadPool& pool = sThreadPool;
-	//this_thread::sleep_for(chrono::seconds(20));
+	vector<hTool::hAutoPtr<int>> v;
+	cout << "......" << endl;
+	v.push_back(new int(1));
+	cout << "......" << endl;
+	v.push_back(new int(2));
+	cout << "......" << endl;
+	v.push_back(new int(3));
+	cout << "......" << endl;
+	for (auto& i : v)
+		cout << *i << endl;
 }
 
-#undef COUT_LOCK
+TEST(ÖÇÄÜÖ¸Õë²âÊÔ2)
+{
+	list<hTool::hAutoPtr<int>> l;
+	cout << "......" << endl;
+	l.push_back(new int(1));
+	cout << "......" << endl;
+	l.push_back(new int(2));
+	cout << "......" << endl;
+	l.push_back(new int(3));
+	cout << "......" << endl;
+	for (auto& i : l)
+		cout << *i << endl;
+}
+
+TEST(´´½¨ÈÎÎñ²âÊÔ)
+{
+	Task t(new TaskAttr(50, 2, TaskAttrType::Loop));
+}
+
 TEST_MAIN()

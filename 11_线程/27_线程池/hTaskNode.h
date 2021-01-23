@@ -19,18 +19,20 @@ namespace hThread
 
 	class TaskNode
 	{
-		//friend class Task;
 	protected:
-		size_t id = 0;
-		NodeData* data = NULL;
+		size_t _id = 0;
+		hTool::hAutoPtr<NodeData> _data;
 	public:
 		virtual ~TaskNode() {}
-		const size_t& getId() const { return id; }
 
-		virtual bool canProc(const size_t& id) { return this->id == id; }
+		void init(size_t id, hTool::hAutoPtr<NodeData> _data);
+		const size_t& getId() const { return _id; }
+
+		virtual bool canProc(size_t id) { return _id == id; }
 		virtual bool initProc() { return true; }//初始化处理，读配置，分配内存等
 		virtual bool preProc() { return true; }//预处理，上读锁，检测节点数据，设置下个节点数据
 		virtual bool onProc() { return true; }//处理函数，上写锁
 		virtual bool finalProc() { return true; }//
 	};
+
 }
