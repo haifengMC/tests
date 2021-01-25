@@ -47,10 +47,11 @@ namespace hThread
 		hTool::hAutoPtr<NodeData> _nodeData;//节点数据
 		NodeList _nodeList;//节点链表
 
-		void setAttr(uint16_t attr = 0);
-		bool addNode(TaskNode* pNode);//增加任务节点	
-		bool bindNodeData(NodeData);//绑定节点数据
+		void setAttr(uint16_t attr = 0) { _attr = attr; }
+		bool addNode(TaskNode* pNode);//增加任务节点
+		bool initNodeData(NodeData* pData = NULL);//初始化节点数据
 
+		std::ostream& debugShow(std::ostream& os, uint8_t n = 0, char c = '\t');
 		TaskAttr(size_t weight, size_t thrdExpect, uint16_t attr);
 	};
 	//任务状态(运行时数据)
@@ -63,6 +64,7 @@ namespace hThread
 		//ThrdList thrds;//当前运行该任务的线程
 		NodeListIt nodeIt;//指向当前在运行节点
 
+		std::ostream& debugShow(std::ostream& os, uint8_t n = 0, char c = '\t');
 		~TaskStat() {}//需要实现析构
 	};
 
@@ -78,6 +80,16 @@ namespace hThread
 		Task(Task&& t);
 
 		bool init(/*TaskMgr* pMgr*/);
+
+		/*
+		设置属性
+		*/
+
+		//增加任务节点
+		bool addNode(TaskNode* pNode) { return _attr && _attr->addNode(pNode); }
+		//初始化节点数据
+		bool initNodeData(NodeData* pData = NULL) { return _attr && _attr->initNodeData(pData); }
+
 		bool setStat(TaskStatType state);
 
 		size_t getId() const { return _thisId; }
@@ -90,6 +102,8 @@ namespace hThread
 		//void addThrd(ThreadMem* pMem);
 		//返回实际使用的线程数
 		//size_t runTask(const size_t& rate);
+
+		std::ostream& debugShow(std::ostream& os, uint8_t n = 0, char c = '\t');
 	private:
 		bool check() const;//一般性检测
 	};

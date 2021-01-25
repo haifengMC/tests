@@ -5,6 +5,9 @@ namespace hThread
 {
 	struct NodeData
 	{
+	protected:
+		typedef NodeData Base;
+	public:
 		size_t id = 0;
 		bool needDel = false;
 		uint64_t totalElapsed = 0;
@@ -15,6 +18,8 @@ namespace hThread
 		virtual ~NodeData() {}
 
 		operator bool() { return needDel; }
+
+		virtual std::ostream& debugShow(std::ostream& os, uint8_t n = 0, char c = '\t');
 	};
 
 	class TaskNode
@@ -22,6 +27,7 @@ namespace hThread
 	protected:
 		size_t _id = 0;
 		hTool::hAutoPtr<NodeData> _data;
+		typedef TaskNode Base;
 	public:
 		virtual ~TaskNode() {}
 
@@ -33,6 +39,8 @@ namespace hThread
 		virtual bool preProc() { return true; }//预处理，上读锁，检测节点数据，设置下个节点数据
 		virtual bool onProc() { return true; }//处理函数，上写锁
 		virtual bool finalProc() { return true; }//
+
+		virtual std::ostream& debugShow(std::ostream& os, uint8_t n = 0, char c = '\t');
 	};
 
 }

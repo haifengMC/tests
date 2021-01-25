@@ -33,4 +33,32 @@ void writeFunc(int i)
 	m.writeUnlock();
 }
 
+TestNodeData::TestNodeData(const char* info)
+{
+	testInfo = info;
+}
+
+std::ostream& TestNodeData::debugShow(std::ostream& os, uint8_t n, char c)
+{
+	Base::debugShow(os, n++, c) << std::endl;
+	os << std::string(n, c) << "[TestNodeData]" <<
+		" testInfo:" << testInfo;
+
+	return os;
+}
+
+TestTaskNode::TestTaskNode(const char* info)
+{
+	testInfo = info;
+}
+
+std::ostream& TestTaskNode::debugShow(std::ostream& os, uint8_t n, char c)
+{
+	Base::debugShow(os, n++, c) << std::endl;
+	os << std::string(n, c) << "[TestTaskNode]" <<
+		" testInfo:" << testInfo;
+
+	return os;
+}
+
 #undef COUT_LOCK

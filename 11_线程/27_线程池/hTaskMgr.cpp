@@ -4,7 +4,6 @@
 
 namespace hThread
 {
-#if 0
 
 	TaskMgr::TaskMgr(const TaskMgrCfgItem& base) : 
 		base(base), tasksIdGen(tasks, 50)
@@ -16,6 +15,7 @@ namespace hThread
 	size_t TaskMgr::commitTasks(Task* task, size_t num)
 	{
 		size_t ret = 0;
+#if 0
 		for (size_t n = 0; n < num; ++n)
 		{
 			Task&& taskRRef = std::move(task[n]);
@@ -42,7 +42,11 @@ namespace hThread
 			auto rsState = stRef.insert(stRef.end(), &taskRef);
 			taskRef.getStat()->stateIt = rsState;
 		}
+#endif
+
+		return ret;
 	}
+#if 0
 
 	//返回已就绪的可用任务数
 	size_t TaskMgr::readyTasks(size_t num, size_t busy)
@@ -119,6 +123,29 @@ namespace hThread
 
 		return ret;
 	}
+#endif
+	std::ostream& TaskMgr::debugShow(std::ostream& os, uint8_t n, char c)
+	{
+/*
+		os << std::string(n++, c) << "[TaskMgr]" << std::endl;
+		os << std::string(n, c) << "[TaskMgrCfgItem]" << 
+			" priority:" << base.priority <<
+			" tType:" << base.tType <<
+			" maxBusyThd" << base.maxBusyThd;
+		os << std::endl;
+		if (_attr)
+			_attr->debugShow(os, n);
+		else
+			os << std::string(n, c) << "[TaskAttr]NULL";
+		os << std::endl;
+		if (_stat)
+			_stat->debugShow(os, n);
+		else
+			os << std::string(n, c) << "[TaskStat]NULL";*/
+
+		return os;
+	}
+#if 0
 
 	void TaskMgr::spliceTasks(TaskStateType from, TaskStateType to, Task** pTask, size_t num)
 	{

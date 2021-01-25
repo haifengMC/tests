@@ -1,11 +1,8 @@
-//#define _D_AUTOPTR
-//#define _D_AUTOPTR_DETAIL
-
 #include "global.h"
 #include "hSingleton.h"
+#include "hTest.h"
 #include "hThread.h"
 #include "hThreadPoolMgr.h"
-#include "hTest.h"
 #include "test.h"
 
 TEST_INIT()
@@ -74,7 +71,53 @@ TEST(智能指针测试2)
 
 TEST(创建任务测试)
 {
-	Task t(new TaskAttr(50, 2, TaskAttrType::Loop));
+	Task t(50, 2, TaskAttrType::Loop);
+	t.debugShow(cout) << endl;
+	t.initNodeData();
+	t.debugShow(cout) << endl;
+	t.addNode(new TaskNode);
+	t.addNode(new TaskNode);
+	t.debugShow(cout) << endl;
+}
+
+TEST(向任务添加自定义数据和节点)
+{
+	Task t(50, 2, TaskAttrType::Loop);
+	t.initNodeData(new TestNodeData("test data"));
+	t.addNode(new TestTaskNode("test node1"));
+	t.addNode(new TestTaskNode("test node2"));
+	t.debugShow(cout) << endl;
+}
+
+TEST(按权重随机生成)
+{
+	hTool::hRWeightMap<size_t> wM =
+	{
+		hTool::hRWeight<size_t>(100, {1,2,3}),
+		hTool::hRWeight<size_t>(200, {4,5,6}),
+		hTool::hRWeight<size_t>(300, {7,8,9}),
+	};
+	cout << wM << endl;
+	for (size_t i = 0; i < 4; ++i)
+	{
+		auto tmpWM = wM;
+		vector<size_t> v;
+		for (size_t j = 0; j < 4; ++j)
+		{
+			v.clear();
+			tmpWM.getRandVal(v, 4);
+			for (auto k : v)
+				cout << k << " ";
+			cout << tmpWM << endl;
+		}
+	}
+}
+
+TEST(任务管理器debugShow)
+{
+	TaskMgrCfgItem base;
+
+
 }
 
 TEST_MAIN()

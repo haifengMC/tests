@@ -38,9 +38,18 @@ namespace hThread
 		{
 			LOCK;
 			++rdCnt;
+#ifdef _D_RWLOCK
+			std::cout << "readLock加读锁 rdCnt:" << rdCnt << std::endl;
+#endif
 		}
 		std::unique_lock<std::mutex> lk(rwM);
-		rdCv.wait(lk, [&] { LOCK; return !writing && !waiting; });
+		rdCv.wait(lk, [&] 
+			{
+				LOCK;
+#ifdef _D_RWLOCK
+				std::cout << "readLock没有写锁等待和写入时读取 writing:" << writing << " waiting:" << waiting << std::endl;
+#endif
+				return !writing && !waiting; });
 
 		return true;
 	}
@@ -51,7 +60,10 @@ namespace hThread
 			LOCK;
 			rdCnt -= rdCnt ? 1 : 0;
 			if (waiting)
-				wtCv.notify_one();
+				wtCv.notify_all();
+#ifdef _D_RWLOCK
+			std::cout << "readUnlock减读锁，写锁等待时通知 rdCnt:" << rdCnt << " waiting:" << waiting << std::endl;
+#endif
 		}
 
 		return true;
@@ -65,12 +77,17 @@ namespace hThread
 			if (wtId >= id)
 				return false;//丢弃旧写锁
 
+#ifdef _D_RWLOCK
+			std::cout << "writeLock加写锁 oldId:" << wtId << " newId:" << id << std::endl;
+#endif
 			wtId = id;
-
 			//如果加锁成功则写入
 			if (rwM.try_lock())
 			{
 				writing = true;
+#ifdef _D_RWLOCK
+				std::cout << "writeLock加锁成功时写入1 wtId:" << wtId << std::endl;
+#endif
 				return true;
 			}
 		}
@@ -83,29 +100,44 @@ namespace hThread
 				if (wtId > id)
 				{//丢弃旧写锁
 					ret = false;
+#ifdef _D_RWLOCK
+					std::cout << "writeLock丢弃旧写锁 oldId:" << id << "newId:" << wtId << std::endl;
+#endif
 					return true;
 				}
 
 				if (waiting)
 				{//标记为等待则丢弃其他等待线程
 					wtCv.notify_all();
+#ifdef _D_RWLOCK
+					std::cout << "writeLock标记为等待则丢弃其他等待线程" << std::endl;
+#endif
 					return false;
 				}
 
 				if (writing)
 				{//写入时等待
 					waiting = true;
+#ifdef _D_RWLOCK
+					std::cout << "writeLock有写入时等待" << std::endl;
+#endif
 					return false;
 				}
 
 				if (rwM.try_lock())
 				{//加锁成功时写入
 					writing = true;
+#ifdef _D_RWLOCK
+					std::cout << "writeLock加锁成功时写入2 wtId:" << wtId << std::endl;
+#endif
 					return true;
 				}
 
 				//读等待
 				waiting = true;
+#ifdef _D_RWLOCK
+				std::cout << "writeLock有读锁读取时等待" << std::endl;
+#endif
 				return false;
 			});
 		return ret;
@@ -121,12 +153,18 @@ namespace hThread
 		{
 			waiting = false;
 			wtCv.notify_all();
+#ifdef _D_RWLOCK
+			std::cout << "writeUnlock减写锁通知等待写锁" << std::endl;
+#endif
 			return true;
 		}
 
 		if (rdCnt)
 			rdCv.notify_all();
 
+#ifdef _D_RWLOCK
+		std::cout << "writeUnlock减写锁有读锁则通知 rdCnt:" << rdCnt << std::endl;
+#endif
 		return true;
 	}
 #undef LOCK

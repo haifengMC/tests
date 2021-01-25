@@ -55,8 +55,6 @@ END_ENUM(TaskMgrPriority, Max, Highest, Higher, High, Normal, Low, Lower, Lowest
 
 BEG_CFGMAP(TaskMgrCfg)
 {
-	DECL_CFGMAP(TaskMgrPriority, priority);
-
 	TaskMgrType tType = TaskMgrType::None;
 	TaskMgrPriority priority = TaskMgrPriority::Max;
 	size_t maxBusyThd = 0;//忙碌线程超过最大上限，则不可分配任务
@@ -65,9 +63,7 @@ END_CFGMAP(TaskMgrCfg, TaskMgrPriority, priority, tType, maxBusyThd)
 
 BEG_CFGDATA(ThreadPoolCfg)
 {
-	DECL_CFGDATA(ThreadPoolCfg, baseCfg, taskMgrCfg);
-
 	TreadBaseCfg baseCfg;
 	TaskMgrCfg taskMgrCfg;
 }
-END_CFGDATA()
+END_CFGDATA(ThreadPoolCfg, baseCfg, taskMgrCfg)
