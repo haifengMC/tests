@@ -132,7 +132,7 @@ int main()
 	mCfg.insert(make_pair(TaskMgrPriority::Higher, TaskMgrCfgItem()));
 	mCfg.insert(make_pair(TaskMgrPriority::Low, TaskMgrCfgItem()));
 	Debug(cout, mCfg) << endl;
-
+	
 	ThreadPoolCfg t("hThread.yml");
 	t.loadCfg();
 	Debug(cout, t) << endl;
