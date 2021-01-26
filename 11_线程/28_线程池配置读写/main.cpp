@@ -136,6 +136,7 @@ int main()
 	ThreadPoolCfg t("hThread.yml");
 	t.loadCfg();
 	Debug(cout, t) << endl;
+	cout << "------" << endl;
 
 	//TaskMgrCfg2 c2("hThread.yml");
 	//c2.loadCfg();
