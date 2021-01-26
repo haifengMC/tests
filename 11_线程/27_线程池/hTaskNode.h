@@ -44,3 +44,4 @@ namespace hThread
 	};
 
 }
+DefLog(hThread::NodeData, id, needDel, totalElapsed, elapsedRecord);

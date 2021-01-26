@@ -1,4 +1,5 @@
 #include "global.h"
+#include "hTool.h"
 #include "hConfig.h"
 
 BEG_CFGSTRUCT(ThreadBaseCfg)

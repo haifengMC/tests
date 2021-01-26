@@ -158,10 +158,7 @@ namespace hThread
 			" attr:" << std::bitset<sizeof(_attr) * 8>(_attr).to_string();
 		
 		os << std::endl;
-		if (_nodeData)
-			_nodeData->debugShow(os, n, c);
-		else
-			os << std::string(n, c) << "[NodeData]NULL";
+		Debug(os, _nodeData);
 
 		os << std::endl;
 		if (_nodeList.empty())
