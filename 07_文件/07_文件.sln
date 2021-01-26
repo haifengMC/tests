@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01_文件读写", "01_文�
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02_标准输入输出", "02_标准输入输出\02_标准输入输出.vcxproj", "{081B7EF7-BAAD-4492-B7F1-19055D64B0DD}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03_输出计数", "03_输出计数\03_输出计数.vcxproj", "{AA461757-C80D-445B-9CA2-8D61E36F5265}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{081B7EF7-BAAD-4492-B7F1-19055D64B0DD}.Release|x64.Build.0 = Release|x64
 		{081B7EF7-BAAD-4492-B7F1-19055D64B0DD}.Release|x86.ActiveCfg = Release|Win32
 		{081B7EF7-BAAD-4492-B7F1-19055D64B0DD}.Release|x86.Build.0 = Release|Win32
+		{AA461757-C80D-445B-9CA2-8D61E36F5265}.Debug|x64.ActiveCfg = Debug|x64
+		{AA461757-C80D-445B-9CA2-8D61E36F5265}.Debug|x64.Build.0 = Debug|x64
+		{AA461757-C80D-445B-9CA2-8D61E36F5265}.Debug|x86.ActiveCfg = Debug|Win32
+		{AA461757-C80D-445B-9CA2-8D61E36F5265}.Debug|x86.Build.0 = Debug|Win32
+		{AA461757-C80D-445B-9CA2-8D61E36F5265}.Release|x64.ActiveCfg = Release|x64
+		{AA461757-C80D-445B-9CA2-8D61E36F5265}.Release|x64.Build.0 = Release|x64
+		{AA461757-C80D-445B-9CA2-8D61E36F5265}.Release|x86.ActiveCfg = Release|Win32
+		{AA461757-C80D-445B-9CA2-8D61E36F5265}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
