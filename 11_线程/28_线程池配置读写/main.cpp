@@ -139,8 +139,13 @@ int main()
 	Debug(cout, t) << endl;
 	cout << "------" << endl;
 
-	vector<int>::iterator it;
-	cout << it._Ptr << endl;
+	list<int>::iterator it;	
+	cout << typeid(it).name() << endl;
+	Debug(cout, it) << endl;
+	list<int> v = { 10 };
+	it = v.begin();
+	Debug(cout, it) << endl;
+
 
 	//TaskMgrCfg2 c2("hThread.yml");
 	//c2.loadCfg();
