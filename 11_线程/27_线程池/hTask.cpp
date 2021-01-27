@@ -155,7 +155,7 @@ namespace hThread
 			" weight:" << _weight << 
 			" thrdExpect:" << _thrdExpect << 
 			" incId" << _incId <<
-			" attr:" << std::bitset<sizeof(_attr) * 8>(_attr).to_string();
+			" attr:" << _attr.to_string();
 		
 		os << std::endl;
 		Debug(os, _nodeData);
@@ -182,7 +182,7 @@ namespace hThread
 		return os;
 	}
 
-	TaskAttr::TaskAttr(size_t weight, size_t thrdExpect, uint16_t attr)
+	TaskAttr::TaskAttr(size_t weight, size_t thrdExpect, const std::bitset<TaskAttrType::Max>& attr)
 	{
 		_weight = weight;
 		_thrdExpect = thrdExpect;
@@ -217,8 +217,8 @@ namespace hThread
 
 		_stat.emplace();
 		//stat->pMgr = pMgr;
-		_stat->state = TaskStatType::Init; 
-		_stat->nodeIt = _attr->_nodeList.end();
+		_stat->_state = TaskStatType::Init; 
+		_stat->_nodeIt = _attr->_nodeList.end();
 
 		return true;
 	}
@@ -231,12 +231,12 @@ namespace hThread
 		if (!check())
 			return false;
 
-		if (_stat->state == state)
+		if (_stat->_state == state)
 			return false;
 
 		Task* pThis = this;
 		//stat->pMgr->spliceTasks(stat->state, state, &pThis, 1);
-		_stat->state = state;
+		_stat->_state = state;
 		return true;
 	}
 
@@ -254,11 +254,11 @@ namespace hThread
 			return PTaskNode();
 
 		NodeList& listRef = _attr->_nodeList;
-		NodeListIt& itRef = _stat->nodeIt;
+		NodeListIt& itRef = _stat->_nodeIt;
 
 		if (itRef == listRef.end())
 		{
-			if (!(_attr->_attr & TaskAttrType::Loop))
+			if (!(_attr->_attr[TaskAttrType::Loop]))
 				return PTaskNode();
 
 			itRef = listRef.begin();
@@ -349,10 +349,7 @@ namespace hThread
 	{
 		os << std::string(n++, c) << "[Task]" << "thisId:" << _thisId;
 		os << std::endl;
-		if (_attr)
-			_attr->debugShow(os, n);
-		else
-			os << std::string(n, c) << "[TaskAttr]NULL";
+		Debug(os, _attr);
 		os << std::endl;
 		if (_stat)
 			_stat->debugShow(os, n);

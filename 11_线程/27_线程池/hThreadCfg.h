@@ -4,10 +4,17 @@
 //任务属性类型
 BEG_ENUM(TaskAttrType)
 {
-	Loop = 0x00000001,	//环任务
+	Loop,	//环任务
 	Max
 }
 END_ENUM(TaskAttrType, Max, Loop)
+
+BEG_ENUM(TaskAttrTypeBit)
+{
+	Loop = 0x00000001,	//环任务
+	Max
+}
+END_ENUM(TaskAttrTypeBit, Max, Loop)
 
 //任务状态类型
 BEG_ENUM(TaskStatType)

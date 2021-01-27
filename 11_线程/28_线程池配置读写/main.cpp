@@ -139,6 +139,9 @@ int main()
 	Debug(cout, t) << endl;
 	cout << "------" << endl;
 
+	vector<int>::iterator it;
+	cout << it._Ptr << endl;
+
 	//TaskMgrCfg2 c2("hThread.yml");
 	//c2.loadCfg();
 

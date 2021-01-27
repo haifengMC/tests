@@ -71,7 +71,7 @@ TEST(智能指针测试2)
 
 TEST(创建任务测试)
 {
-	Task t(50, 2, TaskAttrType::Loop);
+	Task t(50, 2, TaskAttrTypeBit::Loop);
 	t.debugShow(cout) << endl;
 	t.initNodeData();
 	t.debugShow(cout) << endl;

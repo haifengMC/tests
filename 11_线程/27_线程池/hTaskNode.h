@@ -5,25 +5,27 @@ namespace hThread
 {
 	struct NodeData
 	{
+		DefLog_Init();
 	protected:
 		typedef NodeData Base;
 	public:
-		size_t id = 0;
-		bool needDel = false;
-		uint64_t totalElapsed = 0;
-		std::map<size_t, uint64_t> elapsedRecord;//id-time
+		size_t _id = 0;
+		bool _needDel = false;
+		uint64_t _totalElapsed = 0;
+		std::map<size_t, uint64_t> _elapsedRecord;//id-time
 
 		NodeData() {}
-		NodeData(const size_t& id) : id(id) {}
+		NodeData(const size_t& id) : _id(id) {}
 		virtual ~NodeData() {}
 
-		operator bool() { return needDel; }
+		operator bool() { return _needDel; }
 
 		virtual std::ostream& debugShow(std::ostream& os, uint8_t n = 0, char c = '\t');
 	};
 
 	class TaskNode
 	{
+		DefLog_Init();
 	protected:
 		size_t _id = 0;
 		hTool::hAutoPtr<NodeData> _data;
@@ -44,4 +46,5 @@ namespace hThread
 	};
 
 }
-DefLog(hThread::NodeData, id, needDel, totalElapsed, elapsedRecord);
+DefLog(hThread::NodeData, _id, _needDel, _totalElapsed, _elapsedRecord);
+DefLog(hThread::TaskNode, _id);

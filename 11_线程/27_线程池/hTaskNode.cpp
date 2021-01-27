@@ -6,9 +6,9 @@ namespace hThread
 	std::ostream& NodeData::debugShow(std::ostream& os, uint8_t n, char c)
 	{
 		os << std::string(n++, c) << "[NodeData]" <<
-			" id:" << id << 
-			" needDel:" << needDel << 
-			" totalElapsed:" << totalElapsed;
+			" id:" << _id << 
+			" needDel:" << _needDel << 
+			" totalElapsed:" << _totalElapsed;
 
 		return os;
 	}

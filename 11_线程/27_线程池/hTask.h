@@ -39,30 +39,32 @@ namespace hThread
 	//任务属性(静态数据)
 	struct TaskAttr
 	{
-		uint16_t _attr = 0;//任务属性，对应 TaskAttrType
+		DefLog_Init();
 		size_t _weight = 0;//权重
 		size_t _thrdExpect = 0;//期待线程数
 
 		size_t _incId = 0;//节点递增id
+		std::bitset<TaskAttrType::Max> _attr;//任务属性，对应 TaskAttrType
 		hTool::hAutoPtr<NodeData> _nodeData;//节点数据
 		NodeList _nodeList;//节点链表
 
-		void setAttr(uint16_t attr = 0) { _attr = attr; }
+		void setAttr(const std::bitset<TaskAttrType::Max>& attr) { _attr = attr; }
 		bool addNode(TaskNode* pNode);//增加任务节点
 		bool initNodeData(NodeData* pData = NULL);//初始化节点数据
 
 		std::ostream& debugShow(std::ostream& os, uint8_t n = 0, char c = '\t');
-		TaskAttr(size_t weight, size_t thrdExpect, uint16_t attr);
+		TaskAttr(size_t weight, size_t thrdExpect, const std::bitset<TaskAttrType::Max>& attr);
 	};
 	//任务状态(运行时数据)
 	struct TaskStat
 	{
-		TaskStatType state = TaskStatType::Max;//当前状态
-		std::list<Task*>::iterator stateIt;//指向当前状态的迭代器
+		DefLog_Init();
+		TaskStatType _state = TaskStatType::Max;//当前状态
+		std::list<Task*>::iterator _stateIt;//指向当前状态的迭代器
 
 		//TaskMgr* pMgr = NULL;//指向自己所在管理器
 		//ThrdList thrds;//当前运行该任务的线程
-		NodeListIt nodeIt;//指向当前在运行节点
+		NodeListIt _nodeIt;//指向当前在运行节点
 
 		std::ostream& debugShow(std::ostream& os, uint8_t n = 0, char c = '\t');
 		~TaskStat() {}//需要实现析构
@@ -109,3 +111,5 @@ namespace hThread
 	};
 
 }
+DefLog(hThread::TaskAttr, _weight, _thrdExpect, _incId, _attr, _nodeData, _nodeList);
+DefLog(hThread::TaskStat, _state, _stateIt, _nodeIt);
