@@ -52,7 +52,6 @@ namespace hThread
 		bool addNode(TaskNode* pNode);//增加任务节点
 		bool initNodeData(NodeData* pData = NULL);//初始化节点数据
 
-		std::ostream& debugShow(std::ostream& os, uint8_t n = 0, char c = '\t');
 		TaskAttr(size_t weight, size_t thrdExpect, const std::bitset<TaskAttrType::Max>& attr);
 	};
 	//任务状态(运行时数据)
@@ -66,16 +65,16 @@ namespace hThread
 		//ThrdList thrds;//当前运行该任务的线程
 		NodeListIt _nodeIt;//指向当前在运行节点
 
-		std::ostream& debugShow(std::ostream& os, uint8_t n = 0, char c = '\t');
 		~TaskStat() {}//需要实现析构
 	};
 
 	class Task : public hTool::hUniqueMapVal<size_t, Task>
 	{
+		DefLog_Init();
 		size_t _thisId = 0;//任务唯一id
 
-		hTool::hAutoPtr<TaskAttr> _attr;
-		hTool::hAutoPtr<TaskStat> _stat;
+		hTool::hAutoPtr<TaskAttr> _attrb;
+		hTool::hAutoPtr<TaskStat> _state;
 	public:
 		Task(size_t weight, size_t thrdExpect, uint16_t attr);
 		Task(hTool::hAutoPtr<TaskAttr> attr);
@@ -88,16 +87,16 @@ namespace hThread
 		*/
 
 		//增加任务节点
-		bool addNode(TaskNode* pNode) { return _attr && _attr->addNode(pNode); }
+		bool addNode(TaskNode* pNode) { return _attrb && _attrb->addNode(pNode); }
 		//初始化节点数据
-		bool initNodeData(NodeData* pData = NULL) { return _attr && _attr->initNodeData(pData); }
+		bool initNodeData(NodeData* pData = NULL) { return _attrb && _attrb->initNodeData(pData); }
 
 		bool setStat(TaskStatType state);
 
 		size_t getId() const { return _thisId; }
 		size_t getWeight() const;
-		hTool::hAutoPtr<TaskAttr>& getAttr() { return _attr; }
-		hTool::hAutoPtr<TaskStat>& getStat() { return _stat; }
+		hTool::hAutoPtr<TaskAttr>& getAttr() { return _attrb; }
+		hTool::hAutoPtr<TaskStat>& getStat() { return _state; }
 
 		PTaskNode getNextNode();
 		//添加线程到任务,还未启用
@@ -105,7 +104,6 @@ namespace hThread
 		//返回实际使用的线程数
 		//size_t runTask(const size_t& rate);
 
-		std::ostream& debugShow(std::ostream& os, uint8_t n = 0, char c = '\t');
 	private:
 		bool check() const;//一般性检测
 	};
@@ -113,3 +111,4 @@ namespace hThread
 }
 DefLog(hThread::TaskAttr, _weight, _thrdExpect, _incId, _attr, _nodeData, _nodeList);
 DefLog(hThread::TaskStat, _state, _stateIt, _nodeIt);
+DefLog(hThread::Task, _thisId, _attrb, _state);

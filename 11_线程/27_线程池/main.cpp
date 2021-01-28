@@ -72,12 +72,12 @@ TEST(智能指针测试2)
 TEST(创建任务测试)
 {
 	Task t(50, 2, TaskAttrTypeBit::Loop);
-	t.debugShow(cout) << endl;
+	Debug(cout, t) << endl;
 	t.initNodeData();
-	t.debugShow(cout) << endl;
+	Debug(cout, t) << endl;
 	t.addNode(new TaskNode);
 	t.addNode(new TaskNode);
-	t.debugShow(cout) << endl;
+	Debug(cout, t) << endl;
 }
 
 TEST(向任务添加自定义数据和节点)
@@ -86,7 +86,7 @@ TEST(向任务添加自定义数据和节点)
 	t.initNodeData(new TestNodeData("test data"));
 	t.addNode(new TestTaskNode("test node1"));
 	t.addNode(new TestTaskNode("test node2"));
-	t.debugShow(cout) << endl;
+	Debug(cout, t) << endl;
 }
 
 TEST(按权重随机生成)
@@ -97,7 +97,7 @@ TEST(按权重随机生成)
 		hTool::hRWeight<size_t>(200, {4,5,6}),
 		hTool::hRWeight<size_t>(300, {7,8,9}),
 	};
-	cout << wM << endl;
+	Debug(cout, wM) << endl;
 	for (size_t i = 0; i < 4; ++i)
 	{
 		auto tmpWM = wM;
@@ -108,7 +108,8 @@ TEST(按权重随机生成)
 			tmpWM.getRandVal(v, 4);
 			for (auto k : v)
 				cout << k << " ";
-			cout << tmpWM << endl;
+			cout << endl;
+			Debug(cout, tmpWM) << endl;
 		}
 	}
 }

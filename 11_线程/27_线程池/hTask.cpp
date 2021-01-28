@@ -149,39 +149,6 @@ namespace hThread
 		return true;
 	}
 
-	std::ostream& TaskAttr::debugShow(std::ostream& os, uint8_t n, char c)
-	{
-		os << std::string(n++, c) << "[TaskAttr]" << 
-			" weight:" << _weight << 
-			" thrdExpect:" << _thrdExpect << 
-			" incId" << _incId <<
-			" attr:" << _attr.to_string();
-		
-		os << std::endl;
-		Debug(os, _nodeData);
-
-		os << std::endl;
-		if (_nodeList.empty())
-		{
-			os << std::string(n, c) << "[TaskNode]NULL";
-			return os;
-		}
-
-		bool first = true;
-		for (auto& pNode : _nodeList)
-		{
-			if (first) first = false;
-			else os << std::endl;
-
-			if (pNode)
-				pNode->debugShow(os, n, c);
-			else
-				os << std::string(n, c) << "[TaskNode]NULL";
-		}
-
-		return os;
-	}
-
 	TaskAttr::TaskAttr(size_t weight, size_t thrdExpect, const std::bitset<TaskAttrType::Max>& attr)
 	{
 		_weight = weight;
@@ -189,36 +156,30 @@ namespace hThread
 		_attr = attr;
 	}
 
-	std::ostream& TaskStat::debugShow(std::ostream& os, uint8_t n, char c)
-	{
-
-		return os;
-	}
-
 	Task::Task(size_t weight, size_t thrdExpect, uint16_t attr) :
 		hTool::hUniqueMapVal<size_t, Task>(_thisId, this),
-		_attr(weight, thrdExpect, attr) {}
+		_attrb(weight, thrdExpect, attr) {}
 
 	Task::Task(hTool::hAutoPtr<TaskAttr> attr) :
 		hTool::hUniqueMapVal<size_t, Task>(_thisId, this),
-		_attr(attr) {}
+		_attrb(attr) {}
 
 	Task::Task(Task&& t) :
 		hTool::hUniqueMapVal<size_t, Task>(_thisId, this),
-		_attr(std::move(t._attr)), _stat(std::move(t._stat)) {}
+		_attrb(std::move(t._attrb)), _state(std::move(t._state)) {}
 
 	bool Task::init(/*TaskMgr* pMgr*/)
 	{
 		//if (!pMgr)
 		//	return false;
 
-		if (!_attr)
+		if (!_attrb)
 			return false;
 
-		_stat.emplace();
+		_state.emplace();
 		//stat->pMgr = pMgr;
-		_stat->_state = TaskStatType::Init; 
-		_stat->_nodeIt = _attr->_nodeList.end();
+		_state->_state = TaskStatType::Init; 
+		_state->_nodeIt = _attrb->_nodeList.end();
 
 		return true;
 	}
@@ -231,12 +192,12 @@ namespace hThread
 		if (!check())
 			return false;
 
-		if (_stat->_state == state)
+		if (_state->_state == state)
 			return false;
 
 		Task* pThis = this;
 		//stat->pMgr->spliceTasks(stat->state, state, &pThis, 1);
-		_stat->_state = state;
+		_state->_state = state;
 		return true;
 	}
 
@@ -245,7 +206,7 @@ namespace hThread
 		if (!check())
 			return 0;
 
-		return _attr->_weight;
+		return _attrb->_weight;
 	}
 
 	PTaskNode Task::getNextNode()
@@ -253,12 +214,12 @@ namespace hThread
 		if (!check())
 			return PTaskNode();
 
-		NodeList& listRef = _attr->_nodeList;
-		NodeListIt& itRef = _stat->_nodeIt;
+		NodeList& listRef = _attrb->_nodeList;
+		NodeListIt& itRef = _state->_nodeIt;
 
 		if (itRef == listRef.end())
 		{
-			if (!(_attr->_attr[TaskAttrType::Loop]))
+			if (!(_attrb->_attr[TaskAttrType::Loop]))
 				return PTaskNode();
 
 			itRef = listRef.begin();
@@ -345,26 +306,13 @@ namespace hThread
 		return n;
 	}
 #endif
-	std::ostream& Task::debugShow(std::ostream& os, uint8_t n, char c)
-	{
-		os << std::string(n++, c) << "[Task]" << "thisId:" << _thisId;
-		os << std::endl;
-		Debug(os, _attr);
-		os << std::endl;
-		if (_stat)
-			_stat->debugShow(os, n);
-		else
-			os << std::string(n, c) << "[TaskStat]NULL";
-
-		return os;
-	}
 
 	bool Task::check() const
 	{
-		if (!_attr)
+		if (!_attrb)
 			return false;
 
-		if (!_stat)
+		if (!_state)
 			return false;
 
 		//if (!stat->pMgr)

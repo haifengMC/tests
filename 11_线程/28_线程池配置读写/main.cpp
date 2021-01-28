@@ -143,8 +143,8 @@ int main()
 	cout << typeid(it).name() << endl;
 	Debug(cout, it) << endl;
 	list<int> v = { 10 };
-	it = v.begin();
-	Debug(cout, it) << endl;
+	Debug(cout, v.begin()) << endl;
+	Debug(cout, v.end()) << endl;
 
 
 	//TaskMgrCfg2 c2("hThread.yml");

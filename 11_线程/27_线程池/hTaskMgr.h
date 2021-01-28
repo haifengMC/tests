@@ -28,7 +28,6 @@ namespace hThread
 		//执行任务，就绪任务，返回实际执行的任务,numThr可用线程数
 		size_t runTasks(size_t numThr, size_t rate);
 #endif
-		std::ostream& debugShow(std::ostream& os, uint8_t n = 0, char c = '\t');
 
 #if 0
 	private:

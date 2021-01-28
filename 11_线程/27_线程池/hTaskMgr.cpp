@@ -124,27 +124,6 @@ namespace hThread
 		return ret;
 	}
 #endif
-	std::ostream& TaskMgr::debugShow(std::ostream& os, uint8_t n, char c)
-	{
-/*
-		os << std::string(n++, c) << "[TaskMgr]" << std::endl;
-		os << std::string(n, c) << "[TaskMgrCfgItem]" << 
-			" priority:" << base.priority <<
-			" tType:" << base.tType <<
-			" maxBusyThd" << base.maxBusyThd;
-		os << std::endl;
-		if (_attr)
-			_attr->debugShow(os, n);
-		else
-			os << std::string(n, c) << "[TaskAttr]NULL";
-		os << std::endl;
-		if (_stat)
-			_stat->debugShow(os, n);
-		else
-			os << std::string(n, c) << "[TaskStat]NULL";*/
-
-		return os;
-	}
 #if 0
 
 	void TaskMgr::spliceTasks(TaskStateType from, TaskStateType to, Task** pTask, size_t num)
