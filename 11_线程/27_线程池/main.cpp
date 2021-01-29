@@ -119,9 +119,19 @@ TEST(按权重随机生成)
 	}
 }
 
-TEST(任务管理器debugShow)
+TEST(创建任务管理器)
 {
+	TaskMgrCfgItem base;
+	TaskMgr tM(base);
+	Debug(cout, tM) << endl;
 
+}
+
+TEST(id生成器debug)
+{
+	std::map <size_t, Task> _tasks;
+	hTool::hUniqueIdGen<size_t, Task> _tasksIdGen(_tasks, 50);
+	Debug(cout, _tasksIdGen) << endl;
 }
 
 TEST_MAIN()
