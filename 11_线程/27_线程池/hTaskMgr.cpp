@@ -6,9 +6,9 @@ namespace hThread
 {
 
 	TaskMgr::TaskMgr(const TaskMgrCfgItem& base) : 
-		base(base), tasksIdGen(tasks, 50)
+		_base(base), _tasksIdGen(_tasks, 50)
 	{ 
-		tasksIdGen.resize(10000, 99999);
+		_tasksIdGen.resize(10000, 99999);
 	} 
 
 	//提交任务，将新任务提交给管理器，提交后默认状态为等待

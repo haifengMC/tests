@@ -128,6 +128,13 @@ int main()
 
 	TaskMgrCfgItem item;
 	Debug(cout, item) << endl;
+	const TaskMgrCfgItem& cItem = item;
+	cout << typeid(cItem).name() << endl;
+	cout << std::boolalpha;
+	cout << is_same<std::remove_reference<TaskMgrCfgItem&>::type, TaskMgrCfgItem>() << endl;
+	cout << is_same<std::remove_reference<const TaskMgrCfgItem&>::type, const TaskMgrCfgItem>() << endl;
+	cout << is_same<std::remove_cv<std::remove_reference<const TaskMgrCfgItem&>::type>::type, TaskMgrCfgItem>() << endl;
+	Debug(cout, cItem) << endl;
 
 	TaskMgrCfg mCfg;
 	mCfg.insert(make_pair(TaskMgrPriority::Higher, TaskMgrCfgItem()));

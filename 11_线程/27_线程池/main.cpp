@@ -1,11 +1,16 @@
 #include "global.h"
 #include "hSingleton.h"
+#include "hTool.h"
 #include "hTest.h"
 #include "hThread.h"
 #include "hThreadPoolMgr.h"
 #include "test.h"
 
 TEST_INIT()
+{
+	addAttr(TestAttrType::Tail, 3);
+	Debug(std::cout, *this) << std::endl;
+}
 
 using namespace std;
 using namespace hThread;
@@ -116,8 +121,6 @@ TEST(按权重随机生成)
 
 TEST(任务管理器debugShow)
 {
-	TaskMgrCfgItem base;
-
 
 }
 

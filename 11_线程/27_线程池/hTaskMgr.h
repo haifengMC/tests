@@ -5,15 +5,16 @@ namespace hThread
 {
 	class TaskMgr
 	{
+		DefLog_Init();
 		friend class Task;
 
-		const TaskMgrCfgItem& base;
+		const TaskMgrCfgItem& _base;
 
-		std::map <size_t, Task> tasks;//<id-Task>
+		std::map <size_t, Task> _tasks;//<id-Task>
 
-		hTool::hUniqueIdGen<size_t, Task> tasksIdGen;//id生成器
-		hTool::hRWeightMap<size_t> weights;//权重管理<task thisId>
-		std::list<Task*> states[TaskStatType::Max];//状态管理
+		hTool::hUniqueIdGen<size_t, Task> _tasksIdGen;//id生成器
+		hTool::hRWeightMap<size_t> _weights;//权重管理<task thisId>
+		std::list<Task*> _states[TaskStatType::Max];//状态管理
 	public:
 		TaskMgr(const TaskMgrCfgItem& base);
 
@@ -38,3 +39,4 @@ namespace hThread
 #endif
 	};
 }
+DefLog(hThread::TaskMgr, _base, _tasks, _weights);
