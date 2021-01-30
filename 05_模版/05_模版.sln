@@ -41,6 +41,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "18_可变参模版函数调
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "19_共同类型", "19_共同类型\19_共同类型.vcxproj", "{53DD80BB-67F9-42AE-8671-0AC8A93B8FDB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "20_类模版特例化为数组", "20_类模版特例化为数组\20_类模版特例化为数组.vcxproj", "{7D64F204-4F28-47B1-BD68-9059FBE161C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -201,6 +203,14 @@ Global
 		{53DD80BB-67F9-42AE-8671-0AC8A93B8FDB}.Release|x64.Build.0 = Release|x64
 		{53DD80BB-67F9-42AE-8671-0AC8A93B8FDB}.Release|x86.ActiveCfg = Release|Win32
 		{53DD80BB-67F9-42AE-8671-0AC8A93B8FDB}.Release|x86.Build.0 = Release|Win32
+		{7D64F204-4F28-47B1-BD68-9059FBE161C6}.Debug|x64.ActiveCfg = Debug|x64
+		{7D64F204-4F28-47B1-BD68-9059FBE161C6}.Debug|x64.Build.0 = Debug|x64
+		{7D64F204-4F28-47B1-BD68-9059FBE161C6}.Debug|x86.ActiveCfg = Debug|Win32
+		{7D64F204-4F28-47B1-BD68-9059FBE161C6}.Debug|x86.Build.0 = Debug|Win32
+		{7D64F204-4F28-47B1-BD68-9059FBE161C6}.Release|x64.ActiveCfg = Release|x64
+		{7D64F204-4F28-47B1-BD68-9059FBE161C6}.Release|x64.Build.0 = Release|x64
+		{7D64F204-4F28-47B1-BD68-9059FBE161C6}.Release|x86.ActiveCfg = Release|Win32
+		{7D64F204-4F28-47B1-BD68-9059FBE161C6}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
