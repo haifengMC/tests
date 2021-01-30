@@ -25,7 +25,7 @@ TEST(任务枚举类型测试)
 
 TEST(线程池配置加载)
 {
-	ThreadPoolMgr& pool = sTreadPoolMgr;
+	ThreadPoolMgr& pool = sThrdPoolMgr;
 }
 
 TEST(读写锁测试)
@@ -155,6 +155,26 @@ TEST(提交任务到管理器)
 	t2[1].addNode(new TestTaskNode("test node2"));
 	tM.commitTasks(t2);
 	Debug(cout, tM) << endl;
+}
+
+TEST(提交任务到线程池日志)
+{
+	Debug(cout, sThrdPool) << endl;
+	Task t1(50, 2, TaskAttrType::Loop);
+	t1.initNodeData(new TestNodeData("test data"));
+	t1.addNode(new TestTaskNode("test node1"));
+	t1.addNode(new TestTaskNode("test node2"));
+	sThrdPool.commitTasks(t1);
+	Debug(cout, sThrdPool) << endl;
+	Task t2[2]{ {50, 2, TaskAttrTypeBit::Loop}, {50, 2, TaskAttrTypeBit::Loop} };
+	t2[0].initNodeData();
+	t2[0].addNode(new TaskNode);
+	t2[0].addNode(new TaskNode);
+	t2[1].initNodeData(new TestNodeData("test data"));
+	t2[1].addNode(new TestTaskNode("test node1"));
+	t2[1].addNode(new TestTaskNode("test node2"));
+	sThrdPool.commitTasks(t2, TaskMgrPriority::Higher);
+	Debug(cout, sThrdPool) << endl;
 }
 
 TEST_MAIN()

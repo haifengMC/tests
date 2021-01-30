@@ -4,27 +4,28 @@
 
 namespace hThread
 {
-#define RD_LOCK sThreadPool.readLock()
-#define RD_UNLOCK sThreadPool.readUnlock()
-#define WT_LOCK sThreadPool.writeLock()
-#define WT_UNLOCK sThreadPool.writeUnlock()
+//#define RD_LOCK sThreadPool.readLock()
+//#define RD_UNLOCK sThreadPool.readUnlock()
+//#define WT_LOCK sThreadPool.writeLock()
+//#define WT_UNLOCK sThreadPool.writeUnlock()
 
-#if 0
-
-	std::mutex coutM;
 #define	_PUTOUT_D
-#define COUT_LK(x)
 #ifdef _PUTOUT_D 
-#define COUT_LK(x) \
-	{ \
-		std::lock_guard<std::mutex> lk(coutM); \
-		std::cout << x << std::endl; \
+#define COUT_LK(x)\
+	{\
+		std::lock_guard<std::mutex> lk(sThrdPool.coutM); \
+		std::cout << x << std::endl;\
 	}
+
+
+#else
+	#define COUT_LK(x)
 #endif // _PUTOUT_D 
 
-	ThreadMem::ThreadMem(const size_t& id) : id(id),
-		func([&]()
+	ThreadMem::ThreadMem(size_t id) : _id(id),
+		_func([&]()
 		{
+#if 0
 			COUT_LK(this->id << " 线程启动...");
 
 			std::mutex m;
@@ -111,19 +112,20 @@ namespace hThread
 
 			}
 			sThreadPool.removeThrd(id);
+#endif
 		}),
-		thrd(func)
+		_thrd(_func)
 	{
-		COUT_LK(id << " 线程创建...");
-		thrd.detach();
+		COUT_LK(_id << " 线程创建...");
+		_thrd.detach();
 	}
 
 	ThreadMem::~ThreadMem()
 	{
-		COUT_LK(id << " 线程释放...");
+		COUT_LK(_id << " 线程释放...");
 	}
 #undef COUT_LK
-
+#if 0
 	void ThreadMem::runTask(Task* const& task)
 	{
 		WT_LOCK;
@@ -132,30 +134,32 @@ namespace hThread
 		WT_UNLOCK;
 		runCv.notify_one();//应当为本线程打开自锁，在任务锁前打开，任务锁应在添加完任务后由任务打开
 	}
-
+#endif
 	ThreadPool::ThreadPool() : 
-		_invalid(sTreadPoolMgr), 
-		base(sTreadPoolMgr.getBaseCfg()){ init(); }
+		_valid(sThrdPoolMgr), 
+		_base(sThrdPoolMgr.getBaseCfg()){ init(); }
 
 	ThreadPool::~ThreadPool() { final(); }
 
 	void ThreadPool::init()
 	{
-		if (_invalid)
-		{//Err
+		if (!_valid)//Err
 			return;
-		}
-		for (auto& item : sTreadPoolMgr.getTaskMgrCfg())
-			taskMgr.emplace_back(item.second);
 
-		createThrd(base.initThd);
+		for (auto& item : sThrdPoolMgr.getTaskMgrCfg())
+			_taskMgr.emplace_back(new TaskMgr(item.second));
+		//createThrd(base.initThd);
 	}
 
 	void ThreadPool::final()
 	{
+#if 0
 		for (auto& pMem : memMgr)
 			DEL(pMem);
+#endif
+
 	}
+#if 0
 
 	void ThreadPool::run()
 	{
@@ -164,14 +168,17 @@ namespace hThread
 	void ThreadPool::stop()
 	{
 	}
+#endif
 
-	bool ThreadPool::commitTasks(Task* task, size_t num, TaskMgrPriority priority)
+	size_t ThreadPool::commitTasks(Task& task, TaskMgrPriority priority)
 	{
-		if (!task || TaskMgrPriority::Max <= priority)
-			return false;
+		if (TaskMgrPriority::Max <= priority)
+			return 0;
 
-		taskMgr[(size_t)priority].commitTasks(task, num);
+		return _taskMgr[priority]->commitTasks(task);
 	}
+
+#if 0
 
 	hRWLock* ThreadPool::getRWLock(Task* pTask)
 	{
@@ -252,8 +259,8 @@ namespace hThread
 	}
 #endif
 
-#undef RD_LOCK
-#undef RD_UNLOCK
-#undef WT_LOCK
-#undef WT_UNLOCK
+//#undef RD_LOCK
+//#undef RD_UNLOCK
+//#undef WT_LOCK
+//#undef WT_UNLOCK
 }

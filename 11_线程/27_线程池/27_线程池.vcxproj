@@ -164,6 +164,7 @@
     <ClInclude Include="hThread.h" />
     <ClInclude Include="hThreadCfg.h" />
     <ClInclude Include="hThreadPool.h" />
+    <ClInclude Include="hThreadPoolImpl.h" />
     <ClInclude Include="hThreadPoolMgr.h" />
     <ClInclude Include="test.h" />
   </ItemGroup>

@@ -30,14 +30,14 @@ BEG_ENUM(TaskStatType)
 END_ENUM(TaskStatType, Max, Init, Wait, Ready, Run, Finish, Error)
 
 //œﬂ≥Ãª˘¥°≈‰÷√
-BEG_CFGSTRUCT(TreadBaseCfg)
+BEG_CFGSTRUCT(ThreadBaseCfg)
 {
 	size_t minThd = 0;
 	size_t initThd = 0;
 	size_t runThd = 0;
 	size_t maxThd = 0;
 }
-END_CFGSTRUCT(TreadBaseCfg, minThd, initThd, runThd, maxThd)
+END_CFGSTRUCT(ThreadBaseCfg, minThd, initThd, runThd, maxThd)
 
 BEG_ENUM(TaskMgrType)
 {
@@ -70,7 +70,7 @@ END_CFGMAP(TaskMgrCfg, TaskMgrPriority, priority, tType, maxBusyThd)
 
 BEG_CFGDATA(ThreadPoolCfg)
 {
-	TreadBaseCfg baseCfg;
+	ThreadBaseCfg baseCfg;
 	TaskMgrCfg taskMgrCfg;
 }
 END_CFGDATA(ThreadPoolCfg, baseCfg, taskMgrCfg)

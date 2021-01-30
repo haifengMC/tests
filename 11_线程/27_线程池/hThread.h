@@ -9,3 +9,4 @@
 #include "hTaskMgrImpl.h"
 #include "hRWLock.h"
 #include "hThreadPool.h"
+#include "hThreadPoolImpl.h"
