@@ -11,15 +11,17 @@ namespace hThread
 		const TaskMgrCfgItem& _base;
 
 		std::map <size_t, Task> _tasks;//<id-Task>
-
 		hTool::hUniqueIdGen<size_t, Task> _tasksIdGen;//id生成器
 		hTool::hRWeightMap<size_t> _weights;//权重管理<task thisId>
-		std::list<Task*> _states[TaskStatType::Max];//状态管理
+		std::list<size_t> _states[TaskStatType::Max];//状态管理<thisId>
 	public:
 		TaskMgr(const TaskMgrCfgItem& base);
 
 		//提交任务，将新任务提交给管理器，提交后默认状态为等待
-		size_t commitTasks(Task* task, size_t num = 1);
+		template <size_t N>
+		size_t commitTasks(Task (&task)[N]);
+		size_t commitTasks(Task& task);
+		size_t commitTasks(Task* task, size_t num);
 #if 0
 
 		//准备任务，按权重取出等待任务放入就绪任务，返回取出数量
@@ -39,4 +41,4 @@ namespace hThread
 #endif
 	};
 }
-DefLog(hThread::TaskMgr, _base, _tasks, _weights);
+DefLog(hThread::TaskMgr, _base, _tasks, _weights, _states);
