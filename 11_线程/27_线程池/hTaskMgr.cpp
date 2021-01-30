@@ -4,18 +4,18 @@
 
 namespace hThread
 {
-#if 0
 
 	TaskMgr::TaskMgr(const TaskMgrCfgItem& base) : 
-		base(base), tasksIdGen(tasks, 50)
+		_base(base), _tasksIdGen(_tasks, 50)
 	{ 
-		tasksIdGen.resize(10000, 99999);
+		_tasksIdGen.resize(10000, 99999);
 	} 
 
 	//提交任务，将新任务提交给管理器，提交后默认状态为等待
 	size_t TaskMgr::commitTasks(Task* task, size_t num)
 	{
 		size_t ret = 0;
+#if 0
 		for (size_t n = 0; n < num; ++n)
 		{
 			Task&& taskRRef = std::move(task[n]);
@@ -42,7 +42,11 @@ namespace hThread
 			auto rsState = stRef.insert(stRef.end(), &taskRef);
 			taskRef.getStat()->stateIt = rsState;
 		}
+#endif
+
+		return ret;
 	}
+#if 0
 
 	//返回已就绪的可用任务数
 	size_t TaskMgr::readyTasks(size_t num, size_t busy)
@@ -119,6 +123,8 @@ namespace hThread
 
 		return ret;
 	}
+#endif
+#if 0
 
 	void TaskMgr::spliceTasks(TaskStateType from, TaskStateType to, Task** pTask, size_t num)
 	{

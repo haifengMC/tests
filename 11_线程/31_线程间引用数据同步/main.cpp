@@ -5,6 +5,7 @@
 #include <initializer_list>
 
 using namespace std;
+mutex m;
 
 struct AData
 {
@@ -12,19 +13,33 @@ struct AData
 
 	AData& operator=(initializer_list<int> il)
 	{
-		v.clear();
-		for (int i : il)
-			v.push_back(i);
+		std::lock_guard<std::mutex> lk(m);
+		int id = 0;
+		for (auto i : il)
+			v[id++] = i;
 
 		return *this;
 	}
 
+	size_t size() const
+	{
+		std::lock_guard<std::mutex> lk(m);
+		return v.size();
+	}
 };
 
 ostream& operator<<(ostream& os, const AData& data)
 {
-	for (auto i : data.v)
-		os << i << " ";
+	int n = data.size();
+	vector<int> v;
+	for (int i = 0; i < n; ++i)
+		v.push_back(data.v[i]);
+	{
+		std::lock_guard<std::mutex> lk(m);
+		for (int i = 0; i < n; ++i)
+			os << v[i] << " ";
+		os << "\n------------\n";
+	}
 
 	return os;
 }
@@ -37,24 +52,21 @@ struct AItem
 
 	void pData(int i)
 	{
-		cout << data << endl;
+		cout << data;
 		data = { i + 10, i + 20, i + 30 };
-		cout << data << endl;
+		cout << data;
 	}
 };
 
 struct A
 {
-	mutex m;
 	AData data;
 	vector<AItem> items;
 
 	void pData(int i)
 	{
-		lock_guard<mutex> lk(m);
-
-		if (i >= items.size())
-			items.resize(i + 1, data);
+		for (int j = items.size(); j <= i; ++j)
+			items.emplace_back(data);
 
 		items[i].pData(i);
 	}

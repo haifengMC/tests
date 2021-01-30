@@ -125,50 +125,79 @@ namespace hThread
 	}
 #endif
 
+	bool TaskAttr::addNode(TaskNode* pNode)
+	{
+		if (!pNode)
+			return false;
+
+		if (!_nodeData)
+			return false;
+
+		pNode->init(++_incId, _nodeData);
+
+		_nodeList.push_back(hTool::hAutoPtr<TaskNode>(pNode));
+		return pNode;
+	}
+
+	bool TaskAttr::initNodeData(NodeData* pData)
+	{
+		if (pData)
+			_nodeData.bind(pData);
+		else
+			_nodeData.emplace();
+
+		return true;
+	}
+
+	TaskAttr::TaskAttr(size_t weight, size_t thrdExpect, const std::bitset<TaskAttrType::Max>& attr)
+	{
+		_weight = weight;
+		_thrdExpect = thrdExpect;
+		_attr = attr;
+	}
+
+	Task::Task(size_t weight, size_t thrdExpect, uint16_t attr) :
+		hTool::hUniqueMapVal<size_t, Task>(_thisId, this),
+		_attrb(weight, thrdExpect, attr) {}
 
 	Task::Task(hTool::hAutoPtr<TaskAttr> attr) :
-		hTool::hUniqueMapVal<size_t, Task>(thisId, this) 
-	{
-		this->attr = attr;
-	}
+		hTool::hUniqueMapVal<size_t, Task>(_thisId, this),
+		_attrb(attr) {}
 
 	Task::Task(Task&& t) :
-		hTool::hUniqueMapVal<size_t, Task>(thisId, this)
-	{
-		attr = std::move(t.attr);
-		stat = std::move(t.stat);
-	}
+		hTool::hUniqueMapVal<size_t, Task>(_thisId, this),
+		_attrb(std::move(t._attrb)), _state(std::move(t._state)) {}
 
 	bool Task::init(/*TaskMgr* pMgr*/)
 	{
 		//if (!pMgr)
 		//	return false;
 
-		if (!attr)
+		if (!_attrb)
 			return false;
 
-		stat.emplace();
+		_state.emplace();
 		//stat->pMgr = pMgr;
-		stat->state = TaskStateType::Init; 
-		stat->nodeIt = attr->nodeList.end();
+		_state->_state = TaskStatType::Init; 
+		_state->_nodeIt = _attrb->_nodeList.end();
 
 		return true;
 	}
 
-	bool Task::setStat(TaskStateType state)
+	bool Task::setStat(TaskStatType state)
 	{
-		if (TaskStateType::Max >= state)
+		if (TaskStatType::Max >= state)
 			return false;
 
 		if (!check())
 			return false;
 
-		if (stat->state == state)
+		if (_state->_state == state)
 			return false;
 
 		Task* pThis = this;
 		//stat->pMgr->spliceTasks(stat->state, state, &pThis, 1);
-		stat->state = state;
+		_state->_state = state;
 		return true;
 	}
 
@@ -177,26 +206,26 @@ namespace hThread
 		if (!check())
 			return 0;
 
-		return attr->weight;
+		return _attrb->_weight;
 	}
 
-	TaskNode* Task::getNextNode()
+	PTaskNode Task::getNextNode()
 	{
 		if (!check())
-			return NULL;
+			return PTaskNode();
 
-		NodeList& listRef = attr->nodeList;
-		NodeListIt& itRef = stat->nodeIt;
+		NodeList& listRef = _attrb->_nodeList;
+		NodeListIt& itRef = _state->_nodeIt;
 
 		if (itRef == listRef.end())
 		{
-			if (!attr->loop)
-				return NULL;
+			if (!(_attrb->_attr[TaskAttrType::Loop]))
+				return PTaskNode();
 
 			itRef = listRef.begin();
 
 			if (itRef == listRef.end())
-				return NULL;
+				return PTaskNode();
 			else
 				return *itRef;
 		}
@@ -280,10 +309,10 @@ namespace hThread
 
 	bool Task::check() const
 	{
-		if (!attr)
+		if (!_attrb)
 			return false;
 
-		if (!stat)
+		if (!_state)
 			return false;
 
 		//if (!stat->pMgr)

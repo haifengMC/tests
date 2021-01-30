@@ -27,6 +27,149 @@ namespace hThread
 		return ++_id[type];
 	}
 
+	hRWLock::hRWLock(size_t rwType)
+	{
+		if (rwType >= hWLockIdType::Max)
+			throw std::range_error("读写锁类型异常");
+	}
+
+	bool hRWLock::readLock()
+	{
+		{
+			LOCK;
+			++rdCnt;
+#ifdef _D_RWLOCK
+			std::cout << "readLock加读锁 rdCnt:" << rdCnt << std::endl;
+#endif
+		}
+		std::unique_lock<std::mutex> lk(rwM);
+		rdCv.wait(lk, [&] 
+			{
+				LOCK;
+#ifdef _D_RWLOCK
+				std::cout << "readLock没有写锁等待和写入时读取 writing:" << writing << " waiting:" << waiting << std::endl;
+#endif
+				return !writing && !waiting; });
+
+		return true;
+	}
+
+	bool hRWLock::readUnlock()
+	{
+		{
+			LOCK;
+			rdCnt -= rdCnt ? 1 : 0;
+			if (waiting)
+				wtCv.notify_all();
+#ifdef _D_RWLOCK
+			std::cout << "readUnlock减读锁，写锁等待时通知 rdCnt:" << rdCnt << " waiting:" << waiting << std::endl;
+#endif
+		}
+
+		return true;
+	}
+
+	bool hRWLock::writeLock(uint64_t id)
+	{
+		{
+			LOCK;
+
+			if (wtId >= id)
+				return false;//丢弃旧写锁
+
+#ifdef _D_RWLOCK
+			std::cout << "writeLock加写锁 oldId:" << wtId << " newId:" << id << std::endl;
+#endif
+			wtId = id;
+			//如果加锁成功则写入
+			if (rwM.try_lock())
+			{
+				writing = true;
+#ifdef _D_RWLOCK
+				std::cout << "writeLock加锁成功时写入1 wtId:" << wtId << std::endl;
+#endif
+				return true;
+			}
+		}
+
+		bool ret = true;
+		std::unique_lock<std::mutex> lk(wtM);
+		wtCv.wait(lk, [&]
+			{
+				LOCK;
+				if (wtId > id)
+				{//丢弃旧写锁
+					ret = false;
+#ifdef _D_RWLOCK
+					std::cout << "writeLock丢弃旧写锁 oldId:" << id << "newId:" << wtId << std::endl;
+#endif
+					return true;
+				}
+
+				if (waiting)
+				{//标记为等待则丢弃其他等待线程
+					wtCv.notify_all();
+#ifdef _D_RWLOCK
+					std::cout << "writeLock标记为等待则丢弃其他等待线程" << std::endl;
+#endif
+					return false;
+				}
+
+				if (writing)
+				{//写入时等待
+					waiting = true;
+#ifdef _D_RWLOCK
+					std::cout << "writeLock有写入时等待" << std::endl;
+#endif
+					return false;
+				}
+
+				if (rwM.try_lock())
+				{//加锁成功时写入
+					writing = true;
+#ifdef _D_RWLOCK
+					std::cout << "writeLock加锁成功时写入2 wtId:" << wtId << std::endl;
+#endif
+					return true;
+				}
+
+				//读等待
+				waiting = true;
+#ifdef _D_RWLOCK
+				std::cout << "writeLock有读锁读取时等待" << std::endl;
+#endif
+				return false;
+			});
+		return ret;
+	}
+
+	bool hRWLock::writeUnlock()
+	{
+		LOCK;
+		writing = false;
+		rwM.unlock();
+
+		if (waiting)
+		{
+			waiting = false;
+			wtCv.notify_all();
+#ifdef _D_RWLOCK
+			std::cout << "writeUnlock减写锁通知等待写锁" << std::endl;
+#endif
+			return true;
+		}
+
+		if (rdCnt)
+			rdCv.notify_all();
+
+#ifdef _D_RWLOCK
+		std::cout << "writeUnlock减写锁有读锁则通知 rdCnt:" << rdCnt << std::endl;
+#endif
+		return true;
+	}
+#undef LOCK
+
+#if 0
 	hRWLockData::hRWLockData(size_t rwType) : rwType(rwType)
 	{
 		if (rwType >= hWLockIdType::Max)
@@ -207,7 +350,7 @@ namespace hThread
 		return false;
 	}
 
-	hRWLock::hRWLock(size_t rwType, uint8_t n = 0) : data(rwType)
+	hRWLockGroup::hRWLockGroup(size_t rwType, uint8_t n = 0) : data(rwType)
 	{
 		if (data.error)
 			return;
@@ -218,13 +361,13 @@ namespace hThread
 		resize(n);
 	}
 
-	hRWLock::~hRWLock()
+	hRWLockGroup::~hRWLockGroup()
 	{
 		for (auto p : items)
 			delete p;
 	}
 
-	bool hRWLock::readLock(uint8_t i)
+	bool hRWLockGroup::readLock(uint8_t i)
 	{
 		if (!checkSize(i))
 			return false;
@@ -260,7 +403,7 @@ namespace hThread
 		return true;
 	}
 
-	bool hRWLock::readUnlock(uint8_t i)
+	bool hRWLockGroup::readUnlock(uint8_t i)
 	{
 		if (i >= items.size())
 			return false;
@@ -291,7 +434,7 @@ namespace hThread
 		return true;
 	}
 
-	bool hRWLock::writeLock(uint8_t i)
+	bool hRWLockGroup::writeLock(uint8_t i)
 	{
 		if (!checkSize(i))
 			return false;
@@ -354,12 +497,12 @@ namespace hThread
 		return ret;
 	}
 
-	bool hRWLock::writeUnlock(uint8_t i)
+	bool hRWLockGroup::writeUnlock(uint8_t i)
 	{
 		return false;
 	}
 
-	bool hRWLock::checkSize(uint8_t i)
+	bool hRWLockGroup::checkSize(uint8_t i)
 	{
 		if (data.error)
 			return false;
@@ -370,7 +513,7 @@ namespace hThread
 		return true;
 	}
 
-	bool hRWLock::resize(uint8_t n)
+	bool hRWLockGroup::resize(uint8_t n)
 	{
 		LOCK0;
 
@@ -395,6 +538,7 @@ namespace hThread
 			for (uint8_t i = cnt; i < n; ++i)
 				items[i] = new hRWLockItem(i, data);
 	}
+#endif
 
 #undef LOCK
 #undef LOCK0

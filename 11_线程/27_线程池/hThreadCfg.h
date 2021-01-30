@@ -1,16 +1,23 @@
 #pragma once
 #include "hConfig.h"
 
-BEG_CFGSTRUCT(TreadBaseCfg)
+//任务属性类型
+BEG_ENUM(TaskAttrType)
 {
-	size_t minThd = 0;
-	size_t initThd = 0;
-	size_t runThd = 0;
-	size_t maxThd = 0;
+	Loop,	//环任务
+	Max
 }
-END_CFGSTRUCT(TreadBaseCfg, minThd, initThd, runThd, maxThd)
+END_ENUM(TaskAttrType, Max, Loop)
 
-BEG_ENUM(TaskStateType)
+BEG_ENUM(TaskAttrTypeBit)
+{
+	Loop = 0x00000001,	//环任务
+	Max
+}
+END_ENUM(TaskAttrTypeBit, Max, Loop)
+
+//任务状态类型
+BEG_ENUM(TaskStatType)
 {
 	Init,
 	Wait,
@@ -20,7 +27,17 @@ BEG_ENUM(TaskStateType)
 	Error,
 	Max
 }
-END_ENUM(TaskStateType, Max, Init, Wait, Ready, Run, Finish, Error)
+END_ENUM(TaskStatType, Max, Init, Wait, Ready, Run, Finish, Error)
+
+//线程基础配置
+BEG_CFGSTRUCT(TreadBaseCfg)
+{
+	size_t minThd = 0;
+	size_t initThd = 0;
+	size_t runThd = 0;
+	size_t maxThd = 0;
+}
+END_CFGSTRUCT(TreadBaseCfg, minThd, initThd, runThd, maxThd)
 
 BEG_ENUM(TaskMgrType)
 {
@@ -45,8 +62,6 @@ END_ENUM(TaskMgrPriority, Max, Highest, Higher, High, Normal, Low, Lower, Lowest
 
 BEG_CFGMAP(TaskMgrCfg)
 {
-	DECL_CFGMAP(TaskMgrPriority, priority);
-
 	TaskMgrType tType = TaskMgrType::None;
 	TaskMgrPriority priority = TaskMgrPriority::Max;
 	size_t maxBusyThd = 0;//忙碌线程超过最大上限，则不可分配任务
@@ -55,9 +70,7 @@ END_CFGMAP(TaskMgrCfg, TaskMgrPriority, priority, tType, maxBusyThd)
 
 BEG_CFGDATA(ThreadPoolCfg)
 {
-	DECL_CFGDATA(ThreadPoolCfg, baseCfg, taskMgrCfg);
-
 	TreadBaseCfg baseCfg;
 	TaskMgrCfg taskMgrCfg;
 }
-END_CFGDATA()
+END_CFGDATA(ThreadPoolCfg, baseCfg, taskMgrCfg)

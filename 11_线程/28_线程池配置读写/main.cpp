@@ -1,14 +1,25 @@
 #include "global.h"
+#include "hTool.h"
 #include "hConfig.h"
 
-BEG_CFGSTRUCT(TreadBaseCfg)
+BEG_CFGSTRUCT(ThreadBaseCfg)
 {
 	size_t minThd = 0;
 	size_t initThd = 0;
 	size_t runThd = 0;
 	size_t maxThd = 0;
 }
-END_CFGSTRUCT(TreadBaseCfg, minThd, initThd, runThd, maxThd)
+END_CFGSTRUCT(ThreadBaseCfg, minThd, initThd, runThd, maxThd)
+
+//template <>
+//struct Logger<ThreadBaseCfg>
+//{
+//	static std::ostream& debug(std::ostream& os, const ThreadBaseCfg& t, uint8_t n = 0, char c = '\t')
+//	{
+//		os << std::string(n++, c) << "[" << TO_STRING(ThreadBaseCfg) << "]";
+//		return os;
+//	}
+//};
 
 BEG_ENUM(TaskMgrType)
 {
@@ -87,8 +98,6 @@ struct YAML::convert<TaskMgrPriority>
 
 BEG_CFGMAP(TaskMgrCfg)
 {
-	DECL_CFGMAP(TaskMgrPriority, priority);
-
 	TaskMgrType tType = TaskMgrType::None;
 	TaskMgrPriority priority = TaskMgrPriority::Max;
 }
@@ -96,13 +105,10 @@ END_CFGMAP(TaskMgrCfg, TaskMgrPriority, priority, tType)
 
 BEG_CFGDATA(ThreadPoolCfg)
 {
-	DECL_CFGDATA(ThreadPoolCfg, baseCfg, taskMgrCfg);
-
-	TreadBaseCfg baseCfg;
+	ThreadBaseCfg baseCfg;
 	TaskMgrCfg taskMgrCfg;
 }
-END_CFGDATA()
-
+END_CFGDATA(ThreadPoolCfg, baseCfg, taskMgrCfg)
 
 using namespace std;
 
@@ -112,8 +118,41 @@ int main()
 //	cout << TO_STRING(REPEAT_A_SEP(STRUCTENUM_F, 2, SEM_M, TaskMgrPriority, value, Highest, Higher)) << endl;
 //#undef STRUCTENUM_F
 
+	ThreadBaseCfg cfg;
+	Debug(cout, cfg) << endl;
+
+	TaskMgrType tType;
+	Debug(cout, tType) << endl;
+	Debug(cout, 1) << endl;
+	Debug(cout, "hello") << endl;
+
+	TaskMgrCfgItem item;
+	Debug(cout, item) << endl;
+	const TaskMgrCfgItem& cItem = item;
+	cout << typeid(cItem).name() << endl;
+	cout << std::boolalpha;
+	cout << is_same<std::remove_reference<TaskMgrCfgItem&>::type, TaskMgrCfgItem>() << endl;
+	cout << is_same<std::remove_reference<const TaskMgrCfgItem&>::type, const TaskMgrCfgItem>() << endl;
+	cout << is_same<std::remove_cv<std::remove_reference<const TaskMgrCfgItem&>::type>::type, TaskMgrCfgItem>() << endl;
+	Debug(cout, cItem) << endl;
+
+	TaskMgrCfg mCfg;
+	mCfg.insert(make_pair(TaskMgrPriority::Higher, TaskMgrCfgItem()));
+	mCfg.insert(make_pair(TaskMgrPriority::Low, TaskMgrCfgItem()));
+	Debug(cout, mCfg) << endl;
+	
 	ThreadPoolCfg t("hThread.yml");
 	t.loadCfg();
+	Debug(cout, t) << endl;
+	cout << "------" << endl;
+
+	list<int>::iterator it;	
+	cout << typeid(it).name() << endl;
+	Debug(cout, it) << endl;
+	list<int> v = { 10 };
+	Debug(cout, v.begin()) << endl;
+	Debug(cout, v.end()) << endl;
+
 
 	//TaskMgrCfg2 c2("hThread.yml");
 	//c2.loadCfg();

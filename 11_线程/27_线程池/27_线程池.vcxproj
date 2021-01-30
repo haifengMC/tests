@@ -147,14 +147,17 @@
     <ClCompile Include="hRWLock.cpp" />
     <ClCompile Include="hTask.cpp" />
     <ClCompile Include="hTaskMgr.cpp" />
+    <ClCompile Include="hTaskNode.cpp" />
     <ClCompile Include="hThread.cpp" />
     <ClCompile Include="hThreadPoolMgr.cpp" />
     <ClCompile Include="hThreadPool.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hRWLock.h" />
     <ClInclude Include="hTask.h" />
+    <ClInclude Include="hTaskImpl.h" />
     <ClInclude Include="hTaskMgr.h" />
     <ClInclude Include="hTaskMgrImpl.h" />
     <ClInclude Include="hTaskNode.h" />
@@ -162,6 +165,10 @@
     <ClInclude Include="hThreadCfg.h" />
     <ClInclude Include="hThreadPool.h" />
     <ClInclude Include="hThreadPoolMgr.h" />
+    <ClInclude Include="test.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

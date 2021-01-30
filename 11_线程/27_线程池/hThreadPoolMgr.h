@@ -13,8 +13,8 @@ namespace hThread
 
 		ThreadPoolMgr();
 
-		const TreadBaseCfg& getBaseCfg() const { return cfgData.baseCfg; }
-		const TaskMgrCfg& getTaskMgrCfg() const { return cfgData.taskMgrCfg; }
+		const TreadBaseCfg& getBaseCfg() const { return cfgData.data.baseCfg; }
+		const TaskMgrCfg& getTaskMgrCfg() const { return cfgData.data.taskMgrCfg; }
 
 	};
 #define sTreadPoolMgr hThread::ThreadPoolMgr::getMe()

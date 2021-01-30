@@ -3,7 +3,7 @@
 
 #include <chrono>    // std::chrono::seconds
 #include <iostream>  // std::cout
-#include <thread>    // std::thread, std::this_thread::sleep_for
+#include <thread>    // std::thread, std::this_thread::sleep_for 
 
 void thread_task(int n) {
 	std::this_thread::sleep_for(std::chrono::seconds(n));

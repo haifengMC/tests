@@ -5,16 +5,16 @@
 #include <initializer_list>
 
 using namespace std;
+mutex m;
 
 struct AData
 {
 	vector<int> v = { 1, 2, 3 };
-
 	AData& operator=(initializer_list<int> il)
 	{
-		v.clear();
+		int id = 0;
 		for (int i : il)
-			v.push_back(i);
+			v[id] = i;
 
 		return *this;
 	}
@@ -23,8 +23,10 @@ struct AData
 
 ostream& operator<<(ostream& os, const AData& data)
 {
-	for (auto i : data.v)
-		os << i << " ";
+	//for (auto i : data.v)
+	//	os << i << " ";
+	for (size_t i = 0; i < data.v.size(); ++i)
+		os << data.v[i] << " ";
 
 	return os;
 }
@@ -32,14 +34,17 @@ ostream& operator<<(ostream& os, const AData& data)
 struct AItem
 {
 	AData& data;
-	mutex m;
+	//mutex m;
 
 	AItem(AData& data) : data(data) {}
 
 	void pData(int i)
 	{
 		cout << data << endl;
-		data = { i + 10, i + 20, i + 30 };
+		{
+			lock_guard<mutex> lk(m);
+			data = { i + 10, i + 20, i + 30 };
+		}
 		cout << data << endl;
 	}
 };
@@ -50,24 +55,16 @@ struct A
 	AData data;
 	vector<AItem> items;
 
-	void pData(int i)
+	void pData(size_t i)
 	{
-		lock_guard<mutex> lk(m);
+		//lock_guard<mutex> lk(m);
 
 		size_t size = items.size();
-		if (i < size)
-		{
-			items[i].pData(i);
-			return;
-		}
+		if (i >= size)
+			items.resize(i + 1, data);
 
-		for (size_t j = size; i <= i; ++j)
-		{
-			items.reserve(i + 1);
-			//AItem item(data);
-			//items.insert(items.end(), move(AItem(data)));
-			//items.emplace_back(data);
-		}
+		items[i].pData(i);
+
 
 	}
 } a;
