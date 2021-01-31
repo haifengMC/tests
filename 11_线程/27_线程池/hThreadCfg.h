@@ -29,15 +29,27 @@ BEG_ENUM(TaskStatType)
 }
 END_ENUM(TaskStatType, Max, Init, Wait, Ready, Run, Finish, Error)
 
+//线程成员类型
+BEG_ENUM(ThreadMemType)
+{
+	Work,//工作线程
+	Mgr,//管理线程
+	Max
+}
+END_ENUM(ThreadMemType, Max, Work, Mgr)
+
 //线程基础配置
 BEG_CFGSTRUCT(ThreadBaseCfg)
 {
+	//管理线程
+	size_t initMgrThd = 0;
+	//工作线程
 	size_t minThd = 0;
 	size_t initThd = 0;
 	size_t runThd = 0;
 	size_t maxThd = 0;
 }
-END_CFGSTRUCT(ThreadBaseCfg, minThd, initThd, runThd, maxThd)
+END_CFGSTRUCT(ThreadBaseCfg, initMgrThd, minThd, initThd, runThd, maxThd)
 
 BEG_ENUM(TaskMgrType)
 {

@@ -1,4 +1,5 @@
 baseCfg:
+  initMgrThd: 1
   minThd: 3
   initThd: 5
   runThd: 10

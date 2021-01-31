@@ -42,6 +42,9 @@
     <ClCompile Include="hTaskNode.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="hThreadMem.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hTask.h">
@@ -78,6 +81,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="hThreadPoolImpl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="hThreadMem.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
