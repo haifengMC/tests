@@ -168,17 +168,17 @@ namespace hThread
 		hTool::hUniqueMapVal<size_t, Task>(_thisId, this),
 		_attrb(std::move(t._attrb)), _state(std::move(t._state)) {}
 
-	bool Task::init(/*TaskMgr* pMgr*/)
+	bool Task::init(TaskMgr* pMgr)
 	{
-		//if (!pMgr)
-		//	return false;
+		if (!pMgr)
+			return false;
 
 		if (!_attrb)
 			return false;
 
 		_state.emplace();
-		//stat->pMgr = pMgr;
-		_state->_state = TaskStatType::Init; 
+		_state->pMgr = pMgr;
+		_state->_stateTy = TaskStatType::Init; 
 		_state->_nodeIt = _attrb->_nodeList.end();
 
 		return true;
@@ -186,18 +186,18 @@ namespace hThread
 
 	bool Task::setStat(TaskStatType state)
 	{
-		if (TaskStatType::Max >= state)
+		if (TaskStatType::Max <= state)
 			return false;
 
 		if (!check())
 			return false;
 
-		if (_state->_state == state)
+		if (_state->_stateTy == state)
 			return false;
 
 		Task* pThis = this;
 		//stat->pMgr->spliceTasks(stat->state, state, &pThis, 1);
-		_state->_state = state;
+		_state->_stateTy = state;
 		return true;
 	}
 
