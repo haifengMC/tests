@@ -9,8 +9,12 @@ namespace hThread
 	class ThreadMem
 	{
 		DefLog_Init();
-		std::thread _thrd;
+		hTool::hAutoPtr<std::thread> _pThrd;
+
+		ThreadMemStatType _statType;
+		std::list<size_t>::iterator _statIt;//_thrdId中指向自己的迭代器
 	protected:
+		ThreadMemType _type = ThreadMemType::Max;
 		size_t _id = 0;
 		std::function<void()> _func;
 		//运行条件
@@ -27,14 +31,16 @@ namespace hThread
 		hRWLock* pRwLock = NULL;//任务锁(由线程池提供)
 
 #endif
-	private:
-
 	protected:
 		virtual void setFunc() = 0;//设置线程每个线程成员都必须实现
 	public:
 		ThreadMem(size_t id);
 		virtual ~ThreadMem();
 
+		void run();
+
+		bool setStat(ThreadMemStatType type, std::list<size_t>::iterator& it);
+		bool updateStat(ThreadMemStatType type);
 #if 0
 
 		void notify() { runCv.notify_all(); }
@@ -59,6 +65,16 @@ namespace hThread
 	public:
 		ThreadMemWork(size_t id);
 		~ThreadMemWork() {}
+	};
+
+	//管理线程成员
+	class ThreadMemMgr : public ThreadMem
+	{
+	protected:
+		void setFunc();
+	public:
+		ThreadMemMgr(size_t id);
+		~ThreadMemMgr() {}
 	};
 }
 DefLog(hThread::ThreadMem, _id);

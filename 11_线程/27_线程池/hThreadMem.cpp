@@ -11,7 +11,7 @@ namespace hThread
 		case ThreadMemType::Work:
 			return new ThreadMemWork(id);
 		case ThreadMemType::Mgr:
-			return NULL;
+			return new ThreadMemMgr(id);
 		default:
 			break;
 		}
@@ -25,6 +25,47 @@ namespace hThread
 	{
 		COUT_LK(_id << " 线程释放...");
 	}
+
+	void ThreadMem::run()
+	{
+		if (!updateStat(ThreadMemStatType::Ready))
+			return;
+
+		setFunc();
+		_pThrd.bind(new std::thread(_func));
+		_pThrd->detach();
+	}
+
+	bool ThreadMem::setStat(ThreadMemStatType type, std::list<size_t>::iterator& it)
+	{
+		if (_statType == type)
+			return false;
+
+		if (ThreadMemStatType::Max <= type)
+			return false;
+
+		_statType = type;
+		_statIt = it;
+		return true;
+	}
+
+	bool ThreadMem::updateStat(ThreadMemStatType type)
+	{
+		if (_statType == type)
+			return false;
+
+		if (ThreadMemStatType::Max <= type)
+			return false;
+
+		auto& data = sThrdPool.getMemData(_type);
+		auto& oldList = data._thrdId[_statType];
+		auto& newList = data._thrdId[type];
+
+		_statType = type;
+		newList.splice(newList.end(), oldList, _statIt);
+		return true;
+	}
+
 #if 0
 	void ThreadMem::runTask(Task* const& task)
 	{
@@ -39,7 +80,7 @@ namespace hThread
 	{
 		_func = [&]()
 		{
-			COUT_LK(_id << " 线程启动...");
+			COUT_LK(_id << " 工作线程启动...");
 
 			std::mutex m;
 			std::unique_lock<std::mutex> lk(m);
@@ -47,13 +88,13 @@ namespace hThread
 			while (!_close)
 			{
 				//TaskNode* pNode = NULL;
-				COUT_LK(_id << " 线程进入循环，寻找可执行任务...");
+				COUT_LK(_id << " 工作线程进入循环...");
 
 				_runCv.wait(lk, [&]
 					{
 						if (!_pTask)
 						{
-							COUT_LK(_id << " 无任务，线程挂起...");
+							COUT_LK(_id << " 无任务，工作线程挂起...");
 							return false;
 						}
 #if 0
@@ -139,6 +180,38 @@ namespace hThread
 	ThreadMemWork::ThreadMemWork(size_t id) :
 		ThreadMem(id)
 	{
+		_type = ThreadMemType::Work;
 		COUT_LK(_id << " 工作线程创建...");
+	}
+
+	void ThreadMemMgr::setFunc()
+	{
+		_func = [&]()
+		{
+			COUT_LK(_id << " 管理线程启动...");
+
+			std::mutex m;
+			std::unique_lock<std::mutex> lk(m);
+
+			while (!_close)
+			{
+				COUT_LK(_id << " 管理线程进入循环...");
+
+				_runCv.wait(lk, [&]
+					{
+
+
+						COUT_LK(_id << " 管理线程挂起...");
+						return false;
+					});
+			}
+		};
+	}
+
+	ThreadMemMgr::ThreadMemMgr(size_t id) :
+		ThreadMem(id)
+	{
+		_type = ThreadMemType::Mgr;
+		COUT_LK(_id << " 管理线程创建...");
 	}
 }

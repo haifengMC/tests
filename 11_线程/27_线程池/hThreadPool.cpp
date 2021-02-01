@@ -9,6 +9,26 @@ namespace hThread
 //#define WT_LOCK sThreadPool.writeLock()
 //#define WT_UNLOCK sThreadPool.writeUnlock()
 
+	void ThreadMemData::init(size_t num)
+	{
+		ThreadMemStatType stat = ThreadMemStatType::Init;
+		for (size_t i = 0; i < num; ++i)
+		{
+			size_t id = _memArr.size();
+			auto it = _thrdId[stat].insert(_thrdId[stat].end(), id);
+			ThreadMem* pMem = createThrdMem(_type, id);
+			pMem->setStat(stat, it);
+			_memArr.push_back(pMem);
+		}
+	}
+
+	void ThreadMemData::run()
+	{
+		auto& initList = _thrdId[ThreadMemStatType::Init];
+		for (auto it = initList.begin(); it != initList.end();)
+			_memArr[*it++]->run();
+	}
+
 	ThreadPool::ThreadPool() :
 		_valid(sThrdPoolMgr), 
 		_base(sThrdPoolMgr.getBaseCfg()){ init(); }
@@ -23,8 +43,11 @@ namespace hThread
 		for (auto& item : sThrdPoolMgr.getTaskMgrCfg())
 			_taskMgr.emplace_back(new TaskMgr(item.second));
 		COUT_LK("初始化任务管理器完毕...");
-		createThrd(_base.data.initThd);
-		COUT_LK("初始化线程池完毕...");
+		_memData[ThreadMemType::Work]._type = ThreadMemType::Work;
+		_memData[ThreadMemType::Mgr]._type = ThreadMemType::Mgr;
+		createThrd(_base.data.initMgrThd, ThreadMemType::Mgr);
+		createThrd(_base.data.initThd, ThreadMemType::Work);
+		COUT_LK("初始化线程成员完毕...");
 	}
 
 	void ThreadPool::final()
@@ -35,11 +58,13 @@ namespace hThread
 #endif
 
 	}
-#if 0
 
 	void ThreadPool::run()
 	{
+		for (auto& data : _memData)
+			data.run();
 	}
+#if 0
 
 	void ThreadPool::stop()
 	{
@@ -74,13 +99,9 @@ namespace hThread
 		if (ThreadMemType::Max <= t)
 			return;
 
-		ThreadMemMgr& mgr = _memMgrArr[t];
-		for (size_t i = 0; i < num; ++i)
-		{
-			size_t id = mgr._memMgr.size();
-			mgr._memMgr.push_back(createThrdMem(t, id));
-			mgr._readyThd.insert(id);
-		}
+		ThreadMemData& data = _memData[t];
+		data.init(num);
+
 		//rwLock.writeUnlock();
 	}
 #if 0

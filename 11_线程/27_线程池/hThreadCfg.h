@@ -32,11 +32,21 @@ END_ENUM(TaskStatType, Max, Init, Wait, Ready, Run, Finish, Error)
 //线程成员类型
 BEG_ENUM(ThreadMemType)
 {
-	Work,//工作线程
 	Mgr,//管理线程
+	Work,//工作线程
 	Max
 }
 END_ENUM(ThreadMemType, Max, Work, Mgr)
+
+//线程成员状态类型
+BEG_ENUM(ThreadMemStatType)
+{
+	Init,
+	Ready,
+	Busy,
+	Max
+}
+END_ENUM(ThreadMemStatType, Max, Init, Ready, Busy)
 
 //线程基础配置
 BEG_CFGSTRUCT(ThreadBaseCfg)

@@ -121,19 +121,25 @@ TEST(按权重随机生成)
 
 TEST(id生成器debug)
 {
-	std::map <size_t, Task> _tasks;
-	hTool::hUniqueIdGen<size_t, Task> _tasksIdGen(_tasks, 50, 1, 100);
+	hTool::hUniqueIdGen<size_t, Task> _tasksIdGen(50, 1, 100);
 	Debug(cout, _tasksIdGen) << endl;
-	InsertTask(t1);
-	InsertTask(t2);
+	Task* va = new Task(50, 2, TaskAttrType::Loop);
+	va->initNodeData(new TestNodeData("test data"));
+	va->addNode(new TestTaskNode("test node1"));
+	va->addNode(new TestTaskNode("test node2"));
+	cout << _tasksIdGen.insert(va).second << endl;
+	//InsertTask(t1);
+	//InsertTask(t2);
 	Debug(cout, _tasksIdGen) << endl;
-	_tasksIdGen.putKey(1);
-	Debug(cout, _tasksIdGen) << endl;
-	InsertTask(t3);
-	Debug(cout, _tasksIdGen) << endl;
-	InsertTask(t4);
-	Debug(cout, _tasksIdGen) << endl;
+	//_tasksIdGen.putKey(1);
+	//Debug(cout, _tasksIdGen) << endl;
+	//InsertTask(t3);
+	//Debug(cout, _tasksIdGen) << endl;
+	//InsertTask(t4);
+	//Debug(cout, _tasksIdGen) << endl;
 }
+
+#if 0
 
 TEST(提交任务到管理器)
 {
@@ -159,7 +165,6 @@ TEST(提交任务到管理器)
 
 TEST(提交任务到线程池日志)
 {
-	Debug(cout, sThrdPool) << endl;
 	Task t1(50, 2, TaskAttrType::Loop);
 	t1.initNodeData(new TestNodeData("test data"));
 	t1.addNode(new TestTaskNode("test node1"));
@@ -176,5 +181,14 @@ TEST(提交任务到线程池日志)
 	sThrdPool.commitTasks(t2, TaskMgrPriority::Higher);
 	Debug(cout, sThrdPool) << endl;
 }
+
+TEST(线程池运行5秒)
+{
+	sThrdPool.run();
+	this_thread::sleep_for(2s);
+	Debug(cout, sThrdPool) << endl;
+	this_thread::sleep_for(2s);
+}
+#endif
 
 TEST_MAIN()
