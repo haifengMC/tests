@@ -6,9 +6,10 @@ using namespace std;
 
 void f(list<int>& l)
 {
+	cout << "{";
 	for (auto i : l)
 		cout << i << " ";
-	cout << endl;
+	cout << "}" << endl;
 }
 
 struct A
@@ -50,9 +51,13 @@ int main()
 		v.emplace_back(l1.insert(l1.end(), 0));
 		v.emplace_back(l1.insert(l1.end(), 1));
 		v.emplace_back(l1.insert(l1.end(), 2));
-		list<int> l2;
-		for (auto& i : l1)
-			l2.splice(l2.end(), l1, v[i]._it);
+		list<int> l2; 
+		f(l1);
+		f(l2);
+		for (auto it = l1.begin(); it != l1.end();)
+			l2.splice(l2.end(), l1, v[*it++]._it);
+		f(l1);
+		f(l2);
 	}
 
 	return 0;
