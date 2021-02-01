@@ -4,158 +4,38 @@
 
 namespace hThread
 {
-#define RD_LOCK sThreadPool.readLock()
-#define RD_UNLOCK sThreadPool.readUnlock()
-#define WT_LOCK sThreadPool.writeLock()
-#define WT_UNLOCK sThreadPool.writeUnlock()
+//#define RD_LOCK sThreadPool.readLock()
+//#define RD_UNLOCK sThreadPool.readUnlock()
+//#define WT_LOCK sThreadPool.writeLock()
+//#define WT_UNLOCK sThreadPool.writeUnlock()
 
-#if 0
-
-	std::mutex coutM;
-#define	_PUTOUT_D
-#define COUT_LK(x)
-#ifdef _PUTOUT_D 
-#define COUT_LK(x) \
-	{ \
-		std::lock_guard<std::mutex> lk(coutM); \
-		std::cout << x << std::endl; \
-	}
-#endif // _PUTOUT_D 
-
-	ThreadMem::ThreadMem(const size_t& id) : id(id),
-		func([&]()
-		{
-			COUT_LK(this->id << " 线程启动...");
-
-			std::mutex m;
-			std::unique_lock<std::mutex> lk(m);
-
-			while (!isClose())
-			{
-				TaskNode* pNode = NULL;
-
-				COUT_LK(this->id << " 线程等待执行任务...");
-				runCv.wait(lk, [&]
-					{
-						if (!pTask || !pNext || !pRwLock || !pTask->getStat())
-							return false;
-
-						pRwLock->readLock();
-						bool isFailed = TaskStateType::Error == pTask->getStat()->state;
-						pRwLock->readUnlock();
-
-						pRwLock->writeLock();
-						pNode = pTask->getNextNode();
-						pRwLock->writeUnlock();
-
-						if (!pNode)//获取节点失败
-							isFailed = true;
-
-						if (isFailed)//任务失效释放内存
-						{
-							pRwLock->writeLock();
-							pTask->setStat(TaskStateType::Error);
-							pTask = NULL;
-							pNext = NULL;
-							pRwLock->writeUnlock();
-							return false;
-						}
-
-						return true;
-					});
-
-				while (pNode)
-				{
-					if (!pNode->initProc())
-					{
-						pRwLock->writeLock();
-						pTask->setStat(TaskStateType::Error);
-						pTask = NULL;
-						pNext = NULL;
-						pRwLock->writeUnlock();
-						break;
-					}
-
-					pRwLock->readLock();
-					bool preRet = pNode->preProc();
-					pRwLock->readUnlock();
-
-					if (!preRet)//预处理失败，做后续处理
-					{
-						pNode->finalProc();
-						break;
-					}
-
-					runCv.wait(lk, [&]//等待
-						{
-							pRwLock->readLock();
-							bool canProcV = pNode->canProc(nodeId);
-							pRwLock->readUnlock();
-
-							return canProcV;
-						});
-
-					pRwLock->writeLock();
-
-					TaskNode* pCurNode = pNode;
-					pNode = pTask->getNextNode();
-					if (pNode)
-						nodeId = pNode->getId();
-					pCurNode->onProc();
-
-					pRwLock->writeUnlock();
-
-					pCurNode->finalProc();
-					this->pNext->notify();
-				}
-
-			}
-			sThreadPool.removeThrd(id);
-		}),
-		thrd(func)
-	{
-		COUT_LK(id << " 线程创建...");
-		thrd.detach();
-	}
-
-	ThreadMem::~ThreadMem()
-	{
-		COUT_LK(id << " 线程释放...");
-	}
-#undef COUT_LK
-
-	void ThreadMem::runTask(Task* const& task)
-	{
-		WT_LOCK;
-		pTask = task;
-		task->addThrd(this);
-		WT_UNLOCK;
-		runCv.notify_one();//应当为本线程打开自锁，在任务锁前打开，任务锁应在添加完任务后由任务打开
-	}
-
-	ThreadPool::ThreadPool() : 
-		_invalid(sTreadPoolMgr), 
-		base(sTreadPoolMgr.getBaseCfg()){ init(); }
+	ThreadPool::ThreadPool() :
+		_valid(sThrdPoolMgr), 
+		_base(sThrdPoolMgr.getBaseCfg()){ init(); }
 
 	ThreadPool::~ThreadPool() { final(); }
 
 	void ThreadPool::init()
 	{
-		if (_invalid)
-		{//Err
+		if (!_valid)//Err
 			return;
-		}
-		for (auto& item : sTreadPoolMgr.getTaskMgrCfg())
-			taskMgr.emplace_back(item.second);
 
-		createThrd(base.initThd);
+		for (auto& item : sThrdPoolMgr.getTaskMgrCfg())
+			_taskMgr.emplace_back(new TaskMgr(item.second));
+		COUT_LK("初始化任务管理器完毕...");
+		createThrd(_base.data.initThd);
+		COUT_LK("初始化线程池完毕...");
 	}
 
 	void ThreadPool::final()
 	{
+#if 0
 		for (auto& pMem : memMgr)
 			DEL(pMem);
+#endif
+
 	}
+#if 0
 
 	void ThreadPool::run()
 	{
@@ -164,14 +44,17 @@ namespace hThread
 	void ThreadPool::stop()
 	{
 	}
+#endif
 
-	bool ThreadPool::commitTasks(Task* task, size_t num, TaskMgrPriority priority)
+	size_t ThreadPool::commitTasks(Task& task, TaskMgrPriority priority)
 	{
-		if (!task || TaskMgrPriority::Max <= priority)
-			return false;
+		if (TaskMgrPriority::Max <= priority)
+			return 0;
 
-		taskMgr[(size_t)priority].commitTasks(task, num);
+		return _taskMgr[priority]->commitTasks(task);
 	}
+
+#if 0
 
 	hRWLock* ThreadPool::getRWLock(Task* pTask)
 	{
@@ -184,18 +67,23 @@ namespace hThread
 
 		return taskLock[pTask] = new hRWLock;
 	}
-
-	void ThreadPool::createThrd(const size_t& num)
+#endif
+	void ThreadPool::createThrd(size_t num, ThreadMemType t)
 	{
-		rwLock.writeLock();
+		//rwLock.writeLock();
+		if (ThreadMemType::Max <= t)
+			return;
+
+		ThreadMemMgr& mgr = _memMgrArr[t];
 		for (size_t i = 0; i < num; ++i)
 		{
-			memMgr.push_back(new ThreadMem(memMgr.size()));
-			readyThd.insert(memMgr.back()->getId());
+			size_t id = mgr._memMgr.size();
+			mgr._memMgr.push_back(createThrdMem(t, id));
+			mgr._readyThd.insert(id);
 		}
-
-		rwLock.writeUnlock();
+		//rwLock.writeUnlock();
 	}
+#if 0
 	void ThreadPool::closeThrd(const size_t& id)
 	{
 		rwLock.writeLock();
@@ -252,8 +140,8 @@ namespace hThread
 	}
 #endif
 
-#undef RD_LOCK
-#undef RD_UNLOCK
-#undef WT_LOCK
-#undef WT_UNLOCK
+//#undef RD_LOCK
+//#undef RD_UNLOCK
+//#undef WT_LOCK
+//#undef WT_UNLOCK
 }

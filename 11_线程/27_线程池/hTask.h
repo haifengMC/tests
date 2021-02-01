@@ -58,10 +58,10 @@ namespace hThread
 	struct TaskStat
 	{
 		DefLog_Init();
-		TaskStatType _state = TaskStatType::Max;//当前状态
-		std::list<Task*>::iterator _stateIt;//指向当前状态的迭代器
+		TaskStatType _stateTy = TaskStatType::Max;//当前状态
+		std::list<size_t>::iterator _stateIt;//指向当前状态的迭代器
 
-		//TaskMgr* pMgr = NULL;//指向自己所在管理器
+		TaskMgr* pMgr = NULL;//指向自己所在管理器
 		//ThrdList thrds;//当前运行该任务的线程
 		NodeListIt _nodeIt;//指向当前在运行节点
 
@@ -80,7 +80,7 @@ namespace hThread
 		Task(hTool::hAutoPtr<TaskAttr> attr);
 		Task(Task&& t);
 
-		bool init(/*TaskMgr* pMgr*/);
+		bool init(TaskMgr* pMgr);
 
 		/*
 		设置属性
@@ -110,5 +110,5 @@ namespace hThread
 
 }
 DefLog(hThread::TaskAttr, _weight, _thrdExpect, _incId, _attr, _nodeData, _nodeList);
-DefLog(hThread::TaskStat, _state, _stateIt, _nodeIt);
+DefLog(hThread::TaskStat, _stateTy, _stateIt, pMgr, _nodeIt);
 DefLog(hThread::Task, _thisId, _attrb, _state);

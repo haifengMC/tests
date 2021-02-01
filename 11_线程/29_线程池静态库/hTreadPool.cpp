@@ -3,11 +3,11 @@
 
 namespace hThread
 {
-	ThreadPool::ThreadPool() : _invalid(false), busyThd(0), cfgData("hThread.yml")
+	ThreadPool::ThreadPool() : _valid(false), busyThd(0), cfgData("hThread.yml")
 	{
 		if (!cfgData.loadCfg())
 		{//Err
-			_invalid = true;
+			_valid = true;
 			return;
 		}
 		init();

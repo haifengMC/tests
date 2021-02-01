@@ -11,38 +11,43 @@ namespace hThread
 		_tasksIdGen.resize(10000, 99999);
 	} 
 
+	size_t TaskMgr::commitTasks(Task& task)
+	{
+		return commitTasks(&task, 1);
+	}
+
 	//提交任务，将新任务提交给管理器，提交后默认状态为等待
 	size_t TaskMgr::commitTasks(Task* task, size_t num)
 	{
 		size_t ret = 0;
-#if 0
 		for (size_t n = 0; n < num; ++n)
 		{
 			Task&& taskRRef = std::move(task[n]);
-			if (!taskRRef.getStat() && !taskRRef.init(this))
-				continue;
+			if (!taskRRef.init(this))
+				continue;//初始化任务
 
-			if (TaskStateType::Init != taskRRef.getStat()->state)
-				continue;
+			if (TaskStatType::Init != taskRRef.getStat()->_stateTy)
+				continue;//检测初始化状态
 
-			if (!taskRRef.setStat(TaskStateType::Wait))
-				continue;
+			if (!taskRRef.setStat(TaskStatType::Wait))
+				continue;//提交后默认状态为等待
 
-			auto rsPair = tasksIdGen.insert(taskRRef);
+			auto rsPair = _tasksIdGen.insert(taskRRef);
 
 			if (!rsPair.second)
 				continue;
 
 			Task& taskRef = rsPair.first->second;
-
 			++ret;
-			weights.pushBack(taskRef.getWeight(), &taskRef);
 
-			auto& stRef = states[TaskStateType::Wait];
-			auto rsState = stRef.insert(stRef.end(), &taskRef);
-			taskRef.getStat()->stateIt = rsState;
+			//添加至权重管理
+			_weights.pushBack(taskRef.getWeight(), taskRef.getId());
+
+			//添加至状态管理
+			auto& stRef = _states[TaskStatType::Wait];
+			auto rsState = stRef.insert(stRef.end(), taskRef.getId());
+			taskRef.getStat()->_stateIt = rsState;
 		}
-#endif
 
 		return ret;
 	}

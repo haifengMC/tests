@@ -20,3 +20,11 @@ struct TestTaskNode : public hThread::TaskNode
 	TestTaskNode(const char* info);
 	std::ostream& debugShow(std::ostream& os, uint8_t n = 0, char c = '\t');
 };
+
+//idÉú³ÉÆ÷debug
+#define InsertTask(va)\
+	Task va(50, 2, TaskAttrType::Loop);\
+	va.initNodeData(new TestNodeData("test data"));\
+	va.addNode(new TestTaskNode("test node1"));\
+	va.addNode(new TestTaskNode("test node2"));\
+	cout << _tasksIdGen.insert(move(va)).second << endl

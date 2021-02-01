@@ -25,7 +25,7 @@ TEST(任务枚举类型测试)
 
 TEST(线程池配置加载)
 {
-	ThreadPoolMgr& pool = sTreadPoolMgr;
+	ThreadPoolMgr& pool = sThrdPoolMgr;
 }
 
 TEST(读写锁测试)
@@ -119,19 +119,62 @@ TEST(按权重随机生成)
 	}
 }
 
-TEST(创建任务管理器)
+TEST(id生成器debug)
+{
+	std::map <size_t, Task> _tasks;
+	hTool::hUniqueIdGen<size_t, Task> _tasksIdGen(_tasks, 50, 1, 100);
+	Debug(cout, _tasksIdGen) << endl;
+	InsertTask(t1);
+	InsertTask(t2);
+	Debug(cout, _tasksIdGen) << endl;
+	_tasksIdGen.putKey(1);
+	Debug(cout, _tasksIdGen) << endl;
+	InsertTask(t3);
+	Debug(cout, _tasksIdGen) << endl;
+	InsertTask(t4);
+	Debug(cout, _tasksIdGen) << endl;
+}
+
+TEST(提交任务到管理器)
 {
 	TaskMgrCfgItem base;
 	TaskMgr tM(base);
 	Debug(cout, tM) << endl;
-
+	Task t1(50, 2, TaskAttrType::Loop);
+	t1.initNodeData(new TestNodeData("test data"));
+	t1.addNode(new TestTaskNode("test node1"));
+	t1.addNode(new TestTaskNode("test node2"));
+	tM.commitTasks(t1);
+	Debug(cout, tM) << endl;	
+	Task t2[2]{ {50, 2, TaskAttrTypeBit::Loop}, {50, 2, TaskAttrTypeBit::Loop} };
+	t2[0].initNodeData();
+	t2[0].addNode(new TaskNode);
+	t2[0].addNode(new TaskNode);
+	t2[1].initNodeData(new TestNodeData("test data"));
+	t2[1].addNode(new TestTaskNode("test node1"));
+	t2[1].addNode(new TestTaskNode("test node2"));
+	tM.commitTasks(t2);
+	Debug(cout, tM) << endl;
 }
 
-TEST(id生成器debug)
+TEST(提交任务到线程池日志)
 {
-	std::map <size_t, Task> _tasks;
-	hTool::hUniqueIdGen<size_t, Task> _tasksIdGen(_tasks, 50);
-	Debug(cout, _tasksIdGen) << endl;
+	Debug(cout, sThrdPool) << endl;
+	Task t1(50, 2, TaskAttrType::Loop);
+	t1.initNodeData(new TestNodeData("test data"));
+	t1.addNode(new TestTaskNode("test node1"));
+	t1.addNode(new TestTaskNode("test node2"));
+	sThrdPool.commitTasks(t1);
+	Debug(cout, sThrdPool) << endl;
+	Task t2[2]{ {50, 2, TaskAttrTypeBit::Loop}, {50, 2, TaskAttrTypeBit::Loop} };
+	t2[0].initNodeData();
+	t2[0].addNode(new TaskNode);
+	t2[0].addNode(new TaskNode);
+	t2[1].initNodeData(new TestNodeData("test data"));
+	t2[1].addNode(new TestTaskNode("test node1"));
+	t2[1].addNode(new TestTaskNode("test node2"));
+	sThrdPool.commitTasks(t2, TaskMgrPriority::Higher);
+	Debug(cout, sThrdPool) << endl;
 }
 
 TEST_MAIN()

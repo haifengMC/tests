@@ -146,13 +146,19 @@ int main()
 	Debug(cout, t) << endl;
 	cout << "------" << endl;
 
-	list<int>::iterator it;	
-	cout << typeid(it).name() << endl;
-	Debug(cout, it) << endl;
+	list<int>::iterator itL;	
+	cout << typeid(itL).name() << endl;
+	Debug(cout, itL) << endl;
 	list<int> v = { 10 };
 	Debug(cout, v.begin()) << endl;
 	Debug(cout, v.end()) << endl;
 
+	cout << typeid(map<int, double>::iterator).name() << endl;
+	map<int, double>::iterator itM;
+	Debug(cout, itM) << endl;
+	map<int, double> m = { {1, 2.3} };
+	Debug(cout, m.begin()) << endl;
+	Debug(cout, m.end()) << endl;
 
 	//TaskMgrCfg2 c2("hThread.yml");
 	//c2.loadCfg();

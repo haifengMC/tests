@@ -5,9 +5,9 @@ namespace hThread
 {
 	class ThreadPool : public Singleton<ThreadPool>
 	{
-		bool _invalid;
+		bool _valid;
 		size_t busyThd;
-		std::vector<TaskMgr> taskMgr;
+		std::vector<TaskMgr> _taskMgr;
 
 		ThreadPoolCfg cfgData;
 	public:
