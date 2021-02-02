@@ -8,7 +8,7 @@
 
 TEST_INIT()
 {
-	addAttr(TestAttrType::Tail, 3);
+	addAttr(TestAttrType::Tail, 1);
 	Debug(std::cout, *this) << std::endl;
 }
 
@@ -123,72 +123,79 @@ TEST(id生成器debug)
 {
 	hTool::hUniqueIdGen<size_t, Task> _tasksIdGen(50, 1, 100);
 	Debug(cout, _tasksIdGen) << endl;
-	Task* va = new Task(50, 2, TaskAttrType::Loop);
-	va->initNodeData(new TestNodeData("test data"));
-	va->addNode(new TestTaskNode("test node1"));
-	va->addNode(new TestTaskNode("test node2"));
-	cout << _tasksIdGen.insert(va).second << endl;
-	//InsertTask(t1);
-	//InsertTask(t2);
+	InsertTask(t1);
+	InsertTask(t2);
 	Debug(cout, _tasksIdGen) << endl;
-	//_tasksIdGen.putKey(1);
-	//Debug(cout, _tasksIdGen) << endl;
-	//InsertTask(t3);
-	//Debug(cout, _tasksIdGen) << endl;
-	//InsertTask(t4);
-	//Debug(cout, _tasksIdGen) << endl;
+	_tasksIdGen.erase(t1);
+	Debug(cout, _tasksIdGen) << endl;
+	InsertTask(t3);
+	Debug(cout, _tasksIdGen) << endl;
+	InsertTask(t4);
+	Debug(cout, _tasksIdGen) << endl;
 }
-
-#if 0
 
 TEST(提交任务到管理器)
 {
 	TaskMgrCfgItem base;
 	TaskMgr tM(base);
 	Debug(cout, tM) << endl;
-	Task t1(50, 2, TaskAttrType::Loop);
-	t1.initNodeData(new TestNodeData("test data"));
-	t1.addNode(new TestTaskNode("test node1"));
-	t1.addNode(new TestTaskNode("test node2"));
+	PTask t1 = new Task(50, 2, TaskAttrType::Loop);
+	t1->initNodeData(new TestNodeData("test data"));
+	t1->addNode(new TestTaskNode("test node1"));
+	t1->addNode(new TestTaskNode("test node2"));
 	tM.commitTasks(t1);
 	Debug(cout, tM) << endl;	
-	Task t2[2]{ {50, 2, TaskAttrTypeBit::Loop}, {50, 2, TaskAttrTypeBit::Loop} };
-	t2[0].initNodeData();
-	t2[0].addNode(new TaskNode);
-	t2[0].addNode(new TaskNode);
-	t2[1].initNodeData(new TestNodeData("test data"));
-	t2[1].addNode(new TestTaskNode("test node1"));
-	t2[1].addNode(new TestTaskNode("test node2"));
+	PTask t2[2] = 
+	{ 
+		new Task(50, 2, TaskAttrTypeBit::Loop), 
+		new Task(50, 2, TaskAttrTypeBit::Loop)
+	};
+	t2[0]->initNodeData();
+	t2[0]->addNode(new TaskNode);
+	t2[0]->addNode(new TaskNode);
+	t2[1]->initNodeData(new TestNodeData("test data"));
+	t2[1]->addNode(new TestTaskNode("test node1"));
+	t2[1]->addNode(new TestTaskNode("test node2"));
 	tM.commitTasks(t2);
 	Debug(cout, tM) << endl;
 }
 
 TEST(提交任务到线程池日志)
 {
-	Task t1(50, 2, TaskAttrType::Loop);
-	t1.initNodeData(new TestNodeData("test data"));
-	t1.addNode(new TestTaskNode("test node1"));
-	t1.addNode(new TestTaskNode("test node2"));
+	PTask t1 = new Task(50, 2, TaskAttrType::Loop);
+	t1->initNodeData(new TestNodeData("test data"));
+	t1->addNode(new TestTaskNode("test node1"));
+	t1->addNode(new TestTaskNode("test node2"));
 	sThrdPool.commitTasks(t1);
 	Debug(cout, sThrdPool) << endl;
-	Task t2[2]{ {50, 2, TaskAttrTypeBit::Loop}, {50, 2, TaskAttrTypeBit::Loop} };
-	t2[0].initNodeData();
-	t2[0].addNode(new TaskNode);
-	t2[0].addNode(new TaskNode);
-	t2[1].initNodeData(new TestNodeData("test data"));
-	t2[1].addNode(new TestTaskNode("test node1"));
-	t2[1].addNode(new TestTaskNode("test node2"));
+	PTask t2[2] =
+	{
+		new Task(50, 2, TaskAttrTypeBit::Loop),
+		new Task(50, 2, TaskAttrTypeBit::Loop)
+	};
+	t2[0]->initNodeData();
+	t2[0]->addNode(new TaskNode);
+	t2[0]->addNode(new TaskNode);
+	t2[1]->initNodeData(new TestNodeData("test data"));
+	t2[1]->addNode(new TestTaskNode("test node1"));
+	t2[1]->addNode(new TestTaskNode("test node2"));
 	sThrdPool.commitTasks(t2, TaskMgrPriority::Higher);
 	Debug(cout, sThrdPool) << endl;
 }
 
 TEST(线程池运行5秒)
 {
+	PTask t1 = new Task(50, 2, TaskAttrType::Loop);
+	t1->initNodeData(new TestNodeData("test data"));
+	t1->addNode(new TestTaskNode("test node1"));
+	t1->addNode(new TestTaskNode("test node2"));
+	sThrdPool.commitTasks(t1);
+	this_thread::sleep_for(1s);
 	sThrdPool.run();
-	this_thread::sleep_for(2s);
+	this_thread::sleep_for(1s);
 	Debug(cout, sThrdPool) << endl;
-	this_thread::sleep_for(2s);
+	this_thread::sleep_for(4s);
+	sThrdPool.stop();
 }
-#endif
 
 TEST_MAIN()

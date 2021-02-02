@@ -2,9 +2,6 @@
 
 namespace hThread
 {
-	class Task;
-	class TaskMgr;
-	class ThreadMem;
 #if 0
 	class AllTasksData
 	{
@@ -28,13 +25,6 @@ namespace hThread
 		size_t popTasks(Task** const& task, const size_t& num);
 	};
 #endif
-
-	typedef hTool::hAutoPtr<TaskNode> PTaskNode;
-	typedef std::list<PTaskNode> NodeList;
-	typedef NodeList::iterator NodeListIt;
-
-	//typedef std::list<ThreadMem*> ThrdList;
-	//typedef ThrdList::iterator ThrdListIt;
 	
 	//任务属性(静态数据)
 	struct TaskAttr
@@ -45,7 +35,7 @@ namespace hThread
 
 		size_t _incId = 0;//节点递增id
 		std::bitset<TaskAttrType::Max> _attr;//任务属性，对应 TaskAttrType
-		hTool::hAutoPtr<NodeData> _nodeData;//节点数据
+		PNodeData _nodeData;//节点数据
 		NodeList _nodeList;//节点链表
 
 		void setAttr(const std::bitset<TaskAttrType::Max>& attr) { _attr = attr; }
@@ -62,7 +52,7 @@ namespace hThread
 		std::list<size_t>::iterator _stateIt;//指向当前状态的迭代器
 
 		TaskMgr* pMgr = NULL;//指向自己所在管理器
-		//ThrdList thrds;//当前运行该任务的线程
+		ThrdMemList thrds;//当前运行该任务的线程
 		NodeListIt _nodeIt;//指向当前在运行节点
 
 		~TaskStat() {}//需要实现析构
@@ -73,11 +63,11 @@ namespace hThread
 		DefLog_Init();
 		size_t _thisId = 0;//任务唯一id
 
-		hTool::hAutoPtr<TaskAttr> _attrb;
-		hTool::hAutoPtr<TaskStat> _state;
+		PTaskAttr _attrb;
+		PTaskStat _state;
 	public:
 		Task(size_t weight, size_t thrdExpect, uint16_t attr);
-		Task(hTool::hAutoPtr<TaskAttr> attr);
+		Task(PTaskAttr attr);
 		Task(Task&& t);
 
 		bool init(TaskMgr* pMgr);
@@ -95,14 +85,16 @@ namespace hThread
 
 		size_t getId() const { return _thisId; }
 		size_t getWeight() const;
-		hTool::hAutoPtr<TaskAttr>& getAttr() { return _attrb; }
-		hTool::hAutoPtr<TaskStat>& getStat() { return _state; }
+		PTaskAttr getAttr() { return _attrb; }
+		PTaskStat getStat() { return _state; }
 
 		PTaskNode getNextNode();
 		//添加线程到任务,还未启用
 		//void addThrd(ThreadMem* pMem);
 		//返回实际使用的线程数
 		//size_t runTask(const size_t& rate);
+		//根据当前线程数curThrd和期望线程数_thrdExpect确定最终需要的线程数
+		size_t calcNeedThrdNum(size_t curThrd);
 
 	private:
 		bool check() const;//一般性检测

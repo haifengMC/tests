@@ -24,9 +24,39 @@ namespace hThread
 
 	void ThreadMemData::run()
 	{
-		auto& initList = _thrdId[ThreadMemStatType::Init];
-		for (auto it = initList.begin(); it != initList.end();)
-			_memArr[*it++]->run();
+		execEvery(ThreadMemStatType::Init,
+			[&](PThrdMem pMem) { pMem->run(); return true; });
+	}
+
+	void ThreadMemData::stop()
+	{
+		execEvery(ThreadMemStatType::Wait,
+			[&](PThrdMem pMem) { pMem->stop(); return true; });
+		execEvery(ThreadMemStatType::Ready,
+			[&](PThrdMem pMem) { pMem->stop(); return true; });
+		execEvery(ThreadMemStatType::Run,
+			[&](PThrdMem pMem) { pMem->stop(); return true; });
+	}
+
+	void ThreadMemData::join()
+	{
+		execEvery(ThreadMemStatType::Init,
+			[&](PThrdMem pMem) { pMem->join(); return true; });
+	}
+
+	void ThreadMemData::execEvery(ThreadMemStatType statTy,
+		std::function<bool(PThrdMem)> func)
+	{
+		auto& thrdIds = _thrdId[statTy];
+		for (auto it = thrdIds.begin(); it != thrdIds.end();)
+		{
+			auto pMem = _memArr[*it++];
+			if (!pMem)
+				continue;
+
+			if (!func(pMem))
+				break;
+		}
 	}
 
 	ThreadPool::ThreadPool() :
@@ -64,14 +94,19 @@ namespace hThread
 		for (auto& data : _memData)
 			data.run();
 	}
-#if 0
 
 	void ThreadPool::stop()
 	{
-	}
-#endif
+		COUT_LK("停止线程池开始...");
+		for (auto& data : _memData)
+			data.stop();
+		for (auto& data : _memData)
+			data.join();
+		COUT_LK("停止线程池完毕...");
 
-	size_t ThreadPool::commitTasks(Task& task, TaskMgrPriority priority)
+	}
+
+	size_t ThreadPool::commitTasks(PTask& task, TaskMgrPriority priority)
 	{
 		if (TaskMgrPriority::Max <= priority)
 			return 0;
@@ -79,6 +114,43 @@ namespace hThread
 		return _taskMgr[priority]->commitTasks(task);
 	}
 
+	PTask ThreadPool::readyTasks()
+	{
+		size_t busyThdNum = getThrdMemNum(ThreadMemType::Work, ThreadMemStatType::Run);
+		for (auto pMgr : _taskMgr)
+		{
+			if (!pMgr)
+				continue;
+
+			PTask pTask = pMgr->readyTasks(busyThdNum);
+			if (pTask)
+				return pTask;
+		}
+
+		return PTask();
+	}
+
+	bool ThreadPool::initTasks(PTask pTask, size_t thrdNum)
+	{
+		if (!pTask || !thrdNum)
+			return false;
+
+		size_t needNum = pTask->calcNeedThrdNum(thrdNum);
+		size_t initNum = 0;
+		ThreadMemData& memData = sThrdPool.getThrdMemData(ThreadMemType::Work);
+		memData.execEvery(ThreadMemStatType::Wait, 
+			[&](PThrdMem pMem)
+			{
+				ThreadMemWork* pDyMem = pMem.dynamic<ThreadMemWork>();
+				pDyMem->initTask(pTask);
+				if (++initNum < needNum)
+					return true;
+		
+				return false;
+			});
+
+		return true;
+	}
 #if 0
 
 	hRWLock* ThreadPool::getRWLock(Task* pTask)
@@ -103,6 +175,12 @@ namespace hThread
 		data.init(num);
 
 		//rwLock.writeUnlock();
+	}
+
+	size_t ThreadPool::getThrdMemNum(ThreadMemType memTy, ThreadMemStatType statTy)
+	{
+		ThreadMemData& data = _memData[memTy];
+		return data._thrdId[statTy].size();
 	}
 #if 0
 	void ThreadPool::closeThrd(const size_t& id)

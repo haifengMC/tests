@@ -13,7 +13,7 @@ namespace hThread
 		return os;
 	}
 
-	void TaskNode::init(size_t id, hTool::hAutoPtr<NodeData> data)
+	void TaskNode::init(size_t id, PNodeData data)
 	{
 		_id = id;
 		_data = data;

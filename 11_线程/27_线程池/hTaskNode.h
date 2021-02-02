@@ -28,12 +28,12 @@ namespace hThread
 		DefLog_Init();
 	protected:
 		size_t _id = 0;
-		hTool::hAutoPtr<NodeData> _data;
+		PNodeData _data;
 		typedef TaskNode Base;
 	public:
 		virtual ~TaskNode() {}
 
-		void init(size_t id, hTool::hAutoPtr<NodeData> _data);
+		void init(size_t id, PNodeData _data);
 		const size_t& getId() const { return _id; }
 
 		virtual bool canProc(size_t id) { return _id == id; }

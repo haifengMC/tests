@@ -28,12 +28,26 @@ namespace hThread
 
 	void ThreadMem::run()
 	{
-		if (!updateStat(ThreadMemStatType::Ready))
+		if (!updateStat(ThreadMemStatType::Wait))
 			return;
 
 		setFunc();
 		_pThrd.bind(new std::thread(_func));
-		_pThrd->detach();
+		//_pThrd->detach();
+	}
+
+	void ThreadMem::stop()
+	{
+		if (!updateStat(ThreadMemStatType::Init))
+			return;
+
+		close();
+		notify();
+	}
+
+	void ThreadMem::join()
+	{
+		_pThrd->join();
 	}
 
 	bool ThreadMem::setStat(ThreadMemStatType type, std::list<size_t>::iterator& it)
@@ -57,7 +71,7 @@ namespace hThread
 		if (ThreadMemStatType::Max <= type)
 			return false;
 
-		auto& data = sThrdPool.getMemData(_type);
+		auto& data = sThrdPool.getThrdMemData(_type);
 		auto& oldList = data._thrdId[_statType];
 		auto& newList = data._thrdId[type];
 
@@ -92,6 +106,9 @@ namespace hThread
 
 				_runCv.wait(lk, [&]
 					{
+						if (_close)
+							return true;
+
 						if (!_pTask)
 						{
 							COUT_LK(_id << " 无任务，工作线程挂起...");
@@ -126,6 +143,8 @@ namespace hThread
 #endif
 						return true;
 					});
+				if (_close)
+					break;
 #if 0
 				while (pNode)
 				{
@@ -173,7 +192,8 @@ namespace hThread
 				}
 #endif
 			}
-			//sThreadPool.removeThrd(id);
+			//std::this_thread::sleep_for(std::chrono::seconds(1));
+			COUT_LK(_id << " 工作线程停止工作...");
 		};
 	}
 
@@ -182,6 +202,13 @@ namespace hThread
 	{
 		_type = ThreadMemType::Work;
 		COUT_LK(_id << " 工作线程创建...");
+	}
+
+	void ThreadMemWork::initTask(PTask pTask)
+	{
+		COUT_LK(_id << " 工作线程初始化任务,id:" << pTask->getIndex() << "...");
+		_pTask = pTask;
+
 	}
 
 	void ThreadMemMgr::setFunc()
@@ -197,14 +224,40 @@ namespace hThread
 			{
 				COUT_LK(_id << " 管理线程进入循环...");
 
+				PTask pTask;
+				size_t thrdNum = 0;//已就绪的工作线程数
 				_runCv.wait(lk, [&]
 					{
+						if (_close)
+							return true;
 
+						thrdNum = sThrdPool.getThrdMemNum(ThreadMemType::Work, ThreadMemStatType::Ready);
+						if (!thrdNum)
+						{
+							COUT_LK(_id << " 无可用线程，管理线程挂起...");
+							return false;
+						}
 
-						COUT_LK(_id << " 管理线程挂起...");
-						return false;
+						pTask = sThrdPool.readyTasks();
+						if (!pTask)
+						{
+							COUT_LK(_id << " 无任务，管理线程挂起...");
+							return false;
+						}
+
+						return true;
 					});
+				if (_close)
+					break;
+
+				COUT_LK(_id << " 管理线程处理任务,id:" << pTask->getId() << "...");
+				//if (!sThrdPool.initTasks(pTask))
+				//	continue;
+		
+
 			}
+			//std::this_thread::sleep_for(std::chrono::seconds(2));
+			COUT_LK(_id << " 管理线程停止工作...");
 		};
 	}
 

@@ -8,10 +8,14 @@ namespace hThread
 		ThreadMemType _type = ThreadMemType::Max;
 		//所有状态的线程id
 		std::list<size_t> _thrdId[ThreadMemStatType::Max];
-		std::vector<hTool::hAutoPtr<ThreadMem>> _memArr;
+		std::vector<PThrdMem> _memArr;
 
 		void init(size_t num);
 		void run();
+		void stop();
+		void join();
+
+		void execEvery(ThreadMemStatType statTy, std::function<bool(PThrdMem)> func);
 	};
 
 	class ThreadPool : public Singleton<ThreadPool>
@@ -27,7 +31,7 @@ namespace hThread
 		ThreadMemData _memData[ThreadMemType::Max];
 
 		//size_t waitTask = 0;//等待任务数
-		std::vector<hTool::hAutoPtr<TaskMgr>> _taskMgr;
+		std::vector<PTaskMgr> _taskMgr;
 		//std::map<Task*, hRWLock*> taskLock;//任务锁
 	
 		//hRWLock rwLock;//自锁
@@ -40,20 +44,22 @@ namespace hThread
 		void init();
 		void final();
 		void run();
-#if 0
 		void stop();
-#endif
+
 		//提交任务
 		template <size_t N>
-		size_t commitTasks(Task(&task)[N], TaskMgrPriority priority = TaskMgrPriority::Normal);
-		size_t commitTasks(Task& task, TaskMgrPriority priority = TaskMgrPriority::Normal);
-		//选择任务：根据优先级和权重
-
+		size_t commitTasks(PTask(&task)[N], TaskMgrPriority priority = TaskMgrPriority::Normal);
+		size_t commitTasks(PTask& task, TaskMgrPriority priority = TaskMgrPriority::Normal);
+		//准备任务：管理线程根据优先级和权重
+		PTask readyTasks();
+		//初始化任务:管理线程为工作线程初始化任务状态
+		bool initTasks(PTask pTask, size_t thrdNum);
 #if 0
 		hRWLock* getRWLock(Task* pTask);//获取任务锁
 #endif
 		void createThrd(size_t num, ThreadMemType t = ThreadMemType::Work);
-		ThreadMemData& getMemData(ThreadMemType type) { return _memData[type]; }
+		ThreadMemData& getThrdMemData(ThreadMemType type) { return _memData[type]; }
+		size_t getThrdMemNum(ThreadMemType memTy, ThreadMemStatType statTy);
 #if 0
 		void closeThrd(const size_t& id);
 
@@ -65,6 +71,7 @@ namespace hThread
 
 	private:
 		void runThrd(const size_t& num);//使至多num个任务在线程上工作
+		size_t getThrdMemNum(ThreadMemType memTy, ThreadMemStatType statTy);
 		void removeThrd(const size_t& id);
 #endif
 	};

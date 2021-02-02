@@ -236,6 +236,14 @@ namespace hThread
 			return *itRef;
 	}
 
+	size_t Task::calcNeedThrdNum(size_t curThrd)
+	{
+		if (!_attrb)
+			return 0;
+
+		return std::min({curThrd, _attrb->_thrdExpect, _attrb ->_nodeList.size()});
+	}
+
 #if 0
 
 	void Task::addThrd(ThreadMem* pMem)
