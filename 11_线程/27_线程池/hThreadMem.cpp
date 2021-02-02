@@ -231,7 +231,7 @@ namespace hThread
 						if (_close)
 							return true;
 
-						thrdNum = sThrdPool.getThrdMemNum(ThreadMemType::Work, ThreadMemStatType::Ready);
+						thrdNum = sThrdPool.getThrdMemNum(ThreadMemType::Work, ThreadMemStatType::Wait);
 						if (!thrdNum)
 						{
 							COUT_LK(_id << " 无可用线程，管理线程挂起...");
@@ -251,8 +251,8 @@ namespace hThread
 					break;
 
 				COUT_LK(_id << " 管理线程处理任务,id:" << pTask->getId() << "...");
-				//if (!sThrdPool.initTasks(pTask))
-				//	continue;
+				if (!sThrdPool.initTasks(pTask, thrdNum))
+					continue;
 		
 
 			}

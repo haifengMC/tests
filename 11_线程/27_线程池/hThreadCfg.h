@@ -32,8 +32,8 @@ END_ENUM(TaskStatType, Max, Init, Wait, Ready, Run, Finish, Error)
 //线程成员类型
 BEG_ENUM(ThreadMemType)
 {
-	Mgr,//管理线程
 	Work,//工作线程
+	Mgr,//管理线程
 	Max
 }
 END_ENUM(ThreadMemType, Max, Work, Mgr)

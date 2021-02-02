@@ -26,6 +26,8 @@ namespace hThread
 	{
 		execEvery(ThreadMemStatType::Init,
 			[&](PThrdMem pMem) { pMem->run(); return true; });
+
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 
 	void ThreadMemData::stop()
