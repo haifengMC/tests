@@ -144,7 +144,11 @@ namespace hThread
 			[&](PThrdMem pMem)
 			{
 				ThreadMemWork* pDyMem = pMem.dynamic<ThreadMemWork>();
-				pDyMem->initTask(pTask);
+				if (!pDyMem)
+					return true;
+
+				//pTask->addThrdMem(pMem);
+				//pDyMem->initTask(pTask);
 				if (++initNum < needNum)
 					return true;
 		

@@ -30,6 +30,11 @@ namespace hThread
 	public:
 		ThreadMem(size_t id);
 		virtual ~ThreadMem();
+		void destoryPtr() {}
+
+		ThreadMemType getType() const { return _type; }
+		ThreadMemStatType getStat() const { return _statType; }
+		size_t getId() const { return _id; }
 
 		void run();
 		void stop();

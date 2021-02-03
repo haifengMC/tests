@@ -14,6 +14,7 @@ namespace hThread
 		void run();
 		void stop();
 		void join();
+		void destoryPtr() {}
 
 		void execEvery(ThreadMemStatType statTy, std::function<bool(PThrdMem)> func);
 	};

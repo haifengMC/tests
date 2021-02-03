@@ -15,6 +15,7 @@ namespace hThread
 		std::list<size_t> _states[TaskStatType::Max];//状态管理<thisId>
 	public:
 		TaskMgr(const TaskMgrCfgItem& base);
+		void destoryPtr() {}
 
 		//提交任务，将新任务提交给管理器，提交后默认状态为等待
 		template <size_t N>

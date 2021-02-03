@@ -183,6 +183,33 @@ TEST(提交任务到线程池日志)
 	Debug(cout, sThrdPool) << endl;
 }
 
+TEST(智能指针测试)
+{
+	{
+		hTool::hAutoPtr<TestA> pA(new TestA);
+		{
+			hTool::hAutoPtr<TestB> pB(new TestB);
+			pA.debug(cout);
+			pB.debug(cout);
+			pA->_pB.debug(cout);
+			pB->_pA.debug(cout);
+			pA->addThis(pB);
+			pA->_pB.debug(cout);
+			pB->_pA.debug(cout);
+			cout << string(10, '*') << endl;
+		}
+		//or (auto& pr : hTool::hAutoPtr<TestA>::pTMap)
+		//	cout << "[" << pr.first << "]" << *pr.second << "\n";
+		//or (auto& pr : hTool::hAutoPtr<TestB>::pTMap)
+		//	cout << "[" << pr.first << "]" << *pr.second << "\n";
+	}
+	//for (auto& pr : hTool::hAutoPtr<TestA>::pTMap)
+	//	cout << "[" << pr.first << "]" << *pr.second << "\n";
+	//for (auto& pr : hTool::hAutoPtr<TestB>::pTMap)
+	//	cout << "[" << pr.first << "]" << *pr.second << "\n";
+}
+
+#if 0
 TEST(线程池运行5秒)
 {
 	PTask t1 = new Task(50, 2, TaskAttrType::Loop);
@@ -197,5 +224,6 @@ TEST(线程池运行5秒)
 	this_thread::sleep_for(4s);
 	sThrdPool.stop();
 }
+#endif
 
 TEST_MAIN()

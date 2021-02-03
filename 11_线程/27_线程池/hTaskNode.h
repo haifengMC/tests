@@ -17,10 +17,9 @@ namespace hThread
 		NodeData() {}
 		NodeData(const size_t& id) : _id(id) {}
 		virtual ~NodeData() {}
+		void destoryPtr() {}
 
 		operator bool() { return _needDel; }
-
-		virtual std::ostream& debugShow(std::ostream& os, uint8_t n = 0, char c = '\t');
 	};
 
 	class TaskNode
@@ -34,6 +33,8 @@ namespace hThread
 		virtual ~TaskNode() {}
 
 		void init(size_t id, PNodeData _data);
+		void destoryPtr() {}
+
 		const size_t& getId() const { return _id; }
 
 		virtual bool canProc(size_t id) { return _id == id; }
@@ -41,8 +42,7 @@ namespace hThread
 		virtual bool preProc() { return true; }//预处理，上读锁，检测节点数据，设置下个节点数据
 		virtual bool onProc() { return true; }//处理函数，上写锁
 		virtual bool finalProc() { return true; }//
-
-		virtual std::ostream& debugShow(std::ostream& os, uint8_t n = 0, char c = '\t');
+		
 	};
 
 }

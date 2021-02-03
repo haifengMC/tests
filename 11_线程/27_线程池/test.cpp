@@ -61,4 +61,20 @@ std::ostream& TestTaskNode::debugShow(std::ostream& os, uint8_t n, char c)
 	return os;
 }
 
+void TestA::addThis(hTool::hAutoPtr<TestB> pB)
+{
+	_pB = pB;
+	_pB->_pA = this;
+}
+
+void TestA::destoryPtr()
+{
+	_pB.~hAutoPtr();
+}
+
+void TestB::destoryPtr()
+{
+	_pA.~hAutoPtr();
+}
+
 #undef COUT_LOCK

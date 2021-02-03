@@ -28,3 +28,19 @@ struct TestTaskNode : public hThread::TaskNode
 	va->addNode(new TestTaskNode("test node1"));\
 	va->addNode(new TestTaskNode("test node2"));\
 	cout << _tasksIdGen.insert(va).second << endl
+
+//ÖÇÄÜÖ¸Õë²âÊÔ
+struct TestB;
+struct TestA
+{
+	hTool::hAutoPtr<TestB> _pB;
+	void addThis(hTool::hAutoPtr<TestB> pB);
+	void destoryPtr();
+	~TestA() { std::cout << "~TestA()" << std::endl; }
+};
+struct TestB
+{
+	hTool::hAutoPtr<TestA> _pA;
+	void destoryPtr();
+	~TestB() { std::cout << "~TestB()" << std::endl; }
+};

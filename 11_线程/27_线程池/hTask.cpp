@@ -1,5 +1,6 @@
 #include "global.h"
 #include "hThread.h"
+#include "hThreadPoolMgr.h"
 
 namespace hThread
 {
@@ -177,11 +178,17 @@ namespace hThread
 			return false;
 
 		_state.emplace();
-		_state->pMgr = pMgr;
+		_state->_pMgr = pMgr;
 		_state->_stateTy = TaskStatType::Init; 
 		_state->_nodeIt = _attrb->_nodeList.end();
 
 		return true;
+	}
+
+	void Task::destoryPtr()
+	{
+		_attrb.~hAutoPtr();
+		_state.~hAutoPtr();
 	}
 
 	bool Task::setStat(TaskStatType state)
@@ -235,29 +242,36 @@ namespace hThread
 		else
 			return *itRef;
 	}
-
-	size_t Task::calcNeedThrdNum(size_t curThrd)
-	{
-		if (!_attrb)
-			return 0;
-
-		return std::min({curThrd, _attrb->_thrdExpect, _attrb ->_nodeList.size()});
-	}
-
-#if 0
-
-	void Task::addThrd(ThreadMem* pMem)
+	
+	bool Task::addThrdMem(PThrdMem pMem)
 	{
 		if (!pMem)
-			return;
+			return false;
+
+		ThreadMemWork* pDyMem = pMem.dynamic<ThreadMemWork>();
+		if (!pDyMem)
+		{
+			COUT_LK("[" << 
+				pMem->getType().getName() << 
+				pMem->getId() << "]不是工作线程...");
+			return false;
+		}
+
+		if (ThreadMemStatType::Wait != pMem->getStat())
+		{
+			COUT_LK("[" <<
+				pMem->getStat().getName() <<
+				pMem->getId() << "]线程不在等待任务状态...");
+			return false;
+		}
 
 		if (!check())
-			return;
+			return false;
 
-		ThrdList& thrdsRef = stat->thrds;
-
-		//线程正在为任务工作
-		if (pMem->pTask)
+		ThrdMemList& thrdsRef = _state->_thrds;
+#if 0
+		//线程正在为其他任务工作
+		if (!pDyMem)
 			return;
 		pMem->pTask = this;
 
@@ -275,8 +289,20 @@ namespace hThread
 
 		pMem->pRwLock = sThreadPool.getRWLock(this);
 		pMem->notify();
-	}
 #endif
+		return true;
+	}
+
+	size_t Task::calcNeedThrdNum(size_t curThrd)
+	{
+		if (!_attrb)
+			return 0;
+
+		return std::min({curThrd, _attrb->_thrdExpect, _attrb ->_nodeList.size()});
+	}
+
+
+
 
 #if 0
 
@@ -323,8 +349,8 @@ namespace hThread
 		if (!_state)
 			return false;
 
-		//if (!stat->pMgr)
-		//	return false;
+		if (!_state->_pMgr)
+			return false;
 
 		return true;
 	}

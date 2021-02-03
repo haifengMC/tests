@@ -43,6 +43,7 @@ namespace hThread
 		bool initNodeData(NodeData* pData = NULL);//初始化节点数据
 
 		TaskAttr(size_t weight, size_t thrdExpect, const std::bitset<TaskAttrType::Max>& attr);
+		void destoryPtr() {}
 	};
 	//任务状态(运行时数据)
 	struct TaskStat
@@ -51,11 +52,12 @@ namespace hThread
 		TaskStatType _stateTy = TaskStatType::Max;//当前状态
 		std::list<size_t>::iterator _stateIt;//指向当前状态的迭代器
 
-		TaskMgr* pMgr = NULL;//指向自己所在管理器
-		ThrdMemList thrds;//当前运行该任务的线程
+		TaskMgr* _pMgr = NULL;//指向自己所在管理器
+		ThrdMemList _thrds;//当前运行该任务的线程
 		NodeListIt _nodeIt;//指向当前在运行节点
 
 		~TaskStat() {}//需要实现析构
+		void destoryPtr() {}
 	};
 
 	class Task : public hTool::hUniqueMapVal<size_t, Task>
@@ -71,6 +73,7 @@ namespace hThread
 		Task(Task&& t);
 
 		bool init(TaskMgr* pMgr);
+		void destoryPtr();
 
 		/*
 		设置属性
@@ -90,7 +93,7 @@ namespace hThread
 
 		PTaskNode getNextNode();
 		//添加线程到任务,还未启用
-		//void addThrd(ThreadMem* pMem);
+		bool addThrdMem(PThrdMem pMem);
 		//返回实际使用的线程数
 		//size_t runTask(const size_t& rate);
 		//根据当前线程数curThrd和期望线程数_thrdExpect确定最终需要的线程数
@@ -102,5 +105,5 @@ namespace hThread
 
 }
 DefLog(hThread::TaskAttr, _weight, _thrdExpect, _incId, _attr, _nodeData, _nodeList);
-DefLog(hThread::TaskStat, _stateTy, _stateIt, pMgr, _nodeIt);
+DefLog(hThread::TaskStat, _stateTy, _stateIt, _pMgr, _nodeIt);
 DefLog(hThread::Task, _thisId, _attrb, _state);

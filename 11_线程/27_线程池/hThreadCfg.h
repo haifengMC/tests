@@ -47,7 +47,7 @@ BEG_ENUM(ThreadMemStatType)
 	Run,//处理任务中
 	Max
 }
-END_ENUM(ThreadMemStatType, Max, Init, Ready, Run)
+END_ENUM(ThreadMemStatType, Max, Init, Wait, Ready, Run)
 
 //线程基础配置
 BEG_CFGSTRUCT(ThreadBaseCfg)
