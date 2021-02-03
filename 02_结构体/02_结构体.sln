@@ -49,6 +49,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "22_获取类名", "22_获�
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "23_文本运算符", "23_文本运算符\23_文本运算符.vcxproj", "{1ACCEAAE-0BF8-4515-A539-34431B153644}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "24_静态转换和动态转换", "24_静态转换和动态转换\24_静态转换和动态转换.vcxproj", "{5FE82D78-9120-4296-B823-867A4448DDE9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -241,6 +243,14 @@ Global
 		{1ACCEAAE-0BF8-4515-A539-34431B153644}.Release|x64.Build.0 = Release|x64
 		{1ACCEAAE-0BF8-4515-A539-34431B153644}.Release|x86.ActiveCfg = Release|Win32
 		{1ACCEAAE-0BF8-4515-A539-34431B153644}.Release|x86.Build.0 = Release|Win32
+		{5FE82D78-9120-4296-B823-867A4448DDE9}.Debug|x64.ActiveCfg = Debug|x64
+		{5FE82D78-9120-4296-B823-867A4448DDE9}.Debug|x64.Build.0 = Debug|x64
+		{5FE82D78-9120-4296-B823-867A4448DDE9}.Debug|x86.ActiveCfg = Debug|Win32
+		{5FE82D78-9120-4296-B823-867A4448DDE9}.Debug|x86.Build.0 = Debug|Win32
+		{5FE82D78-9120-4296-B823-867A4448DDE9}.Release|x64.ActiveCfg = Release|x64
+		{5FE82D78-9120-4296-B823-867A4448DDE9}.Release|x64.Build.0 = Release|x64
+		{5FE82D78-9120-4296-B823-867A4448DDE9}.Release|x86.ActiveCfg = Release|Win32
+		{5FE82D78-9120-4296-B823-867A4448DDE9}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
