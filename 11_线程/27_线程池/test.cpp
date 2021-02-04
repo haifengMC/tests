@@ -38,43 +38,24 @@ TestNodeData::TestNodeData(const char* info)
 	testInfo = info;
 }
 
-std::ostream& TestNodeData::debugShow(std::ostream& os, uint8_t n, char c)
-{
-	Base::debugShow(os, n++, c) << std::endl;
-	os << std::string(n, c) << "[TestNodeData]" <<
-		" testInfo:" << testInfo;
-
-	return os;
-}
-
 TestTaskNode::TestTaskNode(const char* info)
 {
 	testInfo = info;
 }
 
-std::ostream& TestTaskNode::debugShow(std::ostream& os, uint8_t n, char c)
+void TestA::addPtr(hTool::hAutoPtr<TestC> pC)
 {
-	Base::debugShow(os, n++, c) << std::endl;
-	os << std::string(n, c) << "[TestTaskNode]" <<
-		" testInfo:" << testInfo;
-
-	return os;
+	_pC = pC;
 }
 
-void TestA::addThis(hTool::hAutoPtr<TestB> pB)
+void TestB::addPtr(hTool::hAutoPtr<TestA> pA)
+{
+	_pA = pA;
+}
+
+void TestC::addPtr(hTool::hAutoPtr<TestB> pB)
 {
 	_pB = pB;
-	_pB->_pA = this;
-}
-
-void TestA::destoryPtr()
-{
-	_pB.~hAutoPtr();
-}
-
-void TestB::destoryPtr()
-{
-	_pA.~hAutoPtr();
 }
 
 #undef COUT_LOCK

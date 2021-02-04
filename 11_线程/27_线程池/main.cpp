@@ -74,6 +74,32 @@ TEST(智能指针测试2)
 		cout << *i << endl;
 }
 
+TEST(智能指针测试3)
+{
+	{
+		hTool::hAutoPtr<TestA> pA(new TestA);
+		TestP(1);
+		{
+			hTool::hAutoPtr<TestB> pB(new TestB);
+			TestP(2);
+			{
+				hTool::hAutoPtr<TestC> pC(new TestC);
+				TestP(3);
+				pA->addPtr(pC);
+				TestP(4);
+				pB->addPtr(pA);
+				//TestP(5);
+				//pC->addPtr(pB);
+				TestP(6);
+			}
+			TestP(7);
+		}
+		TestP(8);
+	}
+	TestP(9);
+}
+#if 0
+
 TEST(创建任务测试)
 {
 	Task t(50, 2, TaskAttrTypeBit::Loop);
@@ -183,33 +209,6 @@ TEST(提交任务到线程池日志)
 	Debug(cout, sThrdPool) << endl;
 }
 
-TEST(智能指针测试)
-{
-	{
-		hTool::hAutoPtr<TestA> pA(new TestA);
-		{
-			hTool::hAutoPtr<TestB> pB(new TestB);
-			pA.debug(cout);
-			pB.debug(cout);
-			pA->_pB.debug(cout);
-			pB->_pA.debug(cout);
-			pA->addThis(pB);
-			pA->_pB.debug(cout);
-			pB->_pA.debug(cout);
-			cout << string(10, '*') << endl;
-		}
-		//or (auto& pr : hTool::hAutoPtr<TestA>::pTMap)
-		//	cout << "[" << pr.first << "]" << *pr.second << "\n";
-		//or (auto& pr : hTool::hAutoPtr<TestB>::pTMap)
-		//	cout << "[" << pr.first << "]" << *pr.second << "\n";
-	}
-	//for (auto& pr : hTool::hAutoPtr<TestA>::pTMap)
-	//	cout << "[" << pr.first << "]" << *pr.second << "\n";
-	//for (auto& pr : hTool::hAutoPtr<TestB>::pTMap)
-	//	cout << "[" << pr.first << "]" << *pr.second << "\n";
-}
-
-#if 0
 TEST(线程池运行5秒)
 {
 	PTask t1 = new Task(50, 2, TaskAttrType::Loop);

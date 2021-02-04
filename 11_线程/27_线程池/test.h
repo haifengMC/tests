@@ -10,7 +10,6 @@ struct TestNodeData : public hThread::NodeData
 	std::string testInfo;
 	
 	TestNodeData(const char* info);
-	std::ostream& debugShow(std::ostream& os, uint8_t n = 0, char c = '\t');
 };
 
 struct TestTaskNode : public hThread::TaskNode
@@ -18,7 +17,6 @@ struct TestTaskNode : public hThread::TaskNode
 	std::string testInfo;
 
 	TestTaskNode(const char* info);
-	std::ostream& debugShow(std::ostream& os, uint8_t n = 0, char c = '\t');
 };
 
 //id生成器debug
@@ -30,17 +28,31 @@ struct TestTaskNode : public hThread::TaskNode
 	cout << _tasksIdGen.insert(va).second << endl
 
 //智能指针测试
-struct TestB;
-struct TestA
+struct TestC;
+struct TestA 
 {
-	hTool::hAutoPtr<TestB> _pB;
-	void addThis(hTool::hAutoPtr<TestB> pB);
-	void destoryPtr();
+	hTool::hAutoPtr<TestC> _pC;
+	void addPtr(hTool::hAutoPtr<TestC> pC);
+
 	~TestA() { std::cout << "~TestA()" << std::endl; }
 };
-struct TestB
+struct TestB 
 {
 	hTool::hAutoPtr<TestA> _pA;
-	void destoryPtr();
+	void addPtr(hTool::hAutoPtr<TestA> pA);
+
 	~TestB() { std::cout << "~TestB()" << std::endl; }
 };
+struct TestC
+{
+	hTool::hAutoPtr<TestB> _pB;
+	void addPtr(hTool::hAutoPtr<TestB> pB);
+
+	~TestC() { std::cout << "~TestC()" << std::endl; }
+};
+#define TestP(n)\
+	cout << n << endl;\
+	hTool::hAutoPtr<TestA>::debugMap(cout);\
+	hTool::hAutoPtr<TestB>::debugMap(cout);\
+	hTool::hAutoPtr<TestC>::debugMap(cout);\
+	cout << string(10, '-') << endl
