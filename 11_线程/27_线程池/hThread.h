@@ -23,6 +23,7 @@ namespace hThread
 
 	class Task;
 	typedef hTool::hAutoPtr<Task> PTask;
+	typedef hTool::hWeakPtr<Task> PWTask;
 
 	class TaskMgr;
 	typedef hTool::hAutoPtr<TaskMgr> PTaskMgr;

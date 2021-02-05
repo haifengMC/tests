@@ -58,29 +58,21 @@ struct Test3C
 	cout << string(10, '-') << endl
 //ÖÇÄÜÖ¸Õë²âÊÔ4
 struct Test4B;
-struct Test4A : public hTool::hAutoPtrObj
+struct Test4A
 {
 	const char* name = "A";
-	hTool::hAutoPtr<Test4B> _pB;
-	void addPtr(hTool::hAutoPtr<Test4B> pB);
+	hTool::hWeakPtr<Test4B> _pB;
+	void addPtr(hTool::hWeakPtr<Test4B> pB);
 
 	~Test4A() { std::cout << "~TestA()" << std::endl; }
-
-	void fillAddList(std::list<hTool::hAutoPtrBase*>&);
-	void fillDecList(std::list<hTool::hAutoPtrBase*>&);
-	//void destoryPtr(const void* pT);
 };
-struct Test4B : public hTool::hAutoPtrObj
+struct Test4B
 {
 	const char* name = "B";
-	hTool::hAutoPtr<Test4A> _pA;
-	void addPtr(hTool::hAutoPtr<Test4A> pA);
+	hTool::hWeakPtr<Test4A> _pA;
+	void addPtr(hTool::hWeakPtr<Test4A> pA);
 
 	~Test4B() { std::cout << "~TestB()" << std::endl; }
-
-	void fillAddList(std::list<hTool::hAutoPtrBase*>&);
-	void fillDecList(std::list<hTool::hAutoPtrBase*>&);
-	//void destoryPtr(const void* pT);
 };
 #define Test4P(n)\
 	cout << n << endl;\

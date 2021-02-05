@@ -107,16 +107,15 @@ TEST(智能指针测试4)
 		{
 			hTool::hAutoPtr<Test4B> pB(new Test4B);
 			Test4P(2);
-			pA->addPtr(pB);
+			pA->addPtr(pB.dynamic());
 			Test4P(5);
-			pB->addPtr(pA);
+			pB->addPtr(pA.dynamic());
 			Test4P(8);
 		}
 		Test4P(9);
 	}
 	Test4P(10);
 }
-#if 0
 
 TEST(创建任务测试)
 {
@@ -229,18 +228,26 @@ TEST(提交任务到线程池日志)
 
 TEST(线程池运行5秒)
 {
-	PTask t1 = new Task(50, 2, TaskAttrType::Loop);
-	t1->initNodeData(new TestNodeData("test data"));
-	t1->addNode(new TestTaskNode("test node1"));
-	t1->addNode(new TestTaskNode("test node2"));
-	sThrdPool.commitTasks(t1);
+	{
+		PTask t1 = new Task(50, 2, TaskAttrType::Loop);
+		t1->initNodeData(new TestNodeData("test data"));
+		t1->addNode(new TestTaskNode("test node1"));
+		t1->addNode(new TestTaskNode("test node2"));
+		sThrdPool.commitTasks(t1);
+	}
 	this_thread::sleep_for(1s);
 	sThrdPool.run();
 	this_thread::sleep_for(1s);
 	Debug(cout, sThrdPool) << endl;
 	this_thread::sleep_for(4s);
 	sThrdPool.stop();
+
+	PNodeData::debugMap(cout);
+	PTaskNode::debugMap(cout);
+	PTaskAttr::debugMap(cout);
+	PTaskStat::debugMap(cout);
+	PTask::debugMap(cout);
+	PTaskMgr::debugMap(cout);
 }
-#endif
 
 TEST_MAIN()

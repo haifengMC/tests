@@ -58,38 +58,18 @@ void Test3C::addPtr(hTool::hAutoPtr<Test3B> pB)
 	_pB = pB;
 }
 
-void Test4A::addPtr(hTool::hAutoPtr<Test4B> pB)
+void Test4A::addPtr(hTool::hWeakPtr<Test4B> pB)
 {
 	Test4P(3);
 	_pB = pB;
 	Test4P(4);
 }
 
-void Test4A::fillAddList(std::list<hTool::hAutoPtrBase*>& l)
-{
-	if (_pB && _pB->_pA.getRaw() != this) l.push_back(&_pB);
-}
-
-void Test4A::fillDecList(std::list<hTool::hAutoPtrBase*>& l)
-{
-	if (_pB) l.push_back(&_pB);
-}
-
-void Test4B::addPtr(hTool::hAutoPtr<Test4A> pA)
+void Test4B::addPtr(hTool::hWeakPtr<Test4A> pA)
 {
 	Test4P(6);
 	_pA = pA;
 	Test4P(7);
-}
-
-void Test4B::fillAddList(std::list<hTool::hAutoPtrBase*>& l)
-{
-	if (_pA && _pA->_pB.getRaw() != this) l.push_back(&_pA);
-}
-
-void Test4B::fillDecList(std::list<hTool::hAutoPtrBase*>& l)
-{
-	if (_pA) l.push_back(&_pA);
 }
 
 #undef COUT_LOCK
