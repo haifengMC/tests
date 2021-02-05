@@ -27,32 +27,61 @@ struct TestTaskNode : public hThread::TaskNode
 	va->addNode(new TestTaskNode("test node2"));\
 	cout << _tasksIdGen.insert(va).second << endl
 
-//ÖÇÄÜÖ¸Õë²âÊÔ
-struct TestC;
-struct TestA 
+//ÖÇÄÜÖ¸Õë²âÊÔ3
+struct Test3C;
+struct Test3A 
 {
-	hTool::hAutoPtr<TestC> _pC;
-	void addPtr(hTool::hAutoPtr<TestC> pC);
+	hTool::hAutoPtr<Test3C> _pC;
+	void addPtr(hTool::hAutoPtr<Test3C> pC);
 
-	~TestA() { std::cout << "~TestA()" << std::endl; }
+	~Test3A() { std::cout << "~TestA()" << std::endl; }
 };
-struct TestB 
+struct Test3B 
 {
-	hTool::hAutoPtr<TestA> _pA;
-	void addPtr(hTool::hAutoPtr<TestA> pA);
+	hTool::hAutoPtr<Test3A> _pA;
+	void addPtr(hTool::hAutoPtr<Test3A> pA);
 
-	~TestB() { std::cout << "~TestB()" << std::endl; }
+	~Test3B() { std::cout << "~TestB()" << std::endl; }
 };
-struct TestC
+struct Test3C
 {
-	hTool::hAutoPtr<TestB> _pB;
-	void addPtr(hTool::hAutoPtr<TestB> pB);
+	hTool::hAutoPtr<Test3B> _pB;
+	void addPtr(hTool::hAutoPtr<Test3B> pB);
 
-	~TestC() { std::cout << "~TestC()" << std::endl; }
+	~Test3C() { std::cout << "~TestC()" << std::endl; }
 };
-#define TestP(n)\
+#define Test3P(n)\
 	cout << n << endl;\
-	hTool::hAutoPtr<TestA>::debugMap(cout);\
-	hTool::hAutoPtr<TestB>::debugMap(cout);\
-	hTool::hAutoPtr<TestC>::debugMap(cout);\
+	hTool::hAutoPtr<Test3A>::debugMap(cout);\
+	hTool::hAutoPtr<Test3B>::debugMap(cout);\
+	hTool::hAutoPtr<Test3C>::debugMap(cout);\
+	cout << string(10, '-') << endl
+//ÖÇÄÜÖ¸Õë²âÊÔ4
+struct Test4B;
+struct Test4A : public hTool::hAutoPtrObj
+{
+	const char* name = "A";
+	hTool::hAutoPtr<Test4B> _pB;
+	void addPtr(hTool::hAutoPtr<Test4B> pB);
+
+	~Test4A() { std::cout << "~TestA()" << std::endl; }
+
+	void fillCopyList(std::list<hTool::hAutoPtrBase*>&);
+	void destoryPtr(const void* pT);
+};
+struct Test4B : public hTool::hAutoPtrObj
+{
+	const char* name = "B";
+	hTool::hAutoPtr<Test4A> _pA;
+	void addPtr(hTool::hAutoPtr<Test4A> pA);
+
+	~Test4B() { std::cout << "~TestB()" << std::endl; }
+
+	void fillCopyList(std::list<hTool::hAutoPtrBase*>&);
+	void destoryPtr(const void* pT);
+};
+#define Test4P(n)\
+	cout << n << endl;\
+	hTool::hAutoPtr<Test4A>::debugMap(cout);\
+	hTool::hAutoPtr<Test4B>::debugMap(cout);\
 	cout << string(10, '-') << endl

@@ -77,26 +77,44 @@ TEST(÷«ƒ‹÷∏’Î≤‚ ‘2)
 TEST(÷«ƒ‹÷∏’Î≤‚ ‘3)
 {
 	{
-		hTool::hAutoPtr<TestA> pA(new TestA);
-		TestP(1);
+		hTool::hAutoPtr<Test3A> pA(new Test3A);
+		Test3P(1);
 		{
-			hTool::hAutoPtr<TestB> pB(new TestB);
-			TestP(2);
+			hTool::hAutoPtr<Test3B> pB(new Test3B);
+			Test3P(2);
 			{
-				hTool::hAutoPtr<TestC> pC(new TestC);
-				TestP(3);
+				hTool::hAutoPtr<Test3C> pC(new Test3C);
+				Test3P(3);
 				pA->addPtr(pC);
-				TestP(4);
+				Test3P(4);
 				pB->addPtr(pA);
 				//TestP(5);
 				//pC->addPtr(pB);
-				TestP(6);
+				Test3P(6);
 			}
-			TestP(7);
+			Test3P(7);
 		}
-		TestP(8);
+		Test3P(8);
 	}
-	TestP(9);
+	Test3P(9);
+}
+
+TEST(÷«ƒ‹÷∏’Î≤‚ ‘4)
+{
+	{
+		hTool::hAutoPtr<Test4A> pA(new Test4A);
+		Test4P(1);
+		{
+			hTool::hAutoPtr<Test4B> pB(new Test4B);
+			Test4P(2);
+			pA->addPtr(pB);
+			Test4P(5);
+			pB->addPtr(pA);
+			Test4P(8);
+		}
+		Test4P(9);
+	}
+	Test4P(10);
 }
 #if 0
 
