@@ -66,8 +66,9 @@ struct Test4A : public hTool::hAutoPtrObj
 
 	~Test4A() { std::cout << "~TestA()" << std::endl; }
 
-	void fillCopyList(std::list<hTool::hAutoPtrBase*>&);
-	void destoryPtr(const void* pT);
+	void fillAddList(std::list<hTool::hAutoPtrBase*>&);
+	void fillDecList(std::list<hTool::hAutoPtrBase*>&);
+	//void destoryPtr(const void* pT);
 };
 struct Test4B : public hTool::hAutoPtrObj
 {
@@ -77,8 +78,9 @@ struct Test4B : public hTool::hAutoPtrObj
 
 	~Test4B() { std::cout << "~TestB()" << std::endl; }
 
-	void fillCopyList(std::list<hTool::hAutoPtrBase*>&);
-	void destoryPtr(const void* pT);
+	void fillAddList(std::list<hTool::hAutoPtrBase*>&);
+	void fillDecList(std::list<hTool::hAutoPtrBase*>&);
+	//void destoryPtr(const void* pT);
 };
 #define Test4P(n)\
 	cout << n << endl;\

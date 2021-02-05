@@ -65,14 +65,14 @@ void Test4A::addPtr(hTool::hAutoPtr<Test4B> pB)
 	Test4P(4);
 }
 
-void Test4A::fillCopyList(std::list<hTool::hAutoPtrBase*>& l)
+void Test4A::fillAddList(std::list<hTool::hAutoPtrBase*>& l)
 {
 	if (_pB && _pB->_pA.getRaw() != this) l.push_back(&_pB);
 }
 
-void Test4A::destoryPtr(const void* pT)
+void Test4A::fillDecList(std::list<hTool::hAutoPtrBase*>& l)
 {
-	if (_pB != pT) _pB.destory();
+	if (_pB) l.push_back(&_pB);
 }
 
 void Test4B::addPtr(hTool::hAutoPtr<Test4A> pA)
@@ -82,14 +82,14 @@ void Test4B::addPtr(hTool::hAutoPtr<Test4A> pA)
 	Test4P(7);
 }
 
-void Test4B::fillCopyList(std::list<hTool::hAutoPtrBase*>& l)
+void Test4B::fillAddList(std::list<hTool::hAutoPtrBase*>& l)
 {
 	if (_pA && _pA->_pB.getRaw() != this) l.push_back(&_pA);
 }
 
-void Test4B::destoryPtr(const void* pT)
+void Test4B::fillDecList(std::list<hTool::hAutoPtrBase*>& l)
 {
-	if (_pA != pT) _pA.destory();
+	if (_pA) l.push_back(&_pA);
 }
 
 #undef COUT_LOCK

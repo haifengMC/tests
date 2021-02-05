@@ -143,7 +143,7 @@ namespace hThread
 		memData.execEvery(ThreadMemStatType::Wait, 
 			[&](PThrdMem pMem)
 			{
-				ThreadMemWork* pDyMem = pMem.dynamic<ThreadMemWork>();
+				PWThrdMemWork pDyMem = pMem.dynamic<ThreadMemWork>();
 				if (!pDyMem)
 					return true;
 

@@ -31,6 +31,8 @@ namespace hThread
 	typedef hTool::hAutoPtr<ThreadMem> PThrdMem;
 	typedef std::list<PThrdMem> ThrdMemList;
 	typedef ThrdMemList::iterator ThrdMemListIt;
+	class ThreadMemWork;
+	typedef hTool::hWeakPtr<ThreadMemWork> PWThrdMemWork;
 }
 
 #include "hTaskNode.h"

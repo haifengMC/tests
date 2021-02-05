@@ -248,7 +248,7 @@ namespace hThread
 		if (!pMem)
 			return false;
 
-		ThreadMemWork* pDyMem = pMem.dynamic<ThreadMemWork>();
+		PWThrdMemWork pDyMem = pMem.dynamic<ThreadMemWork>();
 		if (!pDyMem)
 		{
 			COUT_LK("[" << 
