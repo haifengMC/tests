@@ -169,7 +169,7 @@ namespace hThread
 		hTool::hUniqueMapVal<size_t, Task>(_thisId, this),
 		_attrb(std::move(t._attrb)), _state(std::move(t._state)) {}
 
-	bool Task::init(TaskMgr* pMgr)
+	bool Task::init(PWTaskMgr pMgr)
 	{
 		if (!pMgr)
 			return false;
@@ -185,10 +185,40 @@ namespace hThread
 		return true;
 	}
 
-	void Task::destoryPtr()
+	size_t Task::getWeight() const
 	{
-		_attrb.~hAutoPtr();
-		_state.~hAutoPtr();
+		if (!check())
+			return 0;
+
+		return _attrb->_weight;
+	}
+
+	NodeListIt Task::getNextNode()
+	{
+		if (!check())
+		{
+			COUT_LK("任务异常,_attrb:" << _attrb <<
+				"_state:" << _state <<
+				"_pMgr" << (_state ? (bool)_state->_pMgr : false) << "...");
+			return NodeListIt();
+		}
+
+		NodeList& nodeList = _attrb->_nodeList;
+		NodeListIt& nodeIt = _state->_nodeIt;
+
+		if (nodeIt == nodeList.end())
+		{
+			if (!(_attrb->_attr[TaskAttrType::Loop]))
+				return nodeList.end();
+
+			nodeIt = nodeList.begin();
+			return nodeIt;
+		}
+
+		if (++nodeIt == nodeList.end())
+			return getNextNode();
+		else
+			return nodeIt;
 	}
 
 	bool Task::setStat(TaskStatType state)
@@ -207,74 +237,41 @@ namespace hThread
 		_state->_stateTy = state;
 		return true;
 	}
-
-	size_t Task::getWeight() const
-	{
-		if (!check())
-			return 0;
-
-		return _attrb->_weight;
-	}
-
-	PTaskNode Task::getNextNode()
-	{
-		if (!check())
-			return PTaskNode();
-
-		NodeList& listRef = _attrb->_nodeList;
-		NodeListIt& itRef = _state->_nodeIt;
-
-		if (itRef == listRef.end())
-		{
-			if (!(_attrb->_attr[TaskAttrType::Loop]))
-				return PTaskNode();
-
-			itRef = listRef.begin();
-
-			if (itRef == listRef.end())
-				return PTaskNode();
-			else
-				return *itRef;
-		}
-
-		if (++itRef == listRef.end())
-			return getNextNode();
-		else
-			return *itRef;
-	}
 	
-	bool Task::addThrdMem(PThrdMem pMem)
+	bool Task::addThrdMem(PWThrdMemWork pMem)
 	{
 		if (!pMem)
-			return false;
-
-		PWThrdMemWork pDyMem = pMem.dynamic<ThreadMemWork>();
-		if (!pDyMem)
 		{
-			COUT_LK("[" << 
-				pMem->getType().getName() << 
-				pMem->getId() << "]不是工作线程...");
+			COUT_LK(_thisId << " 空线程添加到任务...");
+			return false;
+		}
+
+		if (!check())
+		{
+			COUT_LK(_thisId << "任务异常,_attrb:" << _attrb <<
+				"_state:" << _state <<
+				"_pMgr" << (_state ? (bool)_state->_pMgr : false) << "...");
 			return false;
 		}
 
 		if (ThreadMemStatType::Wait != pMem->getStat())
 		{
-			COUT_LK("[" <<
+			COUT_LK(_thisId << "[" <<
 				pMem->getStat().getName() <<
-				pMem->getId() << "]线程不在等待任务状态...");
+				pMem->getId() << "]线程不在等待状态...");
 			return false;
 		}
 
-		if (!check())
+		ThrdMemWorkList& thrdsRef = _state->_thrds;
+		auto nodeIt = getNextNode();
+		if (!nodeIt._Ptr || nodeIt == _attrb->_nodeList.end())
+		{
+			COUT_LK(_thisId << " 无可用节点...");
 			return false;
-
-		ThrdMemList& thrdsRef = _state->_thrds;
+		}
+		auto memIt = thrdsRef.insert(thrdsRef.end(), pMem);
+		pMem->initTask(getThis(), nodeIt, memIt);
 #if 0
-		//线程正在为其他任务工作
-		if (!pDyMem)
-			return;
-		pMem->pTask = this;
-
 		auto itRBeg = thrdsRef.rbegin();
 		pMem->itMem = thrdsRef.insert(thrdsRef.end(), pMem);
 		ThrdListIt itBeg = thrdsRef.begin();

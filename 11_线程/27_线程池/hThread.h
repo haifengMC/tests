@@ -27,14 +27,27 @@ namespace hThread
 
 	class TaskMgr;
 	typedef hTool::hAutoPtr<TaskMgr> PTaskMgr;
+	typedef hTool::hWeakPtr<TaskMgr> PWTaskMgr;
 
+	typedef hTool::hAutoPtr<std::thread> PThread;
 	class ThreadMem;
 	typedef hTool::hAutoPtr<ThreadMem> PThrdMem;
-	typedef std::list<PThrdMem> ThrdMemList;
-	typedef ThrdMemList::iterator ThrdMemListIt;
 	class ThreadMemWork;
 	typedef hTool::hWeakPtr<ThreadMemWork> PWThrdMemWork;
+	typedef std::list<PWThrdMemWork> ThrdMemWorkList;
+	typedef ThrdMemWorkList::iterator ThrdMemWorkListIt;
 }
+
+#define Debug_PtrMap(os)\
+	PNodeData::debugMap(cout);\
+	PTaskNode::debugMap(cout);\
+	PTaskAttr::debugMap(cout);\
+	PTaskStat::debugMap(cout);\
+	PTask::debugMap(cout);\
+	PTaskMgr::debugMap(cout);\
+	PThread::debugMap(cout);\
+	PThrdMem::debugMap(cout);
+
 
 #include "hTaskNode.h"
 #include "hTask.h"

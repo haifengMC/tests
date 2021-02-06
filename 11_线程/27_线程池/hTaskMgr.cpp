@@ -9,8 +9,14 @@ namespace hThread
 	TaskMgr::TaskMgr(const TaskMgrCfgItem& base) : 
 		_base(base), _tasks(50)
 	{ 
+		COUT_LK(_base.index().getName() << " 任务管理器创建...");
 		_tasks.resize(10000, 99999);
 	} 
+
+	TaskMgr::~TaskMgr()
+	{
+		COUT_LK(_base.index().getName() << " 任务管理器释放...");
+	}
 
 	//提交任务，将新任务提交给管理器，提交后默认状态为等待
 	size_t TaskMgr::commitTasks(PTask* tasks, size_t num)
@@ -23,7 +29,7 @@ namespace hThread
 			if (!pTask)
 				continue;
 
-			if (!pTask->init(this))
+			if (!pTask->init(getThis()))
 				continue;//初始化任务
 
 			if (TaskStatType::Init != pTask->getStat()->_stateTy)

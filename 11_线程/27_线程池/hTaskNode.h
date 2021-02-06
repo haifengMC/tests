@@ -17,7 +17,6 @@ namespace hThread
 		NodeData() {}
 		NodeData(const size_t& id) : _id(id) {}
 		virtual ~NodeData() {}
-		void destoryPtr() {}
 
 		operator bool() { return _needDel; }
 	};
@@ -33,7 +32,6 @@ namespace hThread
 		virtual ~TaskNode() {}
 
 		void init(size_t id, PNodeData _data);
-		void destoryPtr() {}
 
 		const size_t& getId() const { return _id; }
 

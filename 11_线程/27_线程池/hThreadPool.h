@@ -14,7 +14,6 @@ namespace hThread
 		void run();
 		void stop();
 		void join();
-		void destoryPtr() {}
 
 		void execEvery(ThreadMemStatType statTy, std::function<bool(PThrdMem)> func);
 	};
@@ -23,7 +22,7 @@ namespace hThread
 	{
 		DefLog_Init();
 		friend class ThreadMem;
-		//friend class Task;
+		friend class Task;
 
 		bool _valid;
 		const ThreadBaseCfg& _base;
@@ -38,15 +37,15 @@ namespace hThread
 		//hRWLock rwLock;//自锁
 	public:
 		operator bool() { return _valid; }
-
+		
 		ThreadPool();
 		~ThreadPool();
-
+		
 		void init();
 		void final();
 		void run();
 		void stop();
-
+		
 		//提交任务
 		template <size_t N>
 		size_t commitTasks(PTask(&task)[N], TaskMgrPriority priority = TaskMgrPriority::Normal);
@@ -77,6 +76,7 @@ namespace hThread
 #endif
 	};
 #define sThrdPool hThread::ThreadPool::getMe()
+#define sThrdPoolFin hThread::ThreadPool::delMe()
 }
 DefLog(hThread::ThreadMemData, _thrdId);
 DefLog(hThread::ThreadPool, _valid, _base, _memData, _taskMgr);

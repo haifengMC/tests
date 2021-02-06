@@ -63,9 +63,15 @@ namespace hThread
 
 	ThreadPool::ThreadPool() :
 		_valid(sThrdPoolMgr), 
-		_base(sThrdPoolMgr.getBaseCfg()){ init(); }
+		_base(sThrdPoolMgr.getBaseCfg())
+	{ 
+		init(); 
+	}
 
-	ThreadPool::~ThreadPool() { final(); }
+	ThreadPool::~ThreadPool() 
+	{
+		final();
+	}
 
 	void ThreadPool::init()
 	{
@@ -88,6 +94,7 @@ namespace hThread
 		for (auto& pMem : memMgr)
 			DEL(pMem);
 #endif
+		COUT_LK("线程池释放...");
 
 	}
 
@@ -99,12 +106,12 @@ namespace hThread
 
 	void ThreadPool::stop()
 	{
-		COUT_LK("停止线程池开始...");
+		COUT_LK("线程池停止开始...");
 		for (auto& data : _memData)
 			data.stop();
 		for (auto& data : _memData)
 			data.join();
-		COUT_LK("停止线程池完毕...");
+		COUT_LK("线程池停止完毕...");
 
 	}
 
@@ -147,8 +154,7 @@ namespace hThread
 				if (!pDyMem)
 					return true;
 
-				//pTask->addThrdMem(pMem);
-				//pDyMem->initTask(pTask);
+				pTask->addThrdMem(pDyMem);
 				if (++initNum < needNum)
 					return true;
 		

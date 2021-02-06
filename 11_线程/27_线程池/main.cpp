@@ -117,6 +117,15 @@ TEST(智能指针测试4)
 	Test4P(10);
 }
 
+TEST(智能指针测试5)
+{
+	Test5Base* pTBase = new Test5;
+	Test5* pT1 = hTool::hDynamicCast<Test5*>(pTBase);
+	Test5* pT2 = dynamic_cast<Test5*>(pTBase);
+	cout << pT1 << " " << pT2 << endl;
+	DEL(pTBase);
+}
+
 TEST(创建任务测试)
 {
 	Task t(50, 2, TaskAttrTypeBit::Loop);
@@ -241,13 +250,9 @@ TEST(线程池运行5秒)
 	Debug(cout, sThrdPool) << endl;
 	this_thread::sleep_for(4s);
 	sThrdPool.stop();
-
-	PNodeData::debugMap(cout);
-	PTaskNode::debugMap(cout);
-	PTaskAttr::debugMap(cout);
-	PTaskStat::debugMap(cout);
-	PTask::debugMap(cout);
-	PTaskMgr::debugMap(cout);
+	Debug_PtrMap(cout);
+	sThrdPoolFin;
+	Debug_PtrMap(cout);
 }
 
 TEST_MAIN()

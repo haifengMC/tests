@@ -21,11 +21,6 @@ namespace hThread
 
 	ThreadMem::ThreadMem(size_t id) : _id(id) {}
 
-	ThreadMem::~ThreadMem()
-	{
-		COUT_LK(_id << " 线程释放...");
-	}
-
 	void ThreadMem::run()
 	{
 		if (!updateStat(ThreadMemStatType::Wait))
@@ -204,11 +199,18 @@ namespace hThread
 		COUT_LK(_id << " 工作线程创建...");
 	}
 
-	void ThreadMemWork::initTask(PTask pTask)
+	ThreadMemWork::~ThreadMemWork() 
+	{
+		COUT_LK(_id << " 工作线程释放...");
+	}
+
+	void ThreadMemWork::initTask(PWTask pTask, NodeListIt nodeIt, ThrdMemWorkListIt memIt)
 	{
 		COUT_LK(_id << " 工作线程初始化任务,id:" << pTask->getIndex() << "...");
 		_pTask = pTask;
-
+		_nodeIt = nodeIt;
+		_memIt = memIt;
+		setStat(ThreadMemStatType::Ready, _statIt);
 	}
 
 	void ThreadMemMgr::setFunc()
@@ -250,11 +252,11 @@ namespace hThread
 				if (_close)
 					break;
 
-				COUT_LK(_id << " 管理线程处理任务,id:" << pTask->getId() << "...");
+				COUT_LK(_id << " 管理线程初始化任务,id:" << pTask->getId() << "...");
 				if (!sThrdPool.initTasks(pTask, thrdNum))
 					continue;
 		
-
+				COUT_LK(_id << " 管理线程通知工作线程执行任务,id:" << pTask->getId() << "...");
 			}
 			//std::this_thread::sleep_for(std::chrono::seconds(2));
 			COUT_LK(_id << " 管理线程停止工作...");
@@ -267,4 +269,10 @@ namespace hThread
 		_type = ThreadMemType::Mgr;
 		COUT_LK(_id << " 管理线程创建...");
 	}
+
+	ThreadMemMgr::~ThreadMemMgr() 
+	{ 
+		COUT_LK(_id << " 管理线程释放..."); 
+	}
 }
+

@@ -79,3 +79,17 @@ struct Test4B
 	hTool::hAutoPtr<Test4A>::debugMap(cout);\
 	hTool::hAutoPtr<Test4B>::debugMap(cout);\
 	cout << string(10, '-') << endl
+
+
+//ÖÇÄÜÖ¸Õë²âÊÔ5
+struct Test5Base
+{
+	virtual ~Test5Base() {}
+};
+
+struct Test5 : public Test5Base
+{
+	~Test5() {}
+};
+
+//
