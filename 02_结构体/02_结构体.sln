@@ -51,6 +51,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "23_文本运算符", "23_�
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "24_静态转换和动态转换", "24_静态转换和动态转换\24_静态转换和动态转换.vcxproj", "{5FE82D78-9120-4296-B823-867A4448DDE9}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "25_函数模版函数", "25_函数模版函数\25_函数模版函数.vcxproj", "{BACD913D-CAEF-4FDA-B166-15DAE8C255AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -251,6 +253,14 @@ Global
 		{5FE82D78-9120-4296-B823-867A4448DDE9}.Release|x64.Build.0 = Release|x64
 		{5FE82D78-9120-4296-B823-867A4448DDE9}.Release|x86.ActiveCfg = Release|Win32
 		{5FE82D78-9120-4296-B823-867A4448DDE9}.Release|x86.Build.0 = Release|Win32
+		{BACD913D-CAEF-4FDA-B166-15DAE8C255AD}.Debug|x64.ActiveCfg = Debug|x64
+		{BACD913D-CAEF-4FDA-B166-15DAE8C255AD}.Debug|x64.Build.0 = Debug|x64
+		{BACD913D-CAEF-4FDA-B166-15DAE8C255AD}.Debug|x86.ActiveCfg = Debug|Win32
+		{BACD913D-CAEF-4FDA-B166-15DAE8C255AD}.Debug|x86.Build.0 = Debug|Win32
+		{BACD913D-CAEF-4FDA-B166-15DAE8C255AD}.Release|x64.ActiveCfg = Release|x64
+		{BACD913D-CAEF-4FDA-B166-15DAE8C255AD}.Release|x64.Build.0 = Release|x64
+		{BACD913D-CAEF-4FDA-B166-15DAE8C255AD}.Release|x86.ActiveCfg = Release|Win32
+		{BACD913D-CAEF-4FDA-B166-15DAE8C255AD}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
