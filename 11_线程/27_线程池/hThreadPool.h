@@ -50,13 +50,13 @@ namespace hThread
 		template <size_t N>
 		size_t commitTasks(PTask(&task)[N], TaskMgrPriority priority = TaskMgrPriority::Normal);
 		size_t commitTasks(PTask& task, TaskMgrPriority priority = TaskMgrPriority::Normal);
-		//准备任务：管理线程根据优先级和权重
+		//准备任务:管理线程根据优先级和权重
 		PTask readyTasks();
 		//初始化任务:管理线程为工作线程初始化任务状态
 		bool initTasks(PTask pTask, size_t thrdNum);
-#if 0
-		hRWLock* getRWLock(Task* pTask);//获取任务锁
-#endif
+		//运行任务:通知各就绪的工作线程工作
+		void runTasks();
+
 		void createThrd(size_t num, ThreadMemType t = ThreadMemType::Work);
 		ThreadMemData& getThrdMemData(ThreadMemType type) { return _memData[type]; }
 		size_t getThrdMemNum(ThreadMemType memTy, ThreadMemStatType statTy);

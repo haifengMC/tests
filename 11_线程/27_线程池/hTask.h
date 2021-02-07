@@ -53,7 +53,10 @@ namespace hThread
 
 		PWTaskMgr _pMgr;//指向自己所在管理器
 		ThrdMemWorkList _thrds;//当前运行该任务的工作线程
-		NodeListIt _nodeIt;//指向当前在运行节点
+		NodeListIt 
+			_curNodeIt,//指向当前在运行节点
+			_nodeIt;//指向最后载入线程的节点
+		std::mutex rwLock;//自锁，暂时用互斥锁代替
 
 		~TaskStat() {}//需要实现析构
 	};
@@ -66,7 +69,7 @@ namespace hThread
 		PTaskAttr _attrb;
 		PTaskStat _state;
 	public:
-		Task(size_t weight, size_t thrdExpect, uint16_t attr);
+		Task(size_t weight, size_t thrdExpect, uint16_t attr = 0);
 		Task(PTaskAttr attr);
 		Task(Task&& t);
 
@@ -85,20 +88,28 @@ namespace hThread
 		bool addNode(TaskNode* pNode) { return _attrb && _attrb->addNode(pNode); }
 		//初始化节点数据
 		bool initNodeData(NodeData* pData = NULL) { return _attrb && _attrb->initNodeData(pData); }
-		bool setStat(TaskStatType state);
 
 		/*
 		设置状态
 		*/
+		bool setStat(TaskStatType state);
+		bool updateStat(TaskStatType state);
 		//添加线程到任务,还未启用
 		bool addThrdMem(PWThrdMemWork pMem);
-		//返回实际使用的线程数
-		//size_t runTask(const size_t& rate);
+		//线程请求运行任务节点
+		bool runTaskNode(NodeListIt nodeIt);
+		//完成当前节点，通知下一个线程
+		void finishCurNode(ThrdMemWorkListIt memIt);
 		//根据当前线程数curThrd和期望线程数_thrdExpect确定最终需要的线程数
 		size_t calcNeedThrdNum(size_t curThrd);
 
+		template<typename T>
+		void readLk(T func);
+		template<typename T>
+		void writeLk(T func);
 	private:
 		bool check() const;//一般性检测
+		void checkErrOut() const;
 	};
 
 }

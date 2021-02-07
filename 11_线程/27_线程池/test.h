@@ -92,4 +92,8 @@ struct Test5 : public Test5Base
 	~Test5() {}
 };
 
-//
+//线程池运行5秒
+struct Test1TaskNode : public hThread::TaskNode
+{
+	bool onProc();
+};

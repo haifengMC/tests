@@ -238,17 +238,16 @@ TEST(提交任务到线程池日志)
 TEST(线程池运行5秒)
 {
 	{
-		PTask t1 = new Task(50, 2, TaskAttrType::Loop);
-		t1->initNodeData(new TestNodeData("test data"));
-		t1->addNode(new TestTaskNode("test node1"));
-		t1->addNode(new TestTaskNode("test node2"));
+		PTask t1 = new Task(50, 2, TaskAttrTypeBit::Loop);
+		t1->initNodeData(new NodeData());
+		t1->addNode(new Test1TaskNode());
+		t1->addNode(new Test1TaskNode());
 		sThrdPool.commitTasks(t1);
 	}
 	this_thread::sleep_for(1s);
 	sThrdPool.run();
-	this_thread::sleep_for(1s);
+	this_thread::sleep_for(3s);
 	Debug(cout, sThrdPool) << endl;
-	this_thread::sleep_for(4s);
 	sThrdPool.stop();
 	Debug_PtrMap(cout);
 	sThrdPoolFin;

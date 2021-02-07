@@ -32,18 +32,14 @@ namespace hThread
 
 	void ThreadMemData::stop()
 	{
-		execEvery(ThreadMemStatType::Wait,
-			[&](PThrdMem pMem) { pMem->stop(); return true; });
-		execEvery(ThreadMemStatType::Ready,
-			[&](PThrdMem pMem) { pMem->stop(); return true; });
-		execEvery(ThreadMemStatType::Run,
-			[&](PThrdMem pMem) { pMem->stop(); return true; });
+		for (auto& mem : _memArr)
+			mem->stop();
 	}
 
 	void ThreadMemData::join()
 	{
-		execEvery(ThreadMemStatType::Init,
-			[&](PThrdMem pMem) { pMem->join(); return true; });
+		for (auto& mem : _memArr)
+			mem->join();
 	}
 
 	void ThreadMemData::execEvery(ThreadMemStatType statTy,
@@ -112,7 +108,6 @@ namespace hThread
 		for (auto& data : _memData)
 			data.join();
 		COUT_LK("线程池停止完毕...");
-
 	}
 
 	size_t ThreadPool::commitTasks(PTask& task, TaskMgrPriority priority)
@@ -152,7 +147,12 @@ namespace hThread
 			{
 				PWThrdMemWork pDyMem = pMem.dynamic<ThreadMemWork>();
 				if (!pDyMem)
+				{
+					COUT_LK("[" <<
+						pMem->getStat().getName() <<
+						pMem->getId() << "]不是工作线程...");
 					return true;
+				}
 
 				pTask->addThrdMem(pDyMem);
 				if (++initNum < needNum)
@@ -163,20 +163,27 @@ namespace hThread
 
 		return true;
 	}
-#if 0
 
-	hRWLock* ThreadPool::getRWLock(Task* pTask)
+	void ThreadPool::runTasks()
 	{
-		if (!pTask)
-			return NULL;
+		ThreadMemData& memData = sThrdPool.getThrdMemData(ThreadMemType::Work);
+		memData.execEvery(ThreadMemStatType::Ready,
+			[&](PThrdMem pMem)
+			{
+				PWThrdMemWork pDyMem = pMem.dynamic<ThreadMemWork>();
+				if (!pDyMem)
+				{
+					COUT_LK("[" <<
+						pMem->getStat().getName() <<
+						pMem->getId() << "]不是工作线程...");
+					return true;
+				}
 
-		auto it = taskLock.find(pTask);
-		if (it != taskLock.end())
-			return it->second;
-
-		return taskLock[pTask] = new hRWLock;
+				pDyMem->runTask();
+				return true;
+			});
 	}
-#endif
+
 	void ThreadPool::createThrd(size_t num, ThreadMemType t)
 	{
 		//rwLock.writeLock();

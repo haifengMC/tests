@@ -180,7 +180,6 @@ namespace hThread
 		_state.emplace();
 		_state->_pMgr = pMgr;
 		_state->_stateTy = TaskStatType::Init; 
-		_state->_nodeIt = _attrb->_nodeList.end();
 
 		return true;
 	}
@@ -197,18 +196,22 @@ namespace hThread
 	{
 		if (!check())
 		{
-			COUT_LK("任务异常,_attrb:" << _attrb <<
-				"_state:" << _state <<
-				"_pMgr" << (_state ? (bool)_state->_pMgr : false) << "...");
+			checkErrOut();
 			return NodeListIt();
 		}
 
 		NodeList& nodeList = _attrb->_nodeList;
 		NodeListIt& nodeIt = _state->_nodeIt;
 
+		if (!nodeIt._Ptr)
+		{
+			nodeIt = nodeList.begin();
+			return nodeIt;
+		}
+
 		if (nodeIt == nodeList.end())
 		{
-			if (!(_attrb->_attr[TaskAttrType::Loop]))
+			if (!_attrb->_attr[TaskAttrType::Loop])
 				return nodeList.end();
 
 			nodeIt = nodeList.begin();
@@ -232,9 +235,32 @@ namespace hThread
 		if (_state->_stateTy == state)
 			return false;
 
-		Task* pThis = this;
-		//stat->pMgr->spliceTasks(stat->state, state, &pThis, 1);
 		_state->_stateTy = state;
+		return true;
+	}
+
+	bool Task::updateStat(TaskStatType state)
+	{
+		if (TaskStatType::Max <= state)
+			return false;
+
+		if (!check())
+			return false;
+
+		if (_state->_stateTy == state)
+			return false;
+
+		std::list<size_t>* newList = _state->_pMgr->getStateList(state);
+		if (!newList)
+			return false;
+
+		std::list<size_t>* oldList = _state->_pMgr->getStateList(_state->_stateTy);
+		std::list<size_t>::iterator& it = _state->_stateIt;
+		if (!it._Ptr || !oldList || it == oldList->end())
+			it = newList->insert(newList->end(), _thisId);
+		else
+			newList->splice(newList->end(), *oldList, it);
+
 		return true;
 	}
 	
@@ -248,9 +274,7 @@ namespace hThread
 
 		if (!check())
 		{
-			COUT_LK(_thisId << "任务异常,_attrb:" << _attrb <<
-				"_state:" << _state <<
-				"_pMgr" << (_state ? (bool)_state->_pMgr : false) << "...");
+			checkErrOut();
 			return false;
 		}
 
@@ -262,6 +286,14 @@ namespace hThread
 			return false;
 		}
 
+		if (TaskStatType::Wait != _state->_stateTy &&
+			TaskStatType::Ready != _state->_stateTy)
+		{
+			COUT_LK(_thisId << " 任务不在准备状态" <<
+				_state->_stateTy.getName() << "...");
+			return false;
+		}
+
 		ThrdMemWorkList& thrdsRef = _state->_thrds;
 		auto nodeIt = getNextNode();
 		if (!nodeIt._Ptr || nodeIt == _attrb->_nodeList.end())
@@ -270,6 +302,7 @@ namespace hThread
 			return false;
 		}
 		auto memIt = thrdsRef.insert(thrdsRef.end(), pMem);
+		updateStat(TaskStatType::Ready);
 		pMem->initTask(getThis(), nodeIt, memIt);
 #if 0
 		auto itRBeg = thrdsRef.rbegin();
@@ -290,6 +323,74 @@ namespace hThread
 		return true;
 	}
 
+	//线程请求运行任务节点
+	bool Task::runTaskNode(NodeListIt nodeIt)
+	{
+		if (!check())
+		{
+			checkErrOut();
+			return false;
+		}
+
+		if (TaskStatType::Run != _state->_stateTy &&
+			TaskStatType::Ready != _state->_stateTy)
+		{
+			COUT_LK(_thisId << " 任务不在准备状态" <<
+				_state->_stateTy.getName() << "...");
+			return false;
+		}
+
+		if (!nodeIt._Ptr || nodeIt == _attrb->_nodeList.end())
+		{
+			COUT_LK(_thisId << "无效节点");
+			return false;
+		}
+
+		if (!_state->_curNodeIt._Ptr)
+			_state->_curNodeIt = _attrb->_nodeList.begin();
+
+#if 0
+		//未加锁前从第一个节点开始逐个运行
+		if (_state->_curNodeIt != nodeIt)
+			return false;
+#endif
+		updateStat(TaskStatType::Run);
+		return true;
+	}
+
+	void Task::finishCurNode(ThrdMemWorkListIt memIt)
+	{
+		if (!check())
+		{
+			checkErrOut();
+			return;
+		}
+
+		ThrdMemWorkList& thrdList = _state->_thrds;
+		if (!memIt._Ptr || memIt == thrdList.end())
+		{
+			COUT_LK(_thisId << "任务通知空节点...");
+			return;
+		}
+
+		if (thrdList.empty())
+		{
+			COUT_LK(_thisId << "任务无可用工作线程...");
+			return;
+		}
+
+		++_state->_curNodeIt;
+		if (_state->_curNodeIt == _attrb->_nodeList.end() &&
+			_attrb->_attr[TaskAttrType::Loop])
+			_state->_curNodeIt = _attrb->_nodeList.begin();
+
+		ThrdMemWorkListIt nextIt = ++memIt;
+		if (nextIt == thrdList.end())
+			nextIt = thrdList.begin();
+
+		(*nextIt)->notify();
+	}
+
 	size_t Task::calcNeedThrdNum(size_t curThrd)
 	{
 		if (!_attrb)
@@ -297,46 +398,6 @@ namespace hThread
 
 		return std::min({curThrd, _attrb->_thrdExpect, _attrb ->_nodeList.size()});
 	}
-
-
-
-
-#if 0
-
-	//返回实际使用的线程数
-	size_t Task::runTask(const size_t& rate)
-	{
-		if (!check())
-			return 0;
-
-		RD_LOCK;
-		size_t needRate = attr->thrdExpect < rate ? attr->thrdExpect : rate;
-		size_t canNum = needRate < sThreadPool.readyThd.size() ? needRate : sThreadPool.readyThd.size();
-		hRWLock* pRwLock = sThreadPool.getRWLock(this);
-		RD_UNLOCK;
-
-		pRwLock->writeLock();
-		size_t n = 0;
-		for (; n < canNum; ++n)
-		{
-			RD_LOCK;
-			auto it = sThreadPool.readyThd.begin();
-			RD_UNLOCK;
-			if (it == sThreadPool.readyThd.end())
-				break;
-			RD_LOCK;
-			ThreadMem* pMem = sThreadPool.memMgr[*it];
-			RD_UNLOCK;
-			if (!pMem)
-				continue;
-
-			addThrd(pMem);
-		}
-		pRwLock->writeUnlock();
-
-		return n;
-	}
-#endif
 
 	bool Task::check() const
 	{
@@ -350,6 +411,14 @@ namespace hThread
 			return false;
 
 		return true;
+	}
+
+	void Task::checkErrOut() const
+	{
+		COUT_LK(_thisId << "任务异常,_attrb:" << _attrb <<
+			"_state:" << _state <<
+			"_pMgr" << (_state ? (bool)_state->_pMgr : false) << "...");
+
 	}
 
 #undef RD_LOCK

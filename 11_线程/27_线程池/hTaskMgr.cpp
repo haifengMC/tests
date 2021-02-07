@@ -18,6 +18,14 @@ namespace hThread
 		COUT_LK(_base.index().getName() << " 任务管理器释放...");
 	}
 
+	std::list<size_t>* TaskMgr::getStateList(TaskStatType state)
+	{
+		if (TaskStatType::Max <= state)
+			return NULL;
+
+		return &_states[state];
+	}
+
 	//提交任务，将新任务提交给管理器，提交后默认状态为等待
 	size_t TaskMgr::commitTasks(PTask* tasks, size_t num)
 	{

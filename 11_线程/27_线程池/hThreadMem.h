@@ -20,12 +20,6 @@ namespace hThread
 		std::condition_variable _runCv;
 
 		bool _close = false;//关闭标识符
-
-#if 0
-
-		hRWLock* pRwLock = NULL;//任务锁(由线程池提供)
-
-#endif
 	protected:
 		virtual void setFunc() = 0;//设置线程每个线程成员都必须实现
 	public:
@@ -42,14 +36,6 @@ namespace hThread
 
 		bool setStat(ThreadMemStatType type, std::list<size_t>::iterator& it);
 		bool updateStat(ThreadMemStatType type);
-#if 0
-
-
-		void runTask(Task* const& task);
-
-		const size_t& getId() const { return _id; }
-		void setId(const size_t& id) { this->_id = id; }
-#endif
 		void notify() { _runCv.notify_all(); }
 
 		bool shouldBeClosed() const { return _close; }
@@ -59,17 +45,20 @@ namespace hThread
 	//工作线程成员
 	class ThreadMemWork : public ThreadMem
 	{
-		friend class Task;
 		PWTask _pTask;//指向当前执行任务
 		NodeListIt _nodeIt;//指向本线程运行的节点
 		ThrdMemWorkListIt _memIt;//任务线程链表中自己的迭代器
+		hRWLock* _pRwLock;//任务锁(由线程池提供)
 	protected:
+		void reset();
 		void setFunc();
 	public:
 		ThreadMemWork(size_t id);
 		~ThreadMemWork();
 
 		void initTask(PWTask pTask, NodeListIt nodeIt, ThrdMemWorkListIt memIt);
+		void runTask();
+
 	};
 
 	//管理线程成员

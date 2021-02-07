@@ -17,6 +17,8 @@ namespace hThread
 		TaskMgr(const TaskMgrCfgItem& base);
 		~TaskMgr();
 
+		std::list<size_t>* getStateList(TaskStatType state);
+
 		//提交任务，将新任务提交给管理器，提交后默认状态为等待
 		template <size_t N>
 		size_t commitTasks(PTask(&task)[N]);

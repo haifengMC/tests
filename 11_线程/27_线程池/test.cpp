@@ -72,4 +72,11 @@ void Test4B::addPtr(hTool::hWeakPtr<Test4A> pA)
 	Test4P(7);
 }
 
+bool Test1TaskNode::onProc()
+{
+	COUT_LK(_id << " 任务节点处理onProc()...");
+	std::this_thread::sleep_for(1s);
+	return true;
+}
+
 #undef COUT_LOCK

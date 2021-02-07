@@ -75,16 +75,14 @@ namespace hThread
 		return true;
 	}
 
-#if 0
-	void ThreadMem::runTask(Task* const& task)
+	void ThreadMemWork::reset()
 	{
-		WT_LOCK;
-		pTask = task;
-		task->addThrd(this);
-		WT_UNLOCK;
-		runCv.notify_one();//应当为本线程打开自锁，在任务锁前打开，任务锁应在添加完任务后由任务打开
+		_pTask = PWTask();
+		_nodeIt = NodeListIt();
+		_memIt = ThrdMemWorkListIt();
+		updateStat(ThreadMemStatType::Wait);
 	}
-#endif
+
 	void ThreadMemWork::setFunc()
 	{
 		_func = [&]()
@@ -137,57 +135,78 @@ namespace hThread
 
 #endif
 						return true;
+
 					});
 				if (_close)
 					break;
-#if 0
-				while (pNode)
+
+				COUT_LK(_id << " 工作线程运行任务" << _pTask->getIndex() << "...");
+				PTaskAttr pAttr = _pTask->getAttr();
+				PTaskStat pStat = _pTask->getStat();
+				auto& nodeList = pAttr->_nodeList;
+				while (_nodeIt != nodeList.end())
 				{
-					if (!pNode->initProc())
+					if (TaskStatType::Error == pStat)
 					{
-						pRwLock->writeLock();
-						pTask->setStat(TaskStateType::Error);
-						pTask = NULL;
-						pNext = NULL;
-						pRwLock->writeUnlock();
+						COUT_LK(_pTask->getIndex() << " 任务报错,线程" 
+							<< _id << "准备重置...");
 						break;
 					}
 
-					pRwLock->readLock();
-					bool preRet = pNode->preProc();
-					pRwLock->readUnlock();
+					TaskNode& nodeRef = **_nodeIt;
+					if (!nodeRef.initProc())
+					{
+						COUT_LK(_pTask->getIndex() << " 任务节点" << nodeRef.getId() <<
+							"初始化失败,线程" << getId() << "准备重置...");
+						_pTask->writeLk([&]() {_pTask->setStat(TaskStatType::Error); });
+						break;
+					}
 
+					bool preRet = false;
+					_pTask->readLk([&]() { preRet = nodeRef.preProc(); });
 					if (!preRet)//预处理失败，做后续处理
 					{
-						pNode->finalProc();
+						COUT_LK(_pTask->getIndex() << " 任务节点" << nodeRef.getId() <<
+							"预处理失败,做后续处理,线程" << getId() << "准备重置...");
+						nodeRef.finalProc();
 						break;
 					}
 
-					runCv.wait(lk, [&]//等待
+					_runCv.wait(lk, [&]//等待
 						{
-							pRwLock->readLock();
-							bool canProcV = pNode->canProc(nodeId);
-							pRwLock->readUnlock();
+							if (_close)
+								return true;
+
+							bool canProcV = false;
+							_pTask->readLk([&]() { canProcV = _nodeIt == pStat->_curNodeIt; });
+							if (!canProcV)
+							{
+								COUT_LK(getId() << " " << _pTask->getIndex() <<
+									"任务等待前置节点完成_curNodeIt:" << (*pStat->_curNodeIt)->getId() <<
+									"_nodeIt:" << (*_nodeIt)->getId() << "...");
+							}
 
 							return canProcV;
 						});
+					if (_close)
+						break;
+					
+					_pTask->writeLk([&]() 
+						{ 			
+							nodeRef.onProc();
+							nodeRef.finalProc();
+							_pTask->finishCurNode(_memIt);
+							_nodeIt = _pTask->getNextNode();
+						});
 
-					pRwLock->writeLock();
+					COUT_LK(getId() << " 任务" << _pTask->getIndex() << "节点" << nodeRef.getId() <<
+						"处理完成...");
 
-					TaskNode* pCurNode = pNode;
-					pNode = pTask->getNextNode();
-					if (pNode)
-						nodeId = pNode->getId();
-					pCurNode->onProc();
-
-					pRwLock->writeUnlock();
-
-					pCurNode->finalProc();
-					this->pNext->notify();
 				}
-#endif
+				reset();
 			}
 			//std::this_thread::sleep_for(std::chrono::seconds(1));
+			//reset();
 			COUT_LK(_id << " 工作线程停止工作...");
 		};
 	}
@@ -210,7 +229,29 @@ namespace hThread
 		_pTask = pTask;
 		_nodeIt = nodeIt;
 		_memIt = memIt;
-		setStat(ThreadMemStatType::Ready, _statIt);
+		updateStat(ThreadMemStatType::Ready);
+	}
+
+	void ThreadMemWork::runTask()
+	{
+		COUT_LK(_id << " 通知工作线程运行任务,id:" << _pTask->getIndex() << "...");
+		if (!_pTask || !_nodeIt._Ptr || !_memIt._Ptr)
+		{
+			COUT_LK("[" << getStat().getName() << getId() << "]" <<
+				"_pTask" << _pTask <<
+				"_nodeIt" << _nodeIt._Ptr <<
+				"_memIt" << _memIt._Ptr <<
+				"任务初始化异常...");
+			return;
+		}
+
+		if (!_pTask->runTaskNode(_nodeIt))
+			return;
+
+		updateStat(ThreadMemStatType::Run);
+
+		notify();
+
 	}
 
 	void ThreadMemMgr::setFunc()
@@ -257,6 +298,7 @@ namespace hThread
 					continue;
 		
 				COUT_LK(_id << " 管理线程通知工作线程执行任务,id:" << pTask->getId() << "...");
+				sThrdPool.runTasks();
 			}
 			//std::this_thread::sleep_for(std::chrono::seconds(2));
 			COUT_LK(_id << " 管理线程停止工作...");

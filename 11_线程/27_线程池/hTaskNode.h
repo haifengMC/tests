@@ -35,7 +35,6 @@ namespace hThread
 
 		const size_t& getId() const { return _id; }
 
-		virtual bool canProc(size_t id) { return _id == id; }
 		virtual bool initProc() { return true; }//初始化处理，读配置，分配内存等
 		virtual bool preProc() { return true; }//预处理，上读锁，检测节点数据，设置下个节点数据
 		virtual bool onProc() { return true; }//处理函数，上写锁
