@@ -13,41 +13,55 @@ struct E : public D {};
 
 namespace hDynamicDetail
 {
-	template <typename T, typename U>
-	void _hDynamicCast(T& t, 
-		decltype(dynamic_cast<const volatile void*>(static_cast<U>(NULL))) u)
+	template <typename T, bool TBool, typename U, bool UBool>
+	struct _hDynamicCast
 	{
-		t = dynamic_cast<T>((U)u);
-	}
+		static T dynamic(U u) 
+		{ 
+			static_assert((std::is_pointer<T>::value && std::is_pointer<U>::value),
+				"Be not pointer");
+
+			return NULL; 
+		}
+	};
 
 	template <typename T, typename U>
-	void _hDynamicCast(...) {}
+	struct _hDynamicCast<T, true, U, true>
+	{
+		static T dynamic(U u) { return dynamic_cast<T>((U)u); }
+	};
 }
 
 template <typename T, typename U>
 T hDynamicCast(U u) 
 {
-	static_assert((std::is_pointer<T>::value && std::is_pointer<U>::value),
-		"Be not pointer");
-
-	T t = NULL;
-	hDynamicDetail::_hDynamicCast<T, U>(t, u);
-	return t;
+	return hDynamicDetail::_hDynamicCast<
+		T, is_polymorphic<remove_pointer<remove_reference<T>::type>::type>::value,
+		U, is_polymorphic<remove_pointer<remove_reference<U>::type>::type>::value>::
+		dynamic(u);
 }
 
 
 int main()
 {
+	int* pI = new int(0);
+	A* pA = new A;
 	B* pB = new B;
 	B* pC1 = new C;
 	C* pC2 = new C;
-
+	D* pD = new D;
+	E* pE = new E;
+	
+	cout << hDynamicCast<B*>(pI) << endl;
+	cout << hDynamicCast<B*>(pA) << endl;
+	cout << hDynamicCast<B*>(pB) << endl;
 	cout << hDynamicCast<C*>(pB) << endl;
 	cout << hDynamicCast<C*>(pC1) << endl;
 	cout << hDynamicCast<B*>(pC2) << endl;
+	cout << hDynamicCast<B*>(pD) << endl;
+	cout << hDynamicCast<B*>(pE) << endl;
 
-	cout << typeid(decltype(dynamic_cast<B*>(
-		static_cast<E*>(nullptr)))).name() << endl;
+
 
 	return true;
 }
