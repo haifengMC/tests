@@ -1,7 +1,7 @@
 #pragma once
 
 //æ≤Ã¨∂•µ„ Ù–‘
-#if 0
+#if 1
 BEG_CFGDATA(StaticVertexAttribCfg)
 {
 	std::string shaderName;
@@ -16,7 +16,8 @@ END_CFGDATA(StaticVertexAttribCfg, shaderName, vertLoc, colorLoc, vertice, stati
 BEG_CFGDATA(StaticVertexAttribCfg)
 {
 	std::string shaderName;
+	GLuint vertLoc = 0;
 }
-END_CFGDATA(StaticVertexAttribCfg, shaderName)
+END_CFGDATA(StaticVertexAttribCfg, shaderName, vertLoc)
 
 #endif
