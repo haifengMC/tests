@@ -260,6 +260,7 @@ namespace hThread
 			it = newList->insert(newList->end(), _thisId);
 		else
 			newList->splice(newList->end(), *oldList, it);
+		_state->_stateTy = state;
 
 		return true;
 	}
@@ -286,8 +287,7 @@ namespace hThread
 			return false;
 		}
 
-		if (TaskStatType::Wait != _state->_stateTy &&
-			TaskStatType::Ready != _state->_stateTy)
+		if (TaskStatType::Ready != _state->_stateTy)
 		{
 			COUT_LK(_thisId << " 任务不在准备状态" <<
 				_state->_stateTy.getName() << "...");
@@ -302,7 +302,6 @@ namespace hThread
 			return false;
 		}
 		auto memIt = thrdsRef.insert(thrdsRef.end(), pMem);
-		updateStat(TaskStatType::Ready);
 		pMem->initTask(getThis(), nodeIt, memIt);
 #if 0
 		auto itRBeg = thrdsRef.rbegin();
@@ -329,14 +328,6 @@ namespace hThread
 		if (!check())
 		{
 			checkErrOut();
-			return false;
-		}
-
-		if (TaskStatType::Run != _state->_stateTy &&
-			TaskStatType::Ready != _state->_stateTy)
-		{
-			COUT_LK(_thisId << " 任务不在准备状态" <<
-				_state->_stateTy.getName() << "...");
 			return false;
 		}
 

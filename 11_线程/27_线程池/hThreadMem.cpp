@@ -87,7 +87,7 @@ namespace hThread
 	{
 		_func = [&]()
 		{
-			COUT_LK(_id << " 工作线程启动...");
+			COUT_LK("memWork_" << _id << " 工作线程启动...");
 
 			std::mutex m;
 			std::unique_lock<std::mutex> lk(m);
@@ -95,7 +95,7 @@ namespace hThread
 			while (!_close)
 			{
 				//TaskNode* pNode = NULL;
-				COUT_LK(_id << " 工作线程进入循环...");
+				COUT_LK("memWork_" << _id << " 工作线程进入循环...");
 
 				_runCv.wait(lk, [&]
 					{
@@ -104,7 +104,7 @@ namespace hThread
 
 						if (!_pTask)
 						{
-							COUT_LK(_id << " 无任务，工作线程挂起...");
+							COUT_LK("memWork_" << _id << " 无任务，工作线程挂起...");
 							return false;
 						}
 #if 0
@@ -140,7 +140,8 @@ namespace hThread
 				if (_close)
 					break;
 
-				COUT_LK(_id << " 工作线程运行任务" << _pTask->getIndex() << "...");
+				COUT_LK("memWork_" << _id << " 工作线程运行任务" << 
+					"task_" << _pTask->getIndex() << "...");
 				PTaskAttr pAttr = _pTask->getAttr();
 				PTaskStat pStat = _pTask->getStat();
 				auto& nodeList = pAttr->_nodeList;
@@ -148,16 +149,17 @@ namespace hThread
 				{
 					if (TaskStatType::Error == pStat)
 					{
-						COUT_LK(_pTask->getIndex() << " 任务报错,线程" 
-							<< _id << "准备重置...");
+						COUT_LK("task_" << _pTask->getIndex() << " 任务报错,线程" <<
+							"memWork_" << _id << "准备重置...");
 						break;
 					}
 
 					TaskNode& nodeRef = **_nodeIt;
 					if (!nodeRef.initProc())
 					{
-						COUT_LK(_pTask->getIndex() << " 任务节点" << nodeRef.getId() <<
-							"初始化失败,线程" << getId() << "准备重置...");
+						COUT_LK("task_" << _pTask->getIndex() << " 任务节点" << 
+							"node_" << nodeRef.getId() << "初始化失败,线程" << 
+							"memWork_" << getId() << "准备重置...");
 						_pTask->writeLk([&]() {_pTask->setStat(TaskStatType::Error); });
 						break;
 					}
@@ -166,8 +168,9 @@ namespace hThread
 					_pTask->readLk([&]() { preRet = nodeRef.preProc(); });
 					if (!preRet)//预处理失败，做后续处理
 					{
-						COUT_LK(_pTask->getIndex() << " 任务节点" << nodeRef.getId() <<
-							"预处理失败,做后续处理,线程" << getId() << "准备重置...");
+						COUT_LK("task_" << _pTask->getIndex() << " 任务节点" <<
+							"node_" << nodeRef.getId() << "预处理失败,做后续处理,线程" << 
+							"memWork_" << getId() << "准备重置...");
 						nodeRef.finalProc();
 						break;
 					}
@@ -181,7 +184,7 @@ namespace hThread
 							_pTask->readLk([&]() { canProcV = _nodeIt == pStat->_curNodeIt; });
 							if (!canProcV)
 							{
-								COUT_LK(getId() << " " << _pTask->getIndex() <<
+								COUT_LK("memWork_" << getId() << " " << "task_" << _pTask->getIndex() <<
 									"任务等待前置节点完成_curNodeIt:" << (*pStat->_curNodeIt)->getId() <<
 									"_nodeIt:" << (*_nodeIt)->getId() << "...");
 							}
@@ -199,7 +202,7 @@ namespace hThread
 							_nodeIt = _pTask->getNextNode();
 						});
 
-					COUT_LK(getId() << " 任务" << _pTask->getIndex() << "节点" << nodeRef.getId() <<
+					COUT_LK("memWork_" << getId() << " 任务" << "task_" << _pTask->getIndex() << "节点" << nodeRef.getId() <<
 						"处理完成...");
 
 				}
@@ -207,7 +210,7 @@ namespace hThread
 			}
 			//std::this_thread::sleep_for(std::chrono::seconds(1));
 			//reset();
-			COUT_LK(_id << " 工作线程停止工作...");
+			COUT_LK("memWork_" << _id << " 工作线程停止工作...");
 		};
 	}
 
@@ -215,17 +218,18 @@ namespace hThread
 		ThreadMem(id)
 	{
 		_type = ThreadMemType::Work;
-		COUT_LK(_id << " 工作线程创建...");
+		COUT_LK("memWork_" << _id << " 工作线程创建...");
 	}
 
 	ThreadMemWork::~ThreadMemWork() 
 	{
-		COUT_LK(_id << " 工作线程释放...");
+		COUT_LK("memWork_" << _id << " 工作线程释放...");
 	}
 
 	void ThreadMemWork::initTask(PWTask pTask, NodeListIt nodeIt, ThrdMemWorkListIt memIt)
 	{
-		COUT_LK(_id << " 工作线程初始化任务,id:" << pTask->getIndex() << "...");
+		COUT_LK("memWork_" << _id << " 通知工作线程运行任务" <<
+			"task_" << pTask->getIndex() << "...");
 		_pTask = pTask;
 		_nodeIt = nodeIt;
 		_memIt = memIt;
@@ -234,7 +238,8 @@ namespace hThread
 
 	void ThreadMemWork::runTask()
 	{
-		COUT_LK(_id << " 通知工作线程运行任务,id:" << _pTask->getIndex() << "...");
+		COUT_LK("memWork_" << _id << " 通知工作线程运行任务" <<
+			"task_" << _pTask->getIndex() << "...");
 		if (!_pTask || !_nodeIt._Ptr || !_memIt._Ptr)
 		{
 			COUT_LK("[" << getStat().getName() << getId() << "]" <<
@@ -249,23 +254,21 @@ namespace hThread
 			return;
 
 		updateStat(ThreadMemStatType::Run);
-
 		notify();
-
 	}
 
 	void ThreadMemMgr::setFunc()
 	{
 		_func = [&]()
 		{
-			COUT_LK(_id << " 管理线程启动...");
+			COUT_LK("memMgr_" << _id << " 管理线程启动...");
 
 			std::mutex m;
 			std::unique_lock<std::mutex> lk(m);
 
 			while (!_close)
 			{
-				COUT_LK(_id << " 管理线程进入循环...");
+				COUT_LK("memMgr_" << _id << " 管理线程进入循环...");
 
 				PTask pTask;
 				size_t thrdNum = 0;//已就绪的工作线程数
@@ -277,14 +280,14 @@ namespace hThread
 						thrdNum = sThrdPool.getThrdMemNum(ThreadMemType::Work, ThreadMemStatType::Wait);
 						if (!thrdNum)
 						{
-							COUT_LK(_id << " 无可用线程，管理线程挂起...");
+							COUT_LK("memMgr_" << _id << " 无可用线程，管理线程挂起...");
 							return false;
 						}
 
 						pTask = sThrdPool.readyTasks();
 						if (!pTask)
 						{
-							COUT_LK(_id << " 无任务，管理线程挂起...");
+							COUT_LK("memMgr_" << _id << " 无任务，管理线程挂起...");
 							return false;
 						}
 
@@ -293,15 +296,17 @@ namespace hThread
 				if (_close)
 					break;
 
-				COUT_LK(_id << " 管理线程初始化任务,id:" << pTask->getId() << "...");
+				COUT_LK("memMgr_" << _id << " 管理线程初始化任务" <<
+					"task_" << pTask->getIndex() << "...");
 				if (!sThrdPool.initTasks(pTask, thrdNum))
 					continue;
 		
-				COUT_LK(_id << " 管理线程通知工作线程执行任务,id:" << pTask->getId() << "...");
+				COUT_LK("memMgr_" << _id << " 管理线程通知工作线程执行任务" <<
+					"task_" << pTask->getIndex() << "...");
 				sThrdPool.runTasks();
 			}
 			//std::this_thread::sleep_for(std::chrono::seconds(2));
-			COUT_LK(_id << " 管理线程停止工作...");
+			COUT_LK("memMgr_" << _id << " 管理线程停止工作...");
 		};
 	}
 
@@ -309,12 +314,12 @@ namespace hThread
 		ThreadMem(id)
 	{
 		_type = ThreadMemType::Mgr;
-		COUT_LK(_id << " 管理线程创建...");
+		COUT_LK("memMgr_" << _id << " 管理线程创建...");
 	}
 
 	ThreadMemMgr::~ThreadMemMgr() 
 	{ 
-		COUT_LK(_id << " 管理线程释放..."); 
+		COUT_LK("memMgr_" << _id << " 管理线程释放...");
 	}
 }
 

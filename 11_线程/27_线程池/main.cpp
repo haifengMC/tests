@@ -247,7 +247,11 @@ TEST(线程池运行5秒)
 	this_thread::sleep_for(1s);
 	sThrdPool.run();
 	this_thread::sleep_for(3s);
-	Debug(cout, sThrdPool) << endl;
+
+	ostringstream os;
+	Debug(os, sThrdPool);
+	COUT_LK(os.str());
+
 	sThrdPool.stop();
 	Debug_PtrMap(cout);
 	sThrdPoolFin;
