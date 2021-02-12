@@ -302,7 +302,7 @@ namespace hThread
 			return false;
 		}
 		auto memIt = thrdsRef.insert(thrdsRef.end(), pMem);
-		pMem->initTask(getThis(), nodeIt, memIt);
+		pMem->initTask(*getThis<Task>(), nodeIt, memIt);
 #if 0
 		auto itRBeg = thrdsRef.rbegin();
 		pMem->itMem = thrdsRef.insert(thrdsRef.end(), pMem);

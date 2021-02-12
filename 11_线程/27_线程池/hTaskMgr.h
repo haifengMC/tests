@@ -3,7 +3,7 @@
 
 namespace hThread
 {
-	class TaskMgr : public hTool::hAutoPtrObj<TaskMgr>
+	class TaskMgr : public hTool::hAutoPtrObj
 	{
 		DefLog_Init();
 		friend class Task;

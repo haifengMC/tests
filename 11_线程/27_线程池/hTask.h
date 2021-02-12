@@ -61,7 +61,7 @@ namespace hThread
 		~TaskStat() {}//需要实现析构
 	};
 
-	class Task : public hTool::hAutoPtrObj<Task>, public hTool::hUniqueMapVal<size_t, Task>
+	class Task : public hTool::hAutoPtrObj, public hTool::hUniqueMapVal<size_t, Task>
 	{
 		DefLog_Init();
 		size_t _thisId = 0;//任务唯一id

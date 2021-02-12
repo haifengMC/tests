@@ -254,8 +254,10 @@ TEST(线程池运行5秒)
 
 	sThrdPool.stop();
 	Debug_PtrMap(cout);
+	hTool::hAutoPtr<hTool::hWeakPtrBase>::debugMap(cout);
 	sThrdPoolFin;
 	Debug_PtrMap(cout);
+	hTool::hAutoPtr<hTool::hWeakPtrBase>::debugMap(cout);
 }
 
 TEST_MAIN()
