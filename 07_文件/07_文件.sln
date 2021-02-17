@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04_配置读写测试", "04
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "05_protobuf读写测试", "05_protobuf读写测试\05_protobuf读写测试.vcxproj", "{833AECC4-9882-4B65-9637-4261C862848E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "06_protobuf读写测试32", "06_protobuf读写测试32\06_protobuf读写测试32.vcxproj", "{9199FDF0-7837-4801-A821-870A4F35F4B9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -61,6 +63,14 @@ Global
 		{833AECC4-9882-4B65-9637-4261C862848E}.Release|x64.Build.0 = Release|x64
 		{833AECC4-9882-4B65-9637-4261C862848E}.Release|x86.ActiveCfg = Release|Win32
 		{833AECC4-9882-4B65-9637-4261C862848E}.Release|x86.Build.0 = Release|Win32
+		{9199FDF0-7837-4801-A821-870A4F35F4B9}.Debug|x64.ActiveCfg = Debug|x64
+		{9199FDF0-7837-4801-A821-870A4F35F4B9}.Debug|x64.Build.0 = Debug|x64
+		{9199FDF0-7837-4801-A821-870A4F35F4B9}.Debug|x86.ActiveCfg = Debug|Win32
+		{9199FDF0-7837-4801-A821-870A4F35F4B9}.Debug|x86.Build.0 = Debug|Win32
+		{9199FDF0-7837-4801-A821-870A4F35F4B9}.Release|x64.ActiveCfg = Release|x64
+		{9199FDF0-7837-4801-A821-870A4F35F4B9}.Release|x64.Build.0 = Release|x64
+		{9199FDF0-7837-4801-A821-870A4F35F4B9}.Release|x86.ActiveCfg = Release|Win32
+		{9199FDF0-7837-4801-A821-870A4F35F4B9}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
