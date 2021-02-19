@@ -206,6 +206,11 @@ namespace hThread
 						"处理完成...");
 
 				}
+				//线程工作完毕
+				_pTask->writeLk([&]()
+					{
+						_pTask->freeThrdMem(_memIt);
+					});
 				reset();
 			}
 			//std::this_thread::sleep_for(std::chrono::seconds(1));

@@ -5,6 +5,7 @@
 BEG_ENUM(TaskAttrType)
 {
 	Loop,	//环任务
+	Detach,	//分离任务，任务完成后直接丢弃
 	Max
 }
 END_ENUM(TaskAttrType, Max, Loop)
@@ -12,9 +13,10 @@ END_ENUM(TaskAttrType, Max, Loop)
 BEG_ENUM(TaskAttrTypeBit)
 {
 	Loop = 0x00000001,	//环任务
+	Detach = 0x00000002,	//分离任务，任务完成后直接丢弃
 	Max
 }
-END_ENUM(TaskAttrTypeBit, Max, Loop)
+END_ENUM(TaskAttrTypeBit, Max, Loop, Detach)
 
 //任务状态类型
 BEG_ENUM(TaskStatType)
@@ -24,10 +26,11 @@ BEG_ENUM(TaskStatType)
 	Ready,
 	Run,
 	Finish,
+	Detach, //设置了分离的任务完成，管理线程稍后将其删除
 	Error,
 	Max
 }
-END_ENUM(TaskStatType, Max, Init, Wait, Ready, Run, Finish, Error)
+END_ENUM(TaskStatType, Max, Init, Wait, Ready, Run, Finish, Detach, Error)
 
 //线程成员类型
 BEG_ENUM(ThreadMemType)

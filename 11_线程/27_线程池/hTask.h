@@ -81,6 +81,7 @@ namespace hThread
 		PTaskStat getStat() { return _state; }
 		NodeListIt getNextNode();
 
+		bool checkAttr(TaskAttrType attr);
 		/*
 		设置属性
 		*/
@@ -100,6 +101,8 @@ namespace hThread
 		bool runTaskNode(NodeListIt nodeIt);
 		//完成当前节点，通知下一个线程
 		void finishCurNode(ThrdMemWorkListIt memIt);
+		//任务节点分配完成释放线程
+		void freeThrdMem(ThrdMemWorkListIt memIt);
 		//根据当前线程数curThrd和期望线程数_thrdExpect确定最终需要的线程数
 		size_t calcNeedThrdNum(size_t curThrd);
 
@@ -114,5 +117,5 @@ namespace hThread
 
 }
 DefLog(hThread::TaskAttr, _weight, _thrdExpect, _incId, _attr, _nodeData, _nodeList);
-DefLog(hThread::TaskStat, _stateTy, _stateIt, _pMgr, _nodeIt);
+DefLog(hThread::TaskStat, _stateTy, _stateIt, _pMgr, _thrds, _curNodeIt, _nodeIt);
 DefLog(hThread::Task, _thisId, _attrb, _state);
