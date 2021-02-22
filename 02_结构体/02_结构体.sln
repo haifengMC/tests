@@ -59,6 +59,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "27_判断是否定义类", 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "28_函数模版能否实现多态", "28_函数模版能否实现多态\28_函数模版能否实现多态.vcxproj", "{D3073CD3-1279-4779-8AA0-7F756A524BEB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "29_bind和mem_fn实现数据更新", "29_bind和mem_fn实现数据更新\29_bind和mem_fn实现数据更新.vcxproj", "{D6B1D317-74D8-4C38-8FC2-EAC985FCC50B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -291,6 +293,14 @@ Global
 		{D3073CD3-1279-4779-8AA0-7F756A524BEB}.Release|x64.Build.0 = Release|x64
 		{D3073CD3-1279-4779-8AA0-7F756A524BEB}.Release|x86.ActiveCfg = Release|Win32
 		{D3073CD3-1279-4779-8AA0-7F756A524BEB}.Release|x86.Build.0 = Release|Win32
+		{D6B1D317-74D8-4C38-8FC2-EAC985FCC50B}.Debug|x64.ActiveCfg = Debug|x64
+		{D6B1D317-74D8-4C38-8FC2-EAC985FCC50B}.Debug|x64.Build.0 = Debug|x64
+		{D6B1D317-74D8-4C38-8FC2-EAC985FCC50B}.Debug|x86.ActiveCfg = Debug|Win32
+		{D6B1D317-74D8-4C38-8FC2-EAC985FCC50B}.Debug|x86.Build.0 = Debug|Win32
+		{D6B1D317-74D8-4C38-8FC2-EAC985FCC50B}.Release|x64.ActiveCfg = Release|x64
+		{D6B1D317-74D8-4C38-8FC2-EAC985FCC50B}.Release|x64.Build.0 = Release|x64
+		{D6B1D317-74D8-4C38-8FC2-EAC985FCC50B}.Release|x86.ActiveCfg = Release|Win32
+		{D6B1D317-74D8-4C38-8FC2-EAC985FCC50B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
