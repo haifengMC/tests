@@ -436,6 +436,11 @@ namespace hThread
 		return std::min({curThrd, _attrb->_thrdExpect, _attrb ->_nodeList.size()});
 	}
 
+	void Task::undateNodeData(byte opt, void* data)
+	{
+
+	}
+
 	bool Task::check() const
 	{
 		if (!_attrb)

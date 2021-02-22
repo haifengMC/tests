@@ -93,6 +93,15 @@ namespace hThread
 		spliceTasks(TaskStatType::Wait, TaskStatType::Ready, tIds);
 		return pTask;
 	}
+
+	void TaskMgr::updateTaskData(size_t taskId, byte opt, void* data)
+	{
+		PTask pTask = _tasks.get(taskId);
+		if (!pTask)
+			return;
+
+	}
+
 #if 0
 
 	void TaskMgr::cancelReadyTasks()

@@ -26,6 +26,8 @@ namespace hThread
 		size_t commitTasks(PTask& task);
 		//准备任务，按权重取出等待任务放入就绪任务，返回任务指针
 		PTask readyTasks(size_t busy);
+		//更新任务数据
+		void updateTaskData(size_t taskId, byte opt, void* data);
 #if 0
 
 		//取消已准备任务,将就绪任务放回等待状态

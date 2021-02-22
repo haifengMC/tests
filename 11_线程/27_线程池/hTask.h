@@ -105,6 +105,7 @@ namespace hThread
 		void freeThrdMem(ThrdMemWorkListIt memIt);
 		//根据当前线程数curThrd和期望线程数_thrdExpect确定最终需要的线程数
 		size_t calcNeedThrdNum(size_t curThrd);
+		void undateNodeData(byte opt, void * data);
 
 		template<typename T>
 		void readLk(T func);
