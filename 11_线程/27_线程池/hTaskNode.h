@@ -18,6 +18,9 @@ namespace hThread
 		NodeData(const size_t& id) : _id(id) {}
 		virtual ~NodeData() {}
 
+		//更新数据，上写锁
+		virtual void update(size_t opt, ...) {}
+
 		operator bool() { return _needDel; }
 	};
 

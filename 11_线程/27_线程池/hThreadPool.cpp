@@ -1,6 +1,7 @@
 #include "global.h"
 #include "hThread.h"
 #include "hThreadPoolMgr.h"
+#include "hThreadPool.h"
 
 namespace hThread
 {
@@ -76,6 +77,8 @@ namespace hThread
 
 		for (auto& item : sThrdPoolMgr.getTaskMgrCfg())
 			_taskMgr.emplace_back(new TaskMgr(item.second));
+		for (auto& pMgr : _taskMgr)
+			pMgr->init();
 		COUT_LK("初始化任务管理器完毕...");
 		_memData[ThreadMemType::Work]._type = ThreadMemType::Work;
 		_memData[ThreadMemType::Mgr]._type = ThreadMemType::Mgr;
@@ -200,6 +203,12 @@ namespace hThread
 	{
 		ThreadMemData& data = _memData[memTy];
 		return data._thrdId[statTy].size();
+	}
+
+	void ThreadPool::notifyMgrThrd()
+	{
+		for (auto pMem : _memData[ThreadMemType::Mgr]._memArr)
+			pMem->notify();
 	}
 #if 0
 	void ThreadPool::closeThrd(const size_t& id)

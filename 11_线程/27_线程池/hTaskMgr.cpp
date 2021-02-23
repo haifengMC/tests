@@ -17,6 +17,15 @@ namespace hThread
 	{
 		COUT_LK(_base.index().getName() << " 任务管理器释放...");
 	}
+	
+	void TaskMgr::init()
+	{
+		COUT_LK(_base.index().getName() << " 任务管理器初始化...");
+		PTask pTsk;
+		pTsk.bind(new UpdateTask);
+		commitTasks(pTsk);
+		_updateId = pTsk->getId();
+	}
 
 	std::list<size_t>* TaskMgr::getStateList(TaskStatType state)
 	{
@@ -55,7 +64,8 @@ namespace hThread
 			++ret;
 
 			//添加至权重管理
-			_weights.pushBack(taskRef.getWeight(), taskRef.getId());
+			if (!taskRef.checkAttr(TaskAttrType::Repeat) || taskRef.canRepeat())
+				_weights.pushBack(taskRef.getWeight(), taskRef.getId());
 
 			//添加至状态管理
 			auto& stRef = _states[TaskStatType::Wait];
@@ -92,14 +102,6 @@ namespace hThread
 
 		spliceTasks(TaskStatType::Wait, TaskStatType::Ready, tIds);
 		return pTask;
-	}
-
-	void TaskMgr::updateTaskData(size_t taskId, byte opt, void* data)
-	{
-		PTask pTask = _tasks.get(taskId);
-		if (!pTask)
-			return;
-
 	}
 
 #if 0
@@ -158,6 +160,28 @@ namespace hThread
 		return ret;
 	}
 #endif
+
+	void TaskMgr::addUpdateTaskFunc(std::function<void()>& fn)
+	{
+
+		PTask pUpdateTask = _tasks.get(_updateId);
+		if (!pUpdateTask)
+		{
+			COUT_LK(_base.index() << "数据更新 任务未初始化,_updateId:" << _updateId << "...");
+			return;
+		}
+
+		PWUpdTsk pUpTask = pUpdateTask.dynamic<UpdateTask>();
+		if (!pUpTask)
+		{
+			COUT_LK(_base.index() << "数据更新 任务未初始化为UpdateTask对象,_updateId:" << _updateId << "...");
+			return;
+		}
+
+		pUpTask->updata(fn);
+		_weights.pushBack(pUpTask->getWeight(), _updateId);
+		sThrdPool.notifyMgrThrd();
+	}
 
 	void TaskMgr::spliceTasks(TaskStatType from, TaskStatType to, const std::vector<size_t>& ids)
 	{

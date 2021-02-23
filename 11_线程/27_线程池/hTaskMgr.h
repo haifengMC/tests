@@ -13,9 +13,13 @@ namespace hThread
 		hTool::hUniqueIdGen<size_t, Task> _tasks;//<id-Task>id生成器
 		hTool::hRWeightMap<size_t> _weights;//权重管理<task thisId>
 		std::list<size_t> _states[TaskStatType::Max];//状态管理<thisId>
+
+		size_t _updateId = 0;//数据更新 任务id
 	public:
 		TaskMgr(const TaskMgrCfgItem& base);
 		~TaskMgr();
+
+		void init();
 
 		std::list<size_t>* getStateList(TaskStatType state);
 
@@ -27,7 +31,8 @@ namespace hThread
 		//准备任务，按权重取出等待任务放入就绪任务，返回任务指针
 		PTask readyTasks(size_t busy);
 		//更新任务数据
-		void updateTaskData(size_t taskId, byte opt, void* data);
+		template <typename ... Args >
+		void updateTaskData(size_t taskId, size_t opt, Args ... args);
 #if 0
 
 		//取消已准备任务,将就绪任务放回等待状态
@@ -36,6 +41,9 @@ namespace hThread
 		size_t runTasks(size_t numThr, size_t rate);
 #endif
 	private:
+		//向更新任务添加函数
+		void addUpdateTaskFunc(std::function<void()>& fn);
+
 		void spliceTasks(TaskStatType from, TaskStatType to, const std::vector<size_t>& ids);
 
 #if 0

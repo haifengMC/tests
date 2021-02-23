@@ -81,6 +81,7 @@ namespace hThread
 		PTaskStat getStat() { return _state; }
 		NodeListIt getNextNode();
 
+		bool canRepeat() { return false; }
 		bool checkAttr(TaskAttrType attr);
 		/*
 		设置属性
@@ -105,13 +106,15 @@ namespace hThread
 		void freeThrdMem(ThrdMemWorkListIt memIt);
 		//根据当前线程数curThrd和期望线程数_thrdExpect确定最终需要的线程数
 		size_t calcNeedThrdNum(size_t curThrd);
-		void undateNodeData(byte opt, void * data);
+		//更新任务数据
+		template <typename ... Args >
+		void updateTaskData(size_t opt, Args ... args);
 
 		template<typename T>
 		void readLk(T func);
 		template<typename T>
 		void writeLk(T func);
-	private:
+	protected:
 		bool check() const;//一般性检测
 		void checkErrOut() const;
 	};

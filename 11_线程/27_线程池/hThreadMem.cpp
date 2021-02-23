@@ -107,35 +107,22 @@ namespace hThread
 							COUT_LK("memWork_" << _id << " 无任务，工作线程挂起...");
 							return false;
 						}
-#if 0
 
-						if (!pTask || !pNext || !pRwLock || !pTask->getStat())
-							return false;
+						bool ret = true;
+						_pTask->writeLk([&]()
+							{
+								if (!_pTask->checkAttr(TaskAttrType::Repeat))
+									return;//不是重复型任务执行
 
-						pRwLock->readLock();
-						bool isFailed = TaskStateType::Error == pTask->getStat()->state;
-						pRwLock->readUnlock();
+								if (_pTask->canRepeat())
+									return;//当前可重复继续执行
 
-						pRwLock->writeLock();
-						pNode = pTask->getNextNode();
-						pRwLock->writeUnlock();
+								_pTask->freeThrdMem(_memIt);
+								reset();
+								ret = false;
+							});
 
-						if (!pNode)//获取节点失败
-							isFailed = true;
-
-						if (isFailed)//任务失效释放内存
-						{
-							pRwLock->writeLock();
-							pTask->setStat(TaskStateType::Error);
-							pTask = NULL;
-							pNext = NULL;
-							pRwLock->writeUnlock();
-							return false;
-						}
-
-#endif
-						return true;
-
+						return ret;
 					});
 				if (_close)
 					break;
@@ -277,6 +264,7 @@ namespace hThread
 
 				PTask pTask;
 				size_t thrdNum = 0;//已就绪的工作线程数
+				size_t detachNum = 0;//已分离的工作线程数
 				_runCv.wait(lk, [&]
 					{
 						if (_close)

@@ -6,7 +6,11 @@
 #define COUT_LK(x)\
 	{\
 		std::lock_guard<std::mutex> lk(sThrdPoolMgr.getCoutM()); \
-		std::cout << x << std::endl;\
+		std::ostringstream _os;\
+		_os << x << std::endl;\
+		std::ofstream of("ThreadLoop.log", std::ios::app);\
+		of << _os.str().c_str();\
+		of.close();\
 	}
 #else
 #define COUT_LK(x)

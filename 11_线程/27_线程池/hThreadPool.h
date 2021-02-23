@@ -60,6 +60,8 @@ namespace hThread
 		void createThrd(size_t num, ThreadMemType t = ThreadMemType::Work);
 		ThreadMemData& getThrdMemData(ThreadMemType type) { return _memData[type]; }
 		size_t getThrdMemNum(ThreadMemType memTy, ThreadMemStatType statTy);
+		//通知管理线程运行
+		void notifyMgrThrd();
 #if 0
 		void closeThrd(const size_t& id);
 

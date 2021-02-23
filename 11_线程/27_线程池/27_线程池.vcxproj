@@ -152,6 +152,7 @@
     <ClCompile Include="hThreadMem.cpp" />
     <ClCompile Include="hThreadPoolMgr.cpp" />
     <ClCompile Include="hThreadPool.cpp" />
+    <ClCompile Include="hUpdateTask.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="test.cpp" />
   </ItemGroup>
@@ -168,6 +169,7 @@
     <ClInclude Include="hThreadPool.h" />
     <ClInclude Include="hThreadPoolImpl.h" />
     <ClInclude Include="hThreadPoolMgr.h" />
+    <ClInclude Include="hUpdateTask.h" />
     <ClInclude Include="test.h" />
   </ItemGroup>
   <ItemGroup>

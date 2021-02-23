@@ -9,6 +9,8 @@ namespace hThread
 {
 	struct NodeData;
 	typedef hTool::hAutoPtr<NodeData> PNodeData;
+	struct UpdateTaskData;
+	typedef hTool::hWeakPtr<UpdateTaskData> PWUpdTskDt;
 
 	class TaskNode;
 	typedef hTool::hAutoPtr<TaskNode> PTaskNode;
@@ -24,6 +26,8 @@ namespace hThread
 	class Task;
 	typedef hTool::hAutoPtr<Task> PTask;
 	typedef hTool::hWeakPtr<Task> PWTask;
+	class UpdateTask;
+	typedef hTool::hWeakPtr<UpdateTask> PWUpdTsk;
 
 	class TaskMgr;
 	typedef hTool::hAutoPtr<TaskMgr> PTaskMgr;
@@ -51,10 +55,14 @@ namespace hThread
 
 #include "hTaskNode.h"
 #include "hTask.h"
-#include "hTaskImpl.h"
+#include "hUpdateTask.h"
 #include "hTaskMgr.h"
-#include "hTaskMgrImpl.h"
 #include "hRWLock.h"
 #include "hThreadMem.h"
 #include "hThreadPool.h"
+
+#include "hTaskImpl.h"
+#include "hTaskMgrImpl.h"
 #include "hThreadPoolImpl.h"
+
+

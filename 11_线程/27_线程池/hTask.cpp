@@ -419,12 +419,29 @@ namespace hThread
 			//节点还未运行完毕时任务异常
 			if (_state->_curNodeIt != _attrb->_nodeList.end() ||
 				_state->_nodeIt != _attrb->_nodeList.end())
+			{
 				updateStat(TaskStatType::Error);
+				return;
+			}
 			//设置分离的任务完成时稍后等待删除
-			else if (checkAttr(TaskAttrType::Detach))
+			if (checkAttr(TaskAttrType::Detach))
+			{
 				updateStat(TaskStatType::Detach);
-			else
-				updateStat(TaskStatType::Finish);
+				return;
+			}
+			//设置重复的任务完成时放回等待重复执行
+			if (checkAttr(TaskAttrType::Repeat))
+			{
+				updateStat(TaskStatType::Wait);
+				if (!canRepeat())
+					return;
+				
+				_state->_pMgr->_weights.pushBack(getWeight(), getId());
+				sThrdPool.notifyMgrThrd();
+				return;
+			}
+			
+			updateStat(TaskStatType::Finish);
 		}
 	}
 
@@ -434,11 +451,6 @@ namespace hThread
 			return 0;
 
 		return std::min({curThrd, _attrb->_thrdExpect, _attrb ->_nodeList.size()});
-	}
-
-	void Task::undateNodeData(byte opt, void* data)
-	{
-
 	}
 
 	bool Task::check() const
