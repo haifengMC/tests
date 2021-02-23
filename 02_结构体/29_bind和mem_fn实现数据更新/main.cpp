@@ -1,5 +1,6 @@
 #include <iostream>
 #include <list>
+#include <map>
 #include <functional>
 #include <stdarg.h>
 
@@ -7,7 +8,6 @@ using namespace std;
 
 struct Data
 {
-	
 	virtual ~Data() {}
 	virtual void f(int opt, ...) { cout << "Data::f()" << endl; }
 	virtual ostream& showData(ostream& os) { return os; }
@@ -30,29 +30,26 @@ struct DataB : public Data
 struct Update
 {
 	list<function<void()>> _updateList;
+	map<size_t, Data*> _dataMap;
+	void showData();
 	template <class ... Args >
-	void updata(Data* pData, Args ... args);
+	void updata(size_t id, Args ... args);
 	void exec() { for (auto fn : _updateList) fn(); }
 };
 
 int main()
 {
 	Update up;
+	up._dataMap.insert(make_pair(1, new DataA));
+	up._dataMap.insert(make_pair(2, new DataB));
+	up.showData();
 
-	Data* pA = new DataA;
-	Data* pB = new DataB;
-	pA->showData(cout) << endl;
-	pB->showData(cout) << endl;
-
-	up.updata(pA, 1, 2);
-	up.updata(pB, "hello");
+	up.updata(1, 1, 2);
+	up.updata(2, "hello");
 
 	up.exec();
-	pA->showData(cout) << endl;
-	pB->showData(cout) << endl;
+	up.showData();
 
-	delete pA;
-	delete pB;
 #if 0
 	auto fn = mem_fn(&Data::f);
 
@@ -90,9 +87,26 @@ void DataB::f(int opt, ...)
 	_s = s;
 }
 
-template <class ... Args >
-void Update::updata(Data* pData, Args ... args)
+void Update::showData()
 {
-	auto fn = mem_fn(&Data::f);
-	_updateList.push_back(function<void()>(bind(fn, pData, 0, args...)));
+	for (auto data : _dataMap)
+		data.second->showData(cout) << endl;
+}
+
+template <class ... Args >
+void Update::updata(size_t id, Args ... args)
+{
+	using namespace std::placeholders;
+	auto memFn = bind(mem_fn(&Data::f), _1, 0, args...);
+	auto bindFn = [&](decltype(memFn) memFn)
+	{
+		auto it = _dataMap.find(id);
+		if (it == _dataMap.end())
+			return;
+
+		memFn(it->second);
+	};
+	auto fn = bind(bindFn, memFn);
+	fn();
+	//_updateList.push_back(function<void()>(fn));
 }
