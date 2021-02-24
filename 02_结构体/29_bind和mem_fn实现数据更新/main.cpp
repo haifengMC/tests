@@ -94,19 +94,17 @@ void Update::showData()
 }
 
 template <class ... Args >
-void Update::updata(size_t id, Args ... args)
+void Update::updata(size_t id, Args ... args) 
 {
 	using namespace std::placeholders;
-	auto memFn = bind(mem_fn(&Data::f), _1, 0, args...);
-	auto bindFn = [&](decltype(memFn) memFn)
-	{
-		auto it = _dataMap.find(id);
-		if (it == _dataMap.end())
-			return;
+	auto fn = function<void()>(bind([&](size_t id, function<void(Data*)> fn)
+		{
+			auto it = _dataMap.find(id);
+			if (it == _dataMap.end())
+				return;
 
-		memFn(it->second);
-	};
-	auto fn = bind(bindFn, memFn);
-	fn();
-	//_updateList.push_back(function<void()>(fn));
+			fn(it->second);
+		}, id, function<void(Data*)>(bind(mem_fn(&Data::f), _1, 0, args...))));
+
+	_updateList.push_back(function<void()>(fn));
 }
