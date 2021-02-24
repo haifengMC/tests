@@ -46,7 +46,7 @@ namespace hThread
 			if (!pTask)
 				continue;
 
-			if (!pTask->init(*getThis<TaskMgr>()))
+			if (!pTask->init(getThis<TaskMgr>()))
 				continue;//初始化任务
 
 			if (TaskStatType::Init != pTask->getStat()->_stateTy)
