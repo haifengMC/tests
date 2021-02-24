@@ -48,6 +48,12 @@
     <ClCompile Include="hUpdateTask.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="hThreadMemMgr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="hThreadMemWork.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hTask.h">
@@ -90,6 +96,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="hUpdateTask.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="hThreadMemWork.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="hThreadMemMgr.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

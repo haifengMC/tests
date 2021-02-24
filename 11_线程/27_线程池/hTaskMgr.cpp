@@ -161,9 +161,8 @@ namespace hThread
 	}
 #endif
 
-	void TaskMgr::addUpdateTaskFunc(std::function<void()>& fn)
+	void TaskMgr::addUpdateTaskFunc(std::function<void()> fn)
 	{
-
 		PTask pUpdateTask = _tasks.get(_updateId);
 		if (!pUpdateTask)
 		{

@@ -150,6 +150,8 @@
     <ClCompile Include="hTaskNode.cpp" />
     <ClCompile Include="hThread.cpp" />
     <ClCompile Include="hThreadMem.cpp" />
+    <ClCompile Include="hThreadMemMgr.cpp" />
+    <ClCompile Include="hThreadMemWork.cpp" />
     <ClCompile Include="hThreadPoolMgr.cpp" />
     <ClCompile Include="hThreadPool.cpp" />
     <ClCompile Include="hUpdateTask.cpp" />
@@ -166,11 +168,13 @@
     <ClInclude Include="hThread.h" />
     <ClInclude Include="hThreadCfg.h" />
     <ClInclude Include="hThreadMem.h" />
+    <ClInclude Include="hThreadMemWork.h" />
     <ClInclude Include="hThreadPool.h" />
     <ClInclude Include="hThreadPoolImpl.h" />
     <ClInclude Include="hThreadPoolMgr.h" />
     <ClInclude Include="hUpdateTask.h" />
     <ClInclude Include="test.h" />
+    <ClInclude Include="hThreadMemMgr.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

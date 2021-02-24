@@ -13,7 +13,7 @@ namespace hThread
 		PWUpdTskDt pData = _data.dynamic<UpdateTaskData>();
 		if (!pData)
 		{
-			COUT_LK("数据更新任务 数据未初始化为UpdateTaskData对象...");
+			COUT_LK("数据更新任务preProc() 数据未初始化为UpdateTaskData对象...");
 			return false;
 		}
 
@@ -55,7 +55,7 @@ namespace hThread
 				PWUpdTskDt pData = getAttr()->_nodeData.dynamic<UpdateTaskData>();
 				if (!pData)
 				{
-					COUT_LK("数据更新任务 数据未初始化为UpdateTaskData对象...");
+					COUT_LK("数据更新任务updata() 数据未初始化为UpdateTaskData对象...");
 					return;
 				}
 				
@@ -63,4 +63,21 @@ namespace hThread
 			});
 	}
 
+	bool UpdateTask::canRepeat()
+	{
+		if (!check())
+		{
+			checkErrOut();
+			return false;
+		}
+
+		PWUpdTskDt pData = getAttr()->_nodeData.dynamic<UpdateTaskData>();
+		if (!pData)
+		{
+			COUT_LK("数据更新任务canRepeat() 数据未初始化为UpdateTaskData对象...");
+			return false;
+		}
+
+		return !pData->_updateList.empty();
+	}
 }

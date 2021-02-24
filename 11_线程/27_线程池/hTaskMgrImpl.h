@@ -12,10 +12,10 @@ namespace hThread
 	template <typename ... Args >
 	void TaskMgr::updateTaskData(size_t taskId, size_t opt, Args ... args)
 	{
-		auto memFn = std::bind(std::mem_fn(&NodeData::update), std::placeholders::_1, opt, args...);
-		auto fn = std::function<void()>([&]()
+		addUpdateTaskFunc(std::function<void()>(bind(
+			[&](size_t id, std::function<void(NodeData*)> memFn)
 			{
-				PTask pTask = _tasks.get(taskId);
+				PTask pTask = _tasks.get(id);
 				if (!pTask)
 					return;
 
@@ -27,8 +27,10 @@ namespace hThread
 
 						memFn(pAttr->_nodeData.operator ->());
 					});
-				_weights.pushBack(pTask->getWeight(), taskId);
-			});
-		addUpdateTaskFunc(fn);
+				_weights.pushBack(pTask->getWeight(), id);
+			}, taskId, 
+			std::function<void(NodeData*)>(bind(
+				std::mem_fn(&NodeData::update), 
+				std::placeholders::_1, opt, args...)))));
 	}
 }

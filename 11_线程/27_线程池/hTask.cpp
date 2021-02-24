@@ -275,6 +275,18 @@ namespace hThread
 
 		return true;
 	}
+
+	bool Task::resetStatData()
+	{
+		if (!check())
+		{
+			checkErrOut();
+			return false;
+		}
+
+		_state->resetData();
+		return true;
+	}
 	
 	bool Task::addThrdMem(PWThrdMemWork pMem)
 	{
@@ -433,6 +445,7 @@ namespace hThread
 			if (checkAttr(TaskAttrType::Repeat))
 			{
 				updateStat(TaskStatType::Wait);
+				resetStatData();
 				if (!canRepeat())
 					return;
 				

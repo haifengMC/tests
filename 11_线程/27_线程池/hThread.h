@@ -59,6 +59,8 @@ namespace hThread
 #include "hTaskMgr.h"
 #include "hRWLock.h"
 #include "hThreadMem.h"
+#include "hThreadMemWork.h"
+#include "hThreadMemMgr.h"
 #include "hThreadPool.h"
 
 #include "hTaskImpl.h"

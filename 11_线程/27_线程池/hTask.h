@@ -58,6 +58,8 @@ namespace hThread
 			_nodeIt;//指向最后载入线程的节点
 		std::mutex rwLock;//自锁，暂时用互斥锁代替
 
+		//重置状态数据
+		void resetData() { _curNodeIt = _nodeIt = NodeListIt(); }
 		~TaskStat() {}//需要实现析构
 	};
 
@@ -69,6 +71,8 @@ namespace hThread
 		PTaskAttr _attrb;
 		PTaskStat _state;
 	public:
+		virtual bool canRepeat() { return false; }
+
 		Task(size_t weight, size_t thrdExpect, uint16_t attr = 0);
 		Task(PTaskAttr attr);
 		Task(Task&& t);
@@ -81,7 +85,6 @@ namespace hThread
 		PTaskStat getStat() { return _state; }
 		NodeListIt getNextNode();
 
-		bool canRepeat() { return false; }
 		bool checkAttr(TaskAttrType attr);
 		/*
 		设置属性
@@ -96,6 +99,7 @@ namespace hThread
 		*/
 		bool setStat(TaskStatType state);
 		bool updateStat(TaskStatType state);
+		bool resetStatData();
 		//添加线程到任务,还未启用
 		bool addThrdMem(PWThrdMemWork pMem);
 		//线程请求运行任务节点

@@ -42,7 +42,7 @@ namespace hThread
 #endif
 	private:
 		//向更新任务添加函数
-		void addUpdateTaskFunc(std::function<void()>& fn);
+		void addUpdateTaskFunc(std::function<void()> fn);
 
 		void spliceTasks(TaskStatType from, TaskStatType to, const std::vector<size_t>& ids);
 

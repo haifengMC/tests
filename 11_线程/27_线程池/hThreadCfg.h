@@ -6,16 +6,16 @@ BEG_ENUM(TaskAttrType)
 {
 	Loop,	//环任务
 	Detach,	//分离任务，任务完成后直接丢弃
-	Repeat,	//重复任务，任务完成后进入等待，等待下次重复处理
+	Repeat,	//复用任务，任务完成后进入等待，等待下次复用处理
 	Max
 }
 END_ENUM(TaskAttrType, Max, Loop)
 
 BEG_ENUM(TaskAttrTypeBit)
 {
-	Loop = 0x00000001,		//环任务
-	Detach = 0x00000002,	//分离任务，任务完成后直接丢弃
-	Repeat = 0x00000004,	//重复任务，任务完成后进入等待，等待下次重复处理
+	Loop =		0x00000001,		//环任务
+	Detach =	0x00000002,		//分离任务，任务完成后直接丢弃
+	Repeat =	0x00000004,		//复用任务，任务完成后进入等待，等待下次复用处理
 	Max
 }
 END_ENUM(TaskAttrTypeBit, Max, Loop, Detach)

@@ -21,5 +21,6 @@ namespace hThread
 	public:
 		UpdateTask();
 		void updata(std::function<void()>& fn);
+		bool canRepeat();
 	};
 }
