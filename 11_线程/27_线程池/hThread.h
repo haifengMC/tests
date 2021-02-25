@@ -17,11 +17,11 @@ namespace hThread
 	typedef std::list<PTaskNode> NodeList;
 	typedef NodeList::iterator NodeListIt;
 
-	struct TaskAttr;
-	typedef hTool::hAutoPtr<TaskAttr> PTaskAttr;
+	struct TaskStaticData;
+	typedef hTool::hAutoPtr<TaskStaticData> PTaskStaticData;
 
-	struct TaskStat;
-	typedef hTool::hAutoPtr<TaskStat> PTaskStat;
+	struct TaskDynamicData;
+	typedef hTool::hAutoPtr<TaskDynamicData> PTaskDynamicData;
 
 	class Task;
 	typedef hTool::hAutoPtr<Task> PTask;
@@ -45,8 +45,8 @@ namespace hThread
 #define Debug_PtrMap(os)\
 	PNodeData::debugMap(cout);\
 	PTaskNode::debugMap(cout);\
-	PTaskAttr::debugMap(cout);\
-	PTaskStat::debugMap(cout);\
+	PTaskStaticData::debugMap(cout);\
+	PTaskDynamicData::debugMap(cout);\
 	PTask::debugMap(cout);\
 	PTaskMgr::debugMap(cout);\
 	PThread::debugMap(cout);\

@@ -126,7 +126,7 @@ namespace hThread
 	}
 #endif
 
-	bool TaskAttr::addNode(TaskNode* pNode)
+	bool TaskStaticData::addNode(TaskNode* pNode)
 	{
 		if (!pNode)
 			return false;
@@ -140,7 +140,7 @@ namespace hThread
 		return pNode;
 	}
 
-	bool TaskAttr::initNodeData(NodeData* pData)
+	bool TaskStaticData::initNodeData(NodeData* pData)
 	{
 		if (pData)
 			_nodeData.bind(pData);
@@ -150,7 +150,7 @@ namespace hThread
 		return true;
 	}
 
-	TaskAttr::TaskAttr(size_t weight, size_t thrdExpect, const std::bitset<TaskAttrType::Max>& attr)
+	TaskStaticData::TaskStaticData(size_t weight, size_t thrdExpect, const std::bitset<TaskAttrType::Max>& attr)
 	{
 		_weight = weight;
 		_thrdExpect = thrdExpect;
@@ -161,7 +161,7 @@ namespace hThread
 		hTool::hUniqueMapVal<size_t, Task>(_thisId, this),
 		_attrb(weight, thrdExpect, attr) {}
 
-	Task::Task(hTool::hAutoPtr<TaskAttr> attr) :
+	Task::Task(hTool::hAutoPtr<TaskStaticData> attr) :
 		hTool::hUniqueMapVal<size_t, Task>(_thisId, this),
 		_attrb(attr) {}
 

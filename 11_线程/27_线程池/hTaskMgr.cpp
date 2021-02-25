@@ -18,7 +18,7 @@ namespace hThread
 
 	bool TaskStatMgr::updateState(size_t id, TaskStatType state)
 	{
-
+		return false;
 	}
 
 	TaskMgr::TaskMgr(const TaskMgrCfgItem& base) : 
@@ -213,7 +213,7 @@ namespace hThread
 			if (!pTask->getStat())
 				continue;
 
-			TaskStat& stat = *pTask->getStat();
+			TaskDynamicData& stat = *pTask->getStat();
 			if (from != stat._stateTy)
 				continue;
 

@@ -34,7 +34,7 @@ namespace hThread
 
 					pTask->writeLk([&]()
 						{
-							PTaskAttr pAttr = pTask->getAttr();
+							PTaskStaticData pAttr = pTask->getAttr();
 							if (!pAttr)
 								return;
 
