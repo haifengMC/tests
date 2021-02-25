@@ -7,9 +7,6 @@ namespace hThread
 {
 	bool UpdateTaskNode::preProc()
 	{
-		if (!_execList.empty())
-			_execList.clear();
-
 		PWUpdTskDt pData = _data.dynamic<UpdateTaskData>();
 		if (!pData)
 		{
@@ -17,12 +14,39 @@ namespace hThread
 			return false;
 		}
 
-		std::swap(pData->_updateList, _execList);
+		if (pData->_updateMap.empty())
+		{
+			COUT_LK("数据更新任务preProc() 数据无需更新...");
+			return false;
+		}
+
 		return true;
 	}
 
 	bool UpdateTaskNode::onProc()
 	{
+		PWUpdTskDt pData = _data.dynamic<UpdateTaskData>();
+		if (!pData)
+			return false;
+
+		COUT_LK("数据更新任务 检测待更新数据开始...");
+		for (auto it = pData->_updateMap.begin(); it != pData->_updateMap.end();)
+		{
+			auto& data = it->second;
+			if (!data._checkFn())
+			{
+				++it;
+				continue;
+			}
+
+			_execList.splice(_execList.end(), data._execList);
+			it = pData->_updateMap.erase(it);
+		}
+		COUT_LK("数据更新任务 检测待更新数据结束...");
+
+		if (_execList.empty())
+			return false;
+
 		for (auto& fn : _execList)
 			fn();
 		sThrdPool.notifyMgrThrd();
@@ -31,8 +55,7 @@ namespace hThread
 
 	bool UpdateTaskNode::finalProc()
 	{
-		if (!_execList.empty())
-			_execList.clear();
+		_execList.clear();
 		return true;
 	}
 
@@ -42,7 +65,9 @@ namespace hThread
 		addNode(new UpdateTaskNode);
 	}
 
-	void UpdateTask::updata(std::function<void()>& fn)
+	void UpdateTask::updata(size_t taskId,
+		std::function<bool()>& checkFn,
+		std::function<void()>& execFn)
 	{
 		writeLk([&]() 
 			{
@@ -59,7 +84,11 @@ namespace hThread
 					return;
 				}
 				
-				pData->_updateList.push_back(fn);
+				auto it = pData->_updateMap.find(taskId);
+				if (it == pData->_updateMap.end())
+					pData->_updateMap.insert(std::make_pair(taskId, UpdateTaskDefine::ItemData(taskId, checkFn, execFn)));
+				else
+					it->second._execList.push_back(execFn);
 			});
 	}
 
@@ -78,6 +107,6 @@ namespace hThread
 			return false;
 		}
 
-		return !pData->_updateList.empty();
+		return !pData->_updateMap.empty();
 	}
 }

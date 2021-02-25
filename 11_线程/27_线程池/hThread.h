@@ -52,17 +52,18 @@ namespace hThread
 	PThread::debugMap(cout);\
 	PThrdMem::debugMap(cout);
 
-
+#include "hRWLock.h"
+#include "hThreadDataBase.h"
 #include "hTaskNode.h"
 #include "hTask.h"
 #include "hUpdateTask.h"
 #include "hTaskMgr.h"
-#include "hRWLock.h"
 #include "hThreadMem.h"
 #include "hThreadMemWork.h"
 #include "hThreadMemMgr.h"
 #include "hThreadPool.h"
 
+#include "hThreadDataBaseImpl.h"
 #include "hTaskImpl.h"
 #include "hTaskMgrImpl.h"
 #include "hThreadPoolImpl.h"

@@ -5,6 +5,21 @@
 
 namespace hThread
 {
+	std::list<size_t>* TaskStatMgr::getStateList(TaskStatType state)
+	{
+		if (TaskStatType::Max <= state)
+			return NULL;
+
+		std::list<size_t>* pList = NULL;
+		readLk([&]() { pList = &_states[state]; });
+
+		return pList;
+	}
+
+	bool TaskStatMgr::updateState(size_t id, TaskStatType state)
+	{
+
+	}
 
 	TaskMgr::TaskMgr(const TaskMgrCfgItem& base) : 
 		_base(base), _tasks(50)
@@ -161,7 +176,9 @@ namespace hThread
 	}
 #endif
 
-	void TaskMgr::addUpdateTaskFunc(std::function<void()> fn)
+	void TaskMgr::addUpdateTaskFunc(size_t taskId,
+		std::function<bool()> checkFn,
+		std::function<void()> execFn)
 	{
 		PTask pUpdateTask = _tasks.get(_updateId);
 		if (!pUpdateTask)
@@ -177,7 +194,7 @@ namespace hThread
 			return;
 		}
 
-		pUpTask->updata(fn);
+		pUpTask->updata(taskId, checkFn, execFn);
 		_weights.pushBack(pUpTask->getWeight(), _updateId);
 		sThrdPool.notifyMgrThrd();
 	}

@@ -235,6 +235,17 @@ namespace hThread
 		return _attrb->_attr[attr];
 	}
 
+	bool Task::checkStat(TaskStatType stat)
+	{
+		if (!_state)
+			return false;
+
+		if (TaskStatType::Max <= stat)
+			return false;
+
+		return _state->_stateTy == stat;
+	}
+
 	bool Task::setStat(TaskStatType state)
 	{
 		if (TaskStatType::Max <= state)

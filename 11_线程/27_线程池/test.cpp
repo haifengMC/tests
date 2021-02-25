@@ -110,7 +110,7 @@ bool Test2TaskNode::preProc()
 bool Test2TaskNode::onProc()
 {
 	COUT_LK(_s);
-	std::this_thread::sleep_for(1s);
+	std::this_thread::sleep_for(10s);
 	return true;
 }
 

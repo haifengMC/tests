@@ -167,6 +167,8 @@
     <ClInclude Include="hTaskNode.h" />
     <ClInclude Include="hThread.h" />
     <ClInclude Include="hThreadCfg.h" />
+    <ClInclude Include="hThreadDataBase.h" />
+    <ClInclude Include="hThreadDataBaseImpl.h" />
     <ClInclude Include="hThreadMem.h" />
     <ClInclude Include="hThreadMemWork.h" />
     <ClInclude Include="hThreadPool.h" />

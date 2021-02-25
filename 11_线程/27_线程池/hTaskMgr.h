@@ -3,6 +3,21 @@
 
 namespace hThread
 {
+	struct TaskStatData
+	{
+		size_t _id = 0;
+		TaskStatType _state;
+	};
+
+	class TaskStatMgr : public hThreadDataBase
+	{
+		std::list<size_t> _states[TaskStatType::Max];//状态管理<thisId>
+		std::map<size_t, TaskStatType> _stateMap;//状态map<thisId state>
+	public:
+		std::list<size_t>* getStateList(TaskStatType state);
+		bool updateState(size_t id, TaskStatType state);
+	};
+
 	class TaskMgr : public hTool::hAutoPtrObj
 	{
 		DefLog_Init();
@@ -13,6 +28,7 @@ namespace hThread
 		hTool::hUniqueIdGen<size_t, Task> _tasks;//<id-Task>id生成器
 		hTool::hRWeightMap<size_t> _weights;//权重管理<task thisId>
 		std::list<size_t> _states[TaskStatType::Max];//状态管理<thisId>
+		TaskStatMgr _stateMgr;//状态管理
 
 		size_t _updateId = 0;//数据更新 任务id
 	public:
@@ -21,6 +37,7 @@ namespace hThread
 
 		void init();
 
+		//std::list<size_t>* getStateList(TaskStatType state) { return _stateMgr.getStateList(state); }
 		std::list<size_t>* getStateList(TaskStatType state);
 
 		//提交任务，将新任务提交给管理器，提交后默认状态为等待
@@ -42,7 +59,9 @@ namespace hThread
 #endif
 	private:
 		//向更新任务添加函数
-		void addUpdateTaskFunc(std::function<void()> fn);
+		void addUpdateTaskFunc(size_t taskId, 
+			std::function<bool()> checkFn,
+			std::function<void()> execFn);
 
 		void spliceTasks(TaskStatType from, TaskStatType to, const std::vector<size_t>& ids);
 

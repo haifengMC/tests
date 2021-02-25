@@ -104,6 +104,12 @@
     <ClInclude Include="hThreadMemMgr.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="hThreadDataBase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="hThreadDataBaseImpl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

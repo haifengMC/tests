@@ -56,14 +56,13 @@ namespace hThread
 		NodeListIt 
 			_curNodeIt,//指向当前在运行节点
 			_nodeIt;//指向最后载入线程的节点
-		std::mutex rwLock;//自锁，暂时用互斥锁代替
 
 		//重置状态数据
 		void resetData() { _curNodeIt = _nodeIt = NodeListIt(); }
 		~TaskStat() {}//需要实现析构
 	};
 
-	class Task : public hTool::hAutoPtrObj, public hTool::hUniqueMapVal<size_t, Task>
+	class Task : public hThreadDataBase,  public hTool::hAutoPtrObj, public hTool::hUniqueMapVal<size_t, Task>
 	{
 		DefLog_Init();
 		size_t _thisId = 0;//任务唯一id
@@ -86,6 +85,7 @@ namespace hThread
 		NodeListIt getNextNode();
 
 		bool checkAttr(TaskAttrType attr);
+		bool checkStat(TaskStatType stat);
 		/*
 		设置属性
 		*/
@@ -113,11 +113,6 @@ namespace hThread
 		//更新任务数据
 		template <typename ... Args >
 		void updateTaskData(size_t opt, Args ... args);
-
-		template<typename T>
-		void readLk(T func);
-		template<typename T>
-		void writeLk(T func);
 	protected:
 		bool check() const;//一般性检测
 		void checkErrOut() const;
