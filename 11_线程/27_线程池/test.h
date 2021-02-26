@@ -5,14 +5,14 @@ void readFunc(int i);
 void writeFunc(int i);
 
 //向任务添加自定义数据和节点
-struct TestNodeData : public hThread::NodeData
+struct TestNodeData : public hThread::hNodeData
 {
 	std::string testInfo;
 	
 	TestNodeData(const char* info);
 };
 
-struct TestTaskNode : public hThread::TaskNode
+struct TestTaskNode : public hThread::hNode
 {
 	std::string testInfo;
 
@@ -21,7 +21,7 @@ struct TestTaskNode : public hThread::TaskNode
 
 //id生成器debug
 #define InsertTask(va)\
-	Task* va = new Task(50, 2, TaskAttrType::Loop);\
+	hTask* va = new hTask(50, 2, TaskAttrType::Loop);\
 	va->initNodeData(new TestNodeData("test data"));\
 	va->addNode(new TestTaskNode("test node1"));\
 	va->addNode(new TestTaskNode("test node2"));\
@@ -93,18 +93,18 @@ struct Test5 : public Test5Base
 };
 
 //线程池运行5秒
-struct Test1TaskNode : public hThread::TaskNode
+struct Test1TaskNode : public hThread::hNode
 {
 	bool onProc();
 };
 
-struct Test2TaskData : public hThread::NodeData
+struct Test2TaskData : public hThread::hNodeData
 {
 	std::string _s;
 	void update(size_t opt, ...);
 };
 
-struct Test2TaskNode : public hThread::TaskNode
+struct Test2TaskNode : public hThread::hNode
 {
 	std::string _s;
 
@@ -113,7 +113,7 @@ struct Test2TaskNode : public hThread::TaskNode
 	bool finalProc();
 };
 
-class Test2Task : public hThread::Task
+class Test2Task : public hThread::hTask
 {
 public:
 	Test2Task();

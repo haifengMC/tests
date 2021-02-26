@@ -3,7 +3,7 @@
 namespace hThread
 {
 	template <size_t N>
-	size_t ThreadPool::commitTasks(PTask(&task)[N], TaskMgrPriority priority)
+	size_t hPool::commitTasks(PhTask(&task)[N], TaskMgrPriority priority)
 	{
 		if (TaskMgrPriority::Max <= priority)
 			return 0;

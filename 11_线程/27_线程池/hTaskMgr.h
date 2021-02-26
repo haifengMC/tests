@@ -3,13 +3,7 @@
 
 namespace hThread
 {
-	struct TaskStatData
-	{
-		size_t _id = 0;
-		TaskStatType _state;
-	};
-
-	class TaskStatMgr : public hThreadDataBase
+	class TaskStatMgr : public hDataBase
 	{
 		std::list<size_t> _states[TaskStatType::Max];//状态管理<thisId>
 		std::map<size_t, TaskStatType> _stateMap;//状态map<thisId state>
@@ -18,22 +12,22 @@ namespace hThread
 		bool updateState(size_t id, TaskStatType state);
 	};
 
-	class TaskMgr : public hTool::hAutoPtrObj
+	class hTaskMgr : public hTool::hAutoPtrObj
 	{
 		DefLog_Init();
-		friend class Task;
+		friend class hTask;
 
 		const TaskMgrCfgItem& _base;
 
-		hTool::hUniqueIdGen<size_t, Task> _tasks;//<id-Task>id生成器
+		hTool::hUniqueIdGen<size_t, hTask> _tasks;//<id-Task>id生成器
 		hTool::hRWeightMap<size_t> _weights;//权重管理<task thisId>
 		std::list<size_t> _states[TaskStatType::Max];//状态管理<thisId>
 		TaskStatMgr _stateMgr;//状态管理
 
 		size_t _updateId = 0;//数据更新 任务id
 	public:
-		TaskMgr(const TaskMgrCfgItem& base);
-		~TaskMgr();
+		hTaskMgr(const TaskMgrCfgItem& base);
+		~hTaskMgr();
 
 		void init();
 
@@ -42,11 +36,11 @@ namespace hThread
 
 		//提交任务，将新任务提交给管理器，提交后默认状态为等待
 		template <size_t N>
-		size_t commitTasks(PTask(&task)[N]);
-		size_t commitTasks(PTask* task, size_t num);
-		size_t commitTasks(PTask& task);
+		size_t commitTasks(PhTask(&task)[N]);
+		size_t commitTasks(PhTask* task, size_t num);
+		size_t commitTasks(PhTask& task);
 		//准备任务，按权重取出等待任务放入就绪任务，返回任务指针
-		PTask readyTasks(size_t busy);
+		PhTask readyTasks(size_t busy);
 		//更新任务数据
 		template <typename ... Args >
 		void updateTaskData(size_t taskId, size_t opt, Args ... args);
@@ -72,4 +66,4 @@ namespace hThread
 #endif
 	};
 }
-DefLog(hThread::TaskMgr, _base, _tasks, _weights, _states);
+DefLog(hThread::hTaskMgr, _base, _tasks, _weights, _states);

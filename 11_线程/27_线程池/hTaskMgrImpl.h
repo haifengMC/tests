@@ -3,21 +3,21 @@
 namespace hThread
 {
 	template <size_t N>
-	size_t TaskMgr::commitTasks(PTask(&task)[N])
+	size_t hTaskMgr::commitTasks(PhTask(&task)[N])
 	{
 		if (!N) return 0;
 		return commitTasks(task, N);
 	}
 
 	template <typename ... Args >
-	void TaskMgr::updateTaskData(size_t taskId, size_t opt, Args ... args)
+	void hTaskMgr::updateTaskData(size_t taskId, size_t opt, Args ... args)
 	{
 		addUpdateTaskFunc(
 			taskId,
 			std::function<bool()>(std::bind(
 				[&](size_t id)
 				{
-					PTask pTask = _tasks.get(id);
+					PhTask pTask = _tasks.get(id);
 					if (!pTask)
 						return false;
 
@@ -26,15 +26,15 @@ namespace hThread
 					return ret;
 				}, taskId)),
 			std::function<void()>(std::bind(
-				[&](size_t id, std::function<void(NodeData*)> memFn)
+				[&](size_t id, std::function<void(hNodeData*)> memFn)
 				{
-					PTask pTask = _tasks.get(id);
+					PhTask pTask = _tasks.get(id);
 					if (!pTask)
 						return;
 
 					pTask->writeLk([&]()
 						{
-							PTaskStaticData pAttr = pTask->getAttr();
+							PhTskStcDt pAttr = pTask->getAttr();
 							if (!pAttr)
 								return;
 
@@ -42,8 +42,8 @@ namespace hThread
 						});
 					_weights.pushBack(pTask->getWeight(), id);
 				}, taskId,
-				std::function<void(NodeData*)>(bind(
-					std::mem_fn(&NodeData::update),
+				std::function<void(hNodeData*)>(bind(
+					std::mem_fn(&hNodeData::update),
 					std::placeholders::_1, opt, args...)))));
 	}
 }

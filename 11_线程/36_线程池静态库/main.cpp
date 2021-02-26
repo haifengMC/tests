@@ -23,13 +23,13 @@ int main()
 		*/
 	}
 	//this_thread::sleep_for(1s);
-	sThrdPool.run();
+	shPool.run();
 	this_thread::sleep_for(1s);
 	{
 		string is;
-		PTask t;
+		PhTask t;
 		t.bind(new Test2Task);
-		sThrdPool.commitTasks(t);
+		shPool.commitTasks(t);
 		while (1)
 		{
 
@@ -41,13 +41,13 @@ int main()
 	}
 
 	ostringstream os;
-	Debug(os, sThrdPool);
+	Debug(os, shPool);
 	COUT_LK(os.str());
 
-	sThrdPool.stop();
+	shPool.stop();
 	Debug_PtrMap(cout);
 	hTool::hAutoPtr<hTool::hWeakPtrBase>::debugMap(cout);
-	sThrdPoolFin;
+	shPoolFin;
 	Debug_PtrMap(cout);
 	hTool::hAutoPtr<hTool::hWeakPtrBase>::debugMap(cout);
 

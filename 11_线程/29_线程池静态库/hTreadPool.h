@@ -3,15 +3,15 @@
 
 namespace hThread
 {
-	class ThreadPool : public Singleton<ThreadPool>
+	class hPool : public Singleton<hPool>
 	{
 		bool _valid;
 		size_t busyThd;
-		std::vector<TaskMgr> _taskMgr;
+		std::vector<hTaskMgr> _taskMgr;
 
 		ThreadPoolCfg cfgData;
 	public:
-		ThreadPool();
+		hPool();
 		void init();
 		void final();
 		void run();

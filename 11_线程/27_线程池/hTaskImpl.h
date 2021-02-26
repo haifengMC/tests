@@ -3,7 +3,7 @@
 namespace hThread
 {
 	template <typename ... Args >
-	void Task::updateTaskData(size_t opt, Args ... args)
+	void hTask::updateTaskData(size_t opt, Args ... args)
 	{
 		if (!check())
 			return;

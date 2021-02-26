@@ -1,7 +1,7 @@
 #include "global.h"
 #include "hTool.h"
 #include "hThread.h"
-#include "hThreadPoolMgr.h"
+#include "hPoolMgr.h"
 
 namespace hThread
 {
@@ -21,28 +21,28 @@ namespace hThread
 		return false;
 	}
 
-	TaskMgr::TaskMgr(const TaskMgrCfgItem& base) : 
+	hTaskMgr::hTaskMgr(const TaskMgrCfgItem& base) : 
 		_base(base), _tasks(50)
 	{ 
 		COUT_LK(_base.index().getName() << " 任务管理器创建...");
 		_tasks.resize(10000, 99999);
 	} 
 
-	TaskMgr::~TaskMgr()
+	hTaskMgr::~hTaskMgr()
 	{
 		COUT_LK(_base.index().getName() << " 任务管理器释放...");
 	}
 	
-	void TaskMgr::init()
+	void hTaskMgr::init()
 	{
 		COUT_LK(_base.index().getName() << " 任务管理器初始化...");
-		PTask pTsk;
-		pTsk.bind(new UpdateTask);
+		PhTask pTsk;
+		pTsk.bind(new hUpdateTask);
 		commitTasks(pTsk);
 		_updateId = pTsk->getId();
 	}
 
-	std::list<size_t>* TaskMgr::getStateList(TaskStatType state)
+	std::list<size_t>* hTaskMgr::getStateList(TaskStatType state)
 	{
 		if (TaskStatType::Max <= state)
 			return NULL;
@@ -51,17 +51,17 @@ namespace hThread
 	}
 
 	//提交任务，将新任务提交给管理器，提交后默认状态为等待
-	size_t TaskMgr::commitTasks(PTask* tasks, size_t num)
+	size_t hTaskMgr::commitTasks(PhTask* tasks, size_t num)
 	{
 
 		size_t ret = 0;
 		for (size_t n = 0; n < num; ++n)
 		{
-			PTask pTask = tasks[n];
+			PhTask pTask = tasks[n];
 			if (!pTask)
 				continue;
 
-			if (!pTask->init(getThis<TaskMgr>()))
+			if (!pTask->init(getThis<hTaskMgr>()))
 				continue;//初始化任务
 
 			if (TaskStatType::Init != pTask->getStat()->_stateTy)
@@ -75,7 +75,7 @@ namespace hThread
 			if (!rsPair.second)
 				continue;
 
-			Task& taskRef = *rsPair.first->second;
+			hTask& taskRef = *rsPair.first->second;
 			++ret;
 
 			//添加至权重管理
@@ -91,28 +91,28 @@ namespace hThread
 		return ret;
 	}
 
-	size_t TaskMgr::commitTasks(PTask& task)
+	size_t hTaskMgr::commitTasks(PhTask& task)
 	{
 		return commitTasks(&task, 1);
 	}
 
 	//返回任务指针
-	PTask TaskMgr::readyTasks(size_t busy)
+	PhTask hTaskMgr::readyTasks(size_t busy)
 	{
 		//忙碌线程超过最大忙碌限制
 		if (busy >= _base.data.maxBusyThd)
-			return PTask();
+			return PhTask();
 
 		std::vector<size_t> tIds;
 		_weights.getRandVal(tIds, 1);
 		if (tIds.empty())
-			return PTask();
+			return PhTask();
 
-		PTask pTask = _tasks.get(tIds[0]);
+		PhTask pTask = _tasks.get(tIds[0]);
 		if (!pTask)
 		{
 			COUT_LK(_base.index() << "中，任务" << tIds[0] << "无存在...");
-			return PTask();
+			return PhTask();
 		}
 
 		spliceTasks(TaskStatType::Wait, TaskStatType::Ready, tIds);
@@ -176,18 +176,18 @@ namespace hThread
 	}
 #endif
 
-	void TaskMgr::addUpdateTaskFunc(size_t taskId,
+	void hTaskMgr::addUpdateTaskFunc(size_t taskId,
 		std::function<bool()> checkFn,
 		std::function<void()> execFn)
 	{
-		PTask pUpdateTask = _tasks.get(_updateId);
+		PhTask pUpdateTask = _tasks.get(_updateId);
 		if (!pUpdateTask)
 		{
 			COUT_LK(_base.index() << "数据更新 任务未初始化,_updateId:" << _updateId << "...");
 			return;
 		}
 
-		PWUpdTsk pUpTask = pUpdateTask.dynamic<UpdateTask>();
+		PWhUpdTsk pUpTask = pUpdateTask.dynamic<hUpdateTask>();
 		if (!pUpTask)
 		{
 			COUT_LK(_base.index() << "数据更新 任务未初始化为UpdateTask对象,_updateId:" << _updateId << "...");
@@ -196,24 +196,24 @@ namespace hThread
 
 		pUpTask->updata(taskId, checkFn, execFn);
 		_weights.pushBack(pUpTask->getWeight(), _updateId);
-		sThrdPool.notifyMgrThrd();
+		shPool.notifyMgrThrd();
 	}
 
-	void TaskMgr::spliceTasks(TaskStatType from, TaskStatType to, const std::vector<size_t>& ids)
+	void hTaskMgr::spliceTasks(TaskStatType from, TaskStatType to, const std::vector<size_t>& ids)
 	{
 		if (from >= TaskStatType::Max || to >= TaskStatType::Max || ids.empty())
 			return;
 
 		for (auto id : ids)
 		{
-			PTask pTask = _tasks.get(id);
+			PhTask pTask = _tasks.get(id);
 			if (!pTask)
 				continue;
 
 			if (!pTask->getStat())
 				continue;
 
-			TaskDynamicData& stat = *pTask->getStat();
+			hTaskDynamicData& stat = *pTask->getStat();
 			if (from != stat._stateTy)
 				continue;
 

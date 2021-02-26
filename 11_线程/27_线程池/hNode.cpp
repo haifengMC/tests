@@ -3,7 +3,7 @@
 
 namespace hThread
 {
-	void TaskNode::init(size_t id, PNodeData data)
+	void hNode::init(size_t id, PhNodeData data)
 	{
 		_id = id;
 		_data = data;

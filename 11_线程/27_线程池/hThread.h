@@ -7,65 +7,66 @@
 
 namespace hThread 
 {
-	struct NodeData;
-	typedef hTool::hAutoPtr<NodeData> PNodeData;
-	struct UpdateTaskData;
-	typedef hTool::hWeakPtr<UpdateTaskData> PWUpdTskDt;
+	struct hNodeData;
+	typedef hTool::hAutoPtr<hNodeData> PhNodeData;
+	struct hUpdateData;
+	typedef hTool::hWeakPtr<hUpdateData> PWhUpdDt;
 
-	class TaskNode;
-	typedef hTool::hAutoPtr<TaskNode> PTaskNode;
-	typedef std::list<PTaskNode> NodeList;
-	typedef NodeList::iterator NodeListIt;
+	class hNode;
+	typedef hTool::hAutoPtr<hNode> PhNode;
+	typedef std::list<PhNode> hNodeList;
+	typedef hNodeList::iterator hNodeListIt;
 
-	struct TaskStaticData;
-	typedef hTool::hAutoPtr<TaskStaticData> PTaskStaticData;
+	struct hTaskStaticData;
+	typedef hTool::hAutoPtr<hTaskStaticData> PhTskStcDt;
 
-	struct TaskDynamicData;
-	typedef hTool::hAutoPtr<TaskDynamicData> PTaskDynamicData;
+	struct hTaskDynamicData;
+	typedef hTool::hAutoPtr<hTaskDynamicData> PhTskDynDt;
 
-	class Task;
-	typedef hTool::hAutoPtr<Task> PTask;
-	typedef hTool::hWeakPtr<Task> PWTask;
-	class UpdateTask;
-	typedef hTool::hWeakPtr<UpdateTask> PWUpdTsk;
+	class hTask;
+	typedef hTool::hAutoPtr<hTask> PhTask;
+	typedef hTool::hWeakPtr<hTask> PWhTask;
+	class hUpdateTask;
+	typedef hTool::hWeakPtr<hUpdateTask> PWhUpdTsk;
 
-	class TaskMgr;
-	typedef hTool::hAutoPtr<TaskMgr> PTaskMgr;
-	typedef hTool::hWeakPtr<TaskMgr> PWTaskMgr;
+	class hTaskMgr;
+	typedef hTool::hAutoPtr<hTaskMgr> PhTaskMgr;
+	typedef hTool::hWeakPtr<hTaskMgr> PWhTaskMgr;
 
 	typedef hTool::hAutoPtr<std::thread> PThread;
-	class ThreadMem;
-	typedef hTool::hAutoPtr<ThreadMem> PThrdMem;
-	class ThreadMemWork;
-	typedef hTool::hWeakPtr<ThreadMemWork> PWThrdMemWork;
-	typedef std::list<PWThrdMemWork> ThrdMemWorkList;
-	typedef ThrdMemWorkList::iterator ThrdMemWorkListIt;
+	class hMem;
+	typedef hTool::hAutoPtr<hMem> PhMem;
+	class hMemWork;
+	typedef hTool::hWeakPtr<hMemWork> PWhMemWork;
+	typedef std::list<PWhMemWork> hMemWorkList;
+	typedef hMemWorkList::iterator hMemWorkListIt;
 }
 
 #define Debug_PtrMap(os)\
-	PNodeData::debugMap(cout);\
-	PTaskNode::debugMap(cout);\
-	PTaskStaticData::debugMap(cout);\
-	PTaskDynamicData::debugMap(cout);\
-	PTask::debugMap(cout);\
-	PTaskMgr::debugMap(cout);\
+	PhNodeData::debugMap(cout);\
+	PhNode::debugMap(cout);\
+	PhTskStcDt::debugMap(cout);\
+	PhTskDynDt::debugMap(cout);\
+	PhTask::debugMap(cout);\
+	PhTaskMgr::debugMap(cout);\
 	PThread::debugMap(cout);\
-	PThrdMem::debugMap(cout);
+	PhMem::debugMap(cout);
 
 #include "hRWLock.h"
-#include "hThreadDataBase.h"
-#include "hTaskNode.h"
+#include "hDataBase.h"
+#include "hNode.h"
+#include "hTaskData.h"
 #include "hTask.h"
 #include "hUpdateTask.h"
 #include "hTaskMgr.h"
-#include "hThreadMem.h"
-#include "hThreadMemWork.h"
-#include "hThreadMemMgr.h"
-#include "hThreadPool.h"
+#include "hMem.h"
+#include "hMemWork.h"
+#include "hMemMgr.h"
+#include "hPool.h"
 
-#include "hThreadDataBaseImpl.h"
+#include "hDataBaseImpl.h"
 #include "hTaskImpl.h"
 #include "hTaskMgrImpl.h"
-#include "hThreadPoolImpl.h"
+#include "hPoolImpl.h"
 
 

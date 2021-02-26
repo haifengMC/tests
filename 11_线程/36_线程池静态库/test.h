@@ -1,12 +1,12 @@
 #pragma once
 
-struct Test2TaskData : public hThread::NodeData
+struct Test2TaskData : public hThread::hNodeData
 {
 	std::string _s;
 	void update(size_t opt, ...);
 };
 
-struct Test2TaskNode : public hThread::TaskNode
+struct Test2TaskNode : public hThread::hNode
 {
 	std::string _s;
 
@@ -15,7 +15,7 @@ struct Test2TaskNode : public hThread::TaskNode
 	bool finalProc();
 };
 
-class Test2Task : public hThread::Task
+class Test2Task : public hThread::hTask
 {
 public:
 	Test2Task();

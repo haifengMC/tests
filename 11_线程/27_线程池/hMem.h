@@ -2,9 +2,24 @@
 
 namespace hThread
 {
-	ThreadMem* createThrdMem(ThreadMemType, size_t);
+	hMem* createThrdMem(ThreadMemType, size_t);
 
-	class ThreadMem
+	struct hMemData
+	{
+		ThreadMemType _type = ThreadMemType::Max;
+		//所有状态的线程id
+		std::list<size_t> _thrdId[ThreadMemStatType::Max];
+		std::vector<PhMem> _memArr;
+
+		void init(size_t num);
+		void run();
+		void stop();
+		void join();
+
+		void execEvery(ThreadMemStatType statTy, std::function<bool(PhMem)> func);
+	};
+
+	class hMem
 	{
 		DefLog_Init();
 		PThread _pThrd;
@@ -23,8 +38,8 @@ namespace hThread
 	protected:
 		virtual void setFunc() = 0;//设置线程每个线程成员都必须实现
 	public:
-		ThreadMem(size_t id);
-		virtual ~ThreadMem() {}
+		hMem(size_t id);
+		virtual ~hMem() {}
 
 		ThreadMemType getType() const { return _type; }
 		ThreadMemStatType getStat() const { return _statType; }
@@ -42,4 +57,5 @@ namespace hThread
 		void close() { _close = true; }
 	};
 }
-DefLog(hThread::ThreadMem, _id);
+DefLog(hThread::hMemData, _thrdId);
+DefLog(hThread::hMem, _id);

@@ -2,7 +2,7 @@
 
 namespace hThread
 {
-	class hThreadDataBase
+	class hDataBase
 	{
 		std::mutex rwLock;//自锁，暂时用互斥锁代替
 	protected:
@@ -15,6 +15,6 @@ namespace hThread
 		template<typename T>
 		void writeLk(T func);
 
-		virtual ~hThreadDataBase() {}
+		virtual ~hDataBase() {}
 	};
 }

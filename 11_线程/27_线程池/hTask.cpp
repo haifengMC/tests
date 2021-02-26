@@ -1,6 +1,6 @@
 #include "global.h"
 #include "hThread.h"
-#include "hThreadPoolMgr.h"
+#include "hPoolMgr.h"
 
 namespace hThread
 {
@@ -126,50 +126,19 @@ namespace hThread
 	}
 #endif
 
-	bool TaskStaticData::addNode(TaskNode* pNode)
-	{
-		if (!pNode)
-			return false;
-
-		if (!_nodeData)
-			return false;
-
-		pNode->init(++_incId, _nodeData);
-
-		_nodeList.push_back(hTool::hAutoPtr<TaskNode>(pNode));
-		return pNode;
-	}
-
-	bool TaskStaticData::initNodeData(NodeData* pData)
-	{
-		if (pData)
-			_nodeData.bind(pData);
-		else
-			_nodeData.emplace();
-
-		return true;
-	}
-
-	TaskStaticData::TaskStaticData(size_t weight, size_t thrdExpect, const std::bitset<TaskAttrType::Max>& attr)
-	{
-		_weight = weight;
-		_thrdExpect = thrdExpect;
-		_attr = attr;
-	}
-
-	Task::Task(size_t weight, size_t thrdExpect, uint16_t attr) :
-		hTool::hUniqueMapVal<size_t, Task>(_thisId, this),
+	hTask::hTask(size_t weight, size_t thrdExpect, uint16_t attr) :
+		hTool::hUniqueMapVal<size_t, hTask>(_thisId, this),
 		_attrb(weight, thrdExpect, attr) {}
 
-	Task::Task(hTool::hAutoPtr<TaskStaticData> attr) :
-		hTool::hUniqueMapVal<size_t, Task>(_thisId, this),
+	hTask::hTask(hTool::hAutoPtr<hTaskStaticData> attr) :
+		hTool::hUniqueMapVal<size_t, hTask>(_thisId, this),
 		_attrb(attr) {}
 
-	Task::Task(Task&& t) :
-		hTool::hUniqueMapVal<size_t, Task>(_thisId, this),
+	hTask::hTask(hTask&& t) :
+		hTool::hUniqueMapVal<size_t, hTask>(_thisId, this),
 		_attrb(std::move(t._attrb)), _state(std::move(t._state)) {}
 
-	bool Task::init(PWTaskMgr pMgr)
+	bool hTask::init(PWhTaskMgr pMgr)
 	{
 		if (!pMgr)
 			return false;
@@ -184,7 +153,7 @@ namespace hThread
 		return true;
 	}
 
-	size_t Task::getWeight() const
+	size_t hTask::getWeight() const
 	{
 		if (!check())
 			return 0;
@@ -192,16 +161,16 @@ namespace hThread
 		return _attrb->_weight;
 	}
 
-	NodeListIt Task::getNextNode()
+	hNodeListIt hTask::getNextNode()
 	{
 		if (!check())
 		{
 			checkErrOut();
-			return NodeListIt();
+			return hNodeListIt();
 		}
 
-		NodeList& nodeList = _attrb->_nodeList;
-		NodeListIt& nodeIt = _state->_nodeIt;
+		hNodeList& nodeList = _attrb->_nodeList;
+		hNodeListIt& nodeIt = _state->_nodeIt;
 
 		if (!nodeIt._Ptr)
 		{
@@ -224,7 +193,7 @@ namespace hThread
 			return nodeIt;
 	}
 
-	bool Task::checkAttr(TaskAttrType attr)
+	bool hTask::checkAttr(TaskAttrType attr)
 	{
 		if (!_attrb)
 			return false;
@@ -235,7 +204,7 @@ namespace hThread
 		return _attrb->_attr[attr];
 	}
 
-	bool Task::checkStat(TaskStatType stat)
+	bool hTask::checkStat(TaskStatType stat)
 	{
 		if (!_state)
 			return false;
@@ -246,7 +215,7 @@ namespace hThread
 		return _state->_stateTy == stat;
 	}
 
-	bool Task::setStat(TaskStatType state)
+	bool hTask::setStat(TaskStatType state)
 	{
 		if (TaskStatType::Max <= state)
 			return false;
@@ -261,7 +230,7 @@ namespace hThread
 		return true;
 	}
 
-	bool Task::updateStat(TaskStatType state)
+	bool hTask::updateStat(TaskStatType state)
 	{
 		if (TaskStatType::Max <= state)
 			return false;
@@ -287,7 +256,7 @@ namespace hThread
 		return true;
 	}
 
-	bool Task::resetStatData()
+	bool hTask::resetStatData()
 	{
 		if (!check())
 		{
@@ -299,7 +268,7 @@ namespace hThread
 		return true;
 	}
 	
-	bool Task::addThrdMem(PWThrdMemWork pMem)
+	bool hTask::addThrdMem(PWhMemWork pMem)
 	{
 		if (!pMem)
 		{
@@ -328,7 +297,7 @@ namespace hThread
 			return false;
 		}
 
-		ThrdMemWorkList& thrdsRef = _state->_thrds;
+		hMemWorkList& thrdsRef = _state->_thrds;
 		auto nodeIt = getNextNode();
 		if (!nodeIt._Ptr || nodeIt == _attrb->_nodeList.end())
 		{
@@ -336,7 +305,7 @@ namespace hThread
 			return false;
 		}
 		auto memIt = thrdsRef.insert(thrdsRef.end(), pMem);
-		pMem->initTask(getThis<Task>(), nodeIt, memIt);
+		pMem->initTask(getThis<hTask>(), nodeIt, memIt);
 #if 0
 		auto itRBeg = thrdsRef.rbegin();
 		pMem->itMem = thrdsRef.insert(thrdsRef.end(), pMem);
@@ -357,7 +326,7 @@ namespace hThread
 	}
 
 	//线程请求运行任务节点
-	bool Task::runTaskNode(NodeListIt nodeIt)
+	bool hTask::runTaskNode(hNodeListIt nodeIt)
 	{
 		if (!check())
 		{
@@ -383,7 +352,7 @@ namespace hThread
 		return true;
 	}
 
-	void Task::finishCurNode(ThrdMemWorkListIt memIt)
+	void hTask::finishCurNode(hMemWorkListIt memIt)
 	{
 		if (!check())
 		{
@@ -391,7 +360,7 @@ namespace hThread
 			return;
 		}
 
-		ThrdMemWorkList& thrdList = _state->_thrds;
+		hMemWorkList& thrdList = _state->_thrds;
 		if (!memIt._Ptr || memIt == thrdList.end())
 		{
 			COUT_LK(_thisId << "任务通知空节点...");
@@ -413,7 +382,7 @@ namespace hThread
 		//if (TaskStatType::Finish == _state->_stateTy)
 		//	return;
 
-		ThrdMemWorkListIt nextIt = std::next(memIt);
+		hMemWorkListIt nextIt = std::next(memIt);
 		if (nextIt == thrdList.end())
 			nextIt = thrdList.begin();
 
@@ -421,7 +390,7 @@ namespace hThread
 			(*nextIt)->notify();
 	}
 
-	void Task::freeThrdMem(ThrdMemWorkListIt memIt)
+	void hTask::freeThrdMem(hMemWorkListIt memIt)
 	{
 		if (!check())
 		{
@@ -429,7 +398,7 @@ namespace hThread
 			return;
 		}
 
-		ThrdMemWorkList& thrdList = _state->_thrds;
+		hMemWorkList& thrdList = _state->_thrds;
 		if (!memIt._Ptr || memIt == thrdList.end())
 		{
 			COUT_LK(_thisId << "任务释放空线程...");
@@ -461,7 +430,7 @@ namespace hThread
 					return;
 				
 				_state->_pMgr->_weights.pushBack(getWeight(), getId());
-				sThrdPool.notifyMgrThrd();
+				shPool.notifyMgrThrd();
 				return;
 			}
 			
@@ -469,7 +438,7 @@ namespace hThread
 		}
 	}
 
-	size_t Task::calcNeedThrdNum(size_t curThrd)
+	size_t hTask::calcNeedThrdNum(size_t curThrd)
 	{
 		if (!_attrb)
 			return 0;
@@ -477,7 +446,7 @@ namespace hThread
 		return std::min({curThrd, _attrb->_thrdExpect, _attrb ->_nodeList.size()});
 	}
 
-	bool Task::check() const
+	bool hTask::check() const
 	{
 		if (!_attrb)
 			return false;
@@ -491,7 +460,7 @@ namespace hThread
 		return true;
 	}
 
-	void Task::checkErrOut() const
+	void hTask::checkErrOut() const
 	{
 		COUT_LK(_thisId << "任务异常,_attrb:" << _attrb <<
 			"_state:" << _state <<

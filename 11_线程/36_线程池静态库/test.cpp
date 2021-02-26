@@ -45,7 +45,7 @@ bool Test2TaskNode::finalProc()
 	return true;
 }
 
-Test2Task::Test2Task() : Task(50, 1, TaskAttrTypeBit::Repeat)
+Test2Task::Test2Task() : hTask(50, 1, TaskAttrTypeBit::Repeat)
 {
 	initNodeData(new Test2TaskData);
 	addNode(new Test2TaskNode);

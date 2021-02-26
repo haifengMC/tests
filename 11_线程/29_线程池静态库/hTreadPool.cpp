@@ -3,7 +3,7 @@
 
 namespace hThread
 {
-	ThreadPool::ThreadPool() : _valid(false), busyThd(0), cfgData("hThread.yml")
+	hPool::hPool() : _valid(false), busyThd(0), cfgData("hThread.yml")
 	{
 		if (!cfgData.loadCfg())
 		{//Err
@@ -13,21 +13,21 @@ namespace hThread
 		init();
 	}
 
-	void ThreadPool::init()
+	void hPool::init()
 	{
 		//for (const TaskMgrCfgItem& item : cfgData.taskMgrCfg)
 		//	taskMgrs.emplace_back(item.second);
 	}
 
-	void ThreadPool::final()
+	void hPool::final()
 	{
 	}
 
-	void ThreadPool::run()
+	void hPool::run()
 	{
 	}
 
-	void ThreadPool::stop()
+	void hPool::stop()
 	{
 	}
 }

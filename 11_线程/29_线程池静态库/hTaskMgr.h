@@ -3,7 +3,7 @@
 
 namespace hThread
 {
-	class TaskMgr
+	class hTaskMgr
 	{
 		//	const TaskMgrCfgItem& base;
 		//public:

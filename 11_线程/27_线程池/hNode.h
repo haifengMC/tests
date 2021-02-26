@@ -3,20 +3,20 @@
 
 namespace hThread
 {
-	struct NodeData
+	struct hNodeData
 	{
 		DefLog_Init();
 	protected:
-		typedef NodeData Base;
+		typedef hNodeData Base;
 	public:
 		size_t _id = 0;
 		bool _needDel = false;
 		uint64_t _totalElapsed = 0;
 		std::map<size_t, uint64_t> _elapsedRecord;//id-time
 
-		NodeData() {}
-		NodeData(const size_t& id) : _id(id) {}
-		virtual ~NodeData() {}
+		hNodeData() {}
+		hNodeData(const size_t& id) : _id(id) {}
+		virtual ~hNodeData() {}
 
 		//更新数据，上写锁
 		virtual void update(size_t opt, ...) {}
@@ -24,17 +24,17 @@ namespace hThread
 		operator bool() { return _needDel; }
 	};
 
-	class TaskNode
+	class hNode
 	{
 		DefLog_Init();
 	protected:
 		size_t _id = 0;
-		PNodeData _data;
-		typedef TaskNode Base;
+		PhNodeData _data;
+		typedef hNode Base;
 	public:
-		virtual ~TaskNode() {}
+		virtual ~hNode() {}
 
-		void init(size_t id, PNodeData _data);
+		void init(size_t id, PhNodeData _data);
 
 		const size_t& getId() const { return _id; }
 
@@ -46,5 +46,5 @@ namespace hThread
 	};
 
 }
-DefLog(hThread::NodeData, _id, _needDel, _totalElapsed, _elapsedRecord);
-DefLog(hThread::TaskNode, _id);
+DefLog(hThread::hNodeData, _id, _needDel, _totalElapsed, _elapsedRecord);
+DefLog(hThread::hNode, _id);

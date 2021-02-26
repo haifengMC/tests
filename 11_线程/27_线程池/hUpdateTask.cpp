@@ -1,13 +1,13 @@
 #include "global.h"
 #include "hTool.h"
 #include "hThread.h"
-#include "hThreadPoolMgr.h"
+#include "hPoolMgr.h"
 
 namespace hThread
 {
 	bool UpdateTaskNode::preProc()
 	{
-		PWUpdTskDt pData = _data.dynamic<UpdateTaskData>();
+		PWhUpdDt pData = _data.dynamic<hUpdateData>();
 		if (!pData)
 		{
 			COUT_LK("数据更新任务preProc() 数据未初始化为UpdateTaskData对象...");
@@ -25,7 +25,7 @@ namespace hThread
 
 	bool UpdateTaskNode::onProc()
 	{
-		PWUpdTskDt pData = _data.dynamic<UpdateTaskData>();
+		PWhUpdDt pData = _data.dynamic<hUpdateData>();
 		if (!pData)
 			return false;
 
@@ -49,7 +49,7 @@ namespace hThread
 
 		for (auto& fn : _execList)
 			fn();
-		sThrdPool.notifyMgrThrd();
+		shPool.notifyMgrThrd();
 		return true;
 	}
 
@@ -59,13 +59,13 @@ namespace hThread
 		return true;
 	}
 
-	UpdateTask::UpdateTask() : Task(50, 1, TaskAttrTypeBit::Repeat)
+	hUpdateTask::hUpdateTask() : hTask(50, 1, TaskAttrTypeBit::Repeat)
 	{
-		initNodeData(new UpdateTaskData);
+		initNodeData(new hUpdateData);
 		addNode(new UpdateTaskNode);
 	}
 
-	void UpdateTask::updata(size_t taskId,
+	void hUpdateTask::updata(size_t taskId,
 		std::function<bool()>& checkFn,
 		std::function<void()>& execFn)
 	{
@@ -77,7 +77,7 @@ namespace hThread
 					return;
 				}
 
-				PWUpdTskDt pData = getAttr()->_nodeData.dynamic<UpdateTaskData>();
+				PWhUpdDt pData = getAttr()->_nodeData.dynamic<hUpdateData>();
 				if (!pData)
 				{
 					COUT_LK("数据更新任务updata() 数据未初始化为UpdateTaskData对象...");
@@ -92,7 +92,7 @@ namespace hThread
 			});
 	}
 
-	bool UpdateTask::canRepeat()
+	bool hUpdateTask::canRepeat()
 	{
 		if (!check())
 		{
@@ -100,7 +100,7 @@ namespace hThread
 			return false;
 		}
 
-		PWUpdTskDt pData = getAttr()->_nodeData.dynamic<UpdateTaskData>();
+		PWhUpdDt pData = getAttr()->_nodeData.dynamic<hUpdateData>();
 		if (!pData)
 		{
 			COUT_LK("数据更新任务canRepeat() 数据未初始化为UpdateTaskData对象...");

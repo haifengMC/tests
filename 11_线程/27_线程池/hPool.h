@@ -3,43 +3,28 @@
 
 namespace hThread
 {
-	struct ThreadMemData
-	{
-		ThreadMemType _type = ThreadMemType::Max;
-		//所有状态的线程id
-		std::list<size_t> _thrdId[ThreadMemStatType::Max];
-		std::vector<PThrdMem> _memArr;
-
-		void init(size_t num);
-		void run();
-		void stop();
-		void join();
-
-		void execEvery(ThreadMemStatType statTy, std::function<bool(PThrdMem)> func);
-	};
-
-	class ThreadPool : public Singleton<ThreadPool>
+	class hPool : public Singleton<hPool>
 	{
 		DefLog_Init();
-		friend class ThreadMem;
-		friend class Task;
+		friend class hMem;
+		friend class hTask;
 
 		bool _valid;
 		const ThreadBaseCfg& _base;
 
 		//线程管理组数据
-		ThreadMemData _memData[ThreadMemType::Max];
+		hMemData _memData[ThreadMemType::Max];
 
 		//size_t waitTask = 0;//等待任务数
-		std::vector<PTaskMgr> _taskMgr;
+		std::vector<PhTaskMgr> _taskMgr;
 		//std::map<Task*, hRWLock*> taskLock;//任务锁
 	
 		//hRWLock rwLock;//自锁
 	public:
 		operator bool() { return _valid; }
 		
-		ThreadPool();
-		~ThreadPool();
+		hPool();
+		~hPool();
 		
 		void init();
 		void final();
@@ -48,17 +33,17 @@ namespace hThread
 		
 		//提交任务
 		template <size_t N>
-		size_t commitTasks(PTask(&task)[N], TaskMgrPriority priority = TaskMgrPriority::Normal);
-		size_t commitTasks(PTask& task, TaskMgrPriority priority = TaskMgrPriority::Normal);
+		size_t commitTasks(PhTask(&task)[N], TaskMgrPriority priority = TaskMgrPriority::Normal);
+		size_t commitTasks(PhTask& task, TaskMgrPriority priority = TaskMgrPriority::Normal);
 		//准备任务:管理线程根据优先级和权重
-		PTask readyTasks();
+		PhTask readyTasks();
 		//初始化任务:管理线程为工作线程初始化任务状态
-		bool initTasks(PTask pTask, size_t thrdNum);
+		bool initTasks(PhTask pTask, size_t thrdNum);
 		//运行任务:通知各就绪的工作线程工作
 		void runTasks();
 
 		void createThrd(size_t num, ThreadMemType t = ThreadMemType::Work);
-		ThreadMemData& getThrdMemData(ThreadMemType type) { return _memData[type]; }
+		hMemData& getThrdMemData(ThreadMemType type) { return _memData[type]; }
 		size_t getThrdMemNum(ThreadMemType memTy, ThreadMemStatType statTy);
 		//通知管理线程运行
 		void notifyMgrThrd();
@@ -77,8 +62,7 @@ namespace hThread
 		void removeThrd(const size_t& id);
 #endif
 	};
-#define sThrdPool hThread::ThreadPool::getMe()
-#define sThrdPoolFin hThread::ThreadPool::delMe()
+#define shPool hThread::hPool::getMe()
+#define shPoolFin hThread::hPool::delMe()
 }
-DefLog(hThread::ThreadMemData, _thrdId);
-DefLog(hThread::ThreadPool, _valid, _base, _memData, _taskMgr);
+DefLog(hThread::hPool, _valid, _base, _memData, _taskMgr);

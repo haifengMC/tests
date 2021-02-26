@@ -146,12 +146,13 @@
   <ItemGroup>
     <ClCompile Include="hRWLock.cpp" />
     <ClCompile Include="hTask.cpp" />
+    <ClCompile Include="hTaskData.cpp" />
     <ClCompile Include="hTaskMgr.cpp" />
-    <ClCompile Include="hTaskNode.cpp" />
+    <ClCompile Include="hNode.cpp" />
     <ClCompile Include="hThread.cpp" />
-    <ClCompile Include="hThreadMem.cpp" />
-    <ClCompile Include="hThreadMemMgr.cpp" />
-    <ClCompile Include="hThreadMemWork.cpp" />
+    <ClCompile Include="hMem.cpp" />
+    <ClCompile Include="hMemMgr.cpp" />
+    <ClCompile Include="hMemWork.cpp" />
     <ClCompile Include="hThreadPoolMgr.cpp" />
     <ClCompile Include="hThreadPool.cpp" />
     <ClCompile Include="hUpdateTask.cpp" />
@@ -161,22 +162,23 @@
   <ItemGroup>
     <ClInclude Include="hRWLock.h" />
     <ClInclude Include="hTask.h" />
+    <ClInclude Include="hTaskData.h" />
     <ClInclude Include="hTaskImpl.h" />
     <ClInclude Include="hTaskMgr.h" />
     <ClInclude Include="hTaskMgrImpl.h" />
-    <ClInclude Include="hTaskNode.h" />
+    <ClInclude Include="hNode.h" />
     <ClInclude Include="hThread.h" />
     <ClInclude Include="hThreadCfg.h" />
-    <ClInclude Include="hThreadDataBase.h" />
-    <ClInclude Include="hThreadDataBaseImpl.h" />
-    <ClInclude Include="hThreadMem.h" />
-    <ClInclude Include="hThreadMemWork.h" />
-    <ClInclude Include="hThreadPool.h" />
-    <ClInclude Include="hThreadPoolImpl.h" />
-    <ClInclude Include="hThreadPoolMgr.h" />
+    <ClInclude Include="hDataBase.h" />
+    <ClInclude Include="hDataBaseImpl.h" />
+    <ClInclude Include="hMem.h" />
+    <ClInclude Include="hMemWork.h" />
+    <ClInclude Include="hPool.h" />
+    <ClInclude Include="hPoolImpl.h" />
+    <ClInclude Include="hPoolMgr.h" />
     <ClInclude Include="hUpdateTask.h" />
     <ClInclude Include="test.h" />
-    <ClInclude Include="hThreadMemMgr.h" />
+    <ClInclude Include="hMemMgr.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

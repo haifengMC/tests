@@ -5,7 +5,7 @@
 #ifdef _PUTOUT_D 
 #define COUT_LK(x)\
 	{\
-		std::lock_guard<std::mutex> lk(sThrdPoolMgr.getCoutM()); \
+		std::lock_guard<std::mutex> lk(shPoolMgr.getCoutM()); \
 		std::ostringstream _os;\
 		_os << x << std::endl;\
 		std::ofstream of("ThreadLoop.log", std::ios::app);\
@@ -18,7 +18,7 @@
 
 namespace hThread
 {
-	class ThreadPoolMgr : public Singleton<ThreadPoolMgr>
+	class hPoolMgr : public Singleton<hPoolMgr>
 	{
 		bool _valid;
 		ThreadPoolCfg cfgData;
@@ -26,12 +26,12 @@ namespace hThread
 	public:
 		operator bool() { return _valid; }
 
-		ThreadPoolMgr();
+		hPoolMgr();
 
 		std::mutex& getCoutM() { return coutM; }
 		const ThreadBaseCfg& getBaseCfg() const { return cfgData.data.baseCfg; }
 		const TaskMgrCfg& getTaskMgrCfg() const { return cfgData.data.taskMgrCfg; }
 
 	};
-#define sThrdPoolMgr hThread::ThreadPoolMgr::getMe()
+#define shPoolMgr hThread::hPoolMgr::getMe()
 }

@@ -3,7 +3,7 @@
 namespace hThread
 {
 	template<typename T>
-	void hThreadDataBase::readLk(T func)
+	void hDataBase::readLk(T func)
 	{
 		if (!check())
 		{
@@ -17,7 +17,7 @@ namespace hThread
 	}
 
 	template<typename T>
-	void hThreadDataBase::writeLk(T func)
+	void hDataBase::writeLk(T func)
 	{
 		if (!check())
 		{

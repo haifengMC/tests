@@ -1,18 +1,18 @@
 #include "global.h"
 #include "hThread.h"
-#include "hThreadPoolMgr.h"
+#include "hPoolMgr.h"
 
 namespace hThread
 {
-	void ThreadMemWork::reset()
+	void hMemWork::reset()
 	{
-		_pTask = PWTask();
-		_nodeIt = NodeListIt();
-		_memIt = ThrdMemWorkListIt();
+		_pTask = PWhTask();
+		_nodeIt = hNodeListIt();
+		_memIt = hMemWorkListIt();
 		updateStat(ThreadMemStatType::Wait);
 	}
 
-	void ThreadMemWork::setFunc()
+	void hMemWork::setFunc()
 	{
 		_func = [&]()
 		{
@@ -58,8 +58,8 @@ namespace hThread
 
 				COUT_LK("memWork_" << _id << " 工作线程运行任务" <<
 					"task_" << _pTask->getIndex() << "...");
-				PTaskStaticData pAttr = _pTask->getAttr();
-				PTaskDynamicData pStat = _pTask->getStat();
+				PhTskStcDt pAttr = _pTask->getAttr();
+				PhTskDynDt pStat = _pTask->getStat();
 				auto& nodeList = pAttr->_nodeList;
 				while (_nodeIt != nodeList.end())
 				{
@@ -70,7 +70,7 @@ namespace hThread
 						break;
 					}
 
-					TaskNode& nodeRef = **_nodeIt;
+					hNode& nodeRef = **_nodeIt;
 					if (!nodeRef.initProc())
 					{
 						COUT_LK("task_" << _pTask->getIndex() << " 任务节点" <<
@@ -135,19 +135,19 @@ namespace hThread
 		};
 	}
 
-	ThreadMemWork::ThreadMemWork(size_t id) :
-		ThreadMem(id)
+	hMemWork::hMemWork(size_t id) :
+		hMem(id)
 	{
 		_type = ThreadMemType::Work;
 		COUT_LK("memWork_" << _id << " 工作线程创建...");
 	}
 
-	ThreadMemWork::~ThreadMemWork()
+	hMemWork::~hMemWork()
 	{
 		COUT_LK("memWork_" << _id << " 工作线程释放...");
 	}
 
-	void ThreadMemWork::initTask(PWTask pTask, NodeListIt nodeIt, ThrdMemWorkListIt memIt)
+	void hMemWork::initTask(PWhTask pTask, hNodeListIt nodeIt, hMemWorkListIt memIt)
 	{
 		COUT_LK("memWork_" << _id << " 初始化工作线程任务" <<
 			"task_" << pTask->getIndex() << "...");
@@ -157,7 +157,7 @@ namespace hThread
 		updateStat(ThreadMemStatType::Ready);
 	}
 
-	void ThreadMemWork::runTask()
+	void hMemWork::runTask()
 	{
 		COUT_LK("memWork_" << _id << " 通知工作线程运行任务" <<
 			"task_" << _pTask->getIndex() << "...");

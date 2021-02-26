@@ -1,10 +1,10 @@
 #include "global.h"
 #include "hThread.h"
-#include "hThreadPoolMgr.h"
+#include "hPoolMgr.h"
 
 namespace hThread
 {
-	void ThreadMemMgr::setFunc()
+	void hMemMgr::setFunc()
 	{
 		_func = [&]()
 		{
@@ -17,7 +17,7 @@ namespace hThread
 			{
 				COUT_LK("memMgr_" << _id << " 管理线程进入循环...");
 
-				PTask pTask;
+				PhTask pTask;
 				size_t thrdNum = 0;//已就绪的工作线程数
 				size_t detachNum = 0;//已分离的工作线程数
 				_runCv.wait(lk, [&]
@@ -25,14 +25,14 @@ namespace hThread
 						if (_close)
 							return true;
 
-						thrdNum = sThrdPool.getThrdMemNum(ThreadMemType::Work, ThreadMemStatType::Wait);
+						thrdNum = shPool.getThrdMemNum(ThreadMemType::Work, ThreadMemStatType::Wait);
 						if (!thrdNum)
 						{
 							COUT_LK("memMgr_" << _id << " 无可用线程，管理线程挂起...");
 							return false;
 						}
 
-						pTask = sThrdPool.readyTasks();
+						pTask = shPool.readyTasks();
 						if (!pTask)
 						{
 							COUT_LK("memMgr_" << _id << " 无任务，管理线程挂起...");
@@ -46,26 +46,26 @@ namespace hThread
 
 				COUT_LK("memMgr_" << _id << " 管理线程初始化任务" <<
 					"task_" << pTask->getIndex() << "...");
-				if (!sThrdPool.initTasks(pTask, thrdNum))
+				if (!shPool.initTasks(pTask, thrdNum))
 					continue;
 
 				COUT_LK("memMgr_" << _id << " 管理线程通知工作线程执行任务" <<
 					"task_" << pTask->getIndex() << "...");
-				sThrdPool.runTasks();
+				shPool.runTasks();
 			}
 			//std::this_thread::sleep_for(std::chrono::seconds(2));
 			COUT_LK("memMgr_" << _id << " 管理线程停止工作...");
 		};
 	}
 
-	ThreadMemMgr::ThreadMemMgr(size_t id) :
-		ThreadMem(id)
+	hMemMgr::hMemMgr(size_t id) :
+		hMem(id)
 	{
 		_type = ThreadMemType::Mgr;
 		COUT_LK("memMgr_" << _id << " 管理线程创建...");
 	}
 
-	ThreadMemMgr::~ThreadMemMgr()
+	hMemMgr::~hMemMgr()
 	{
 		COUT_LK("memMgr_" << _id << " 管理线程释放...");
 	}

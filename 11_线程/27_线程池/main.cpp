@@ -3,7 +3,7 @@
 #include "hTool.h"
 #include "hTest.h"
 #include "hThread.h"
-#include "hThreadPoolMgr.h"
+#include "hPoolMgr.h"
 #include "test.h"
 
 TEST_INIT()
@@ -25,7 +25,7 @@ TEST(任务枚举类型测试)
 
 TEST(线程池配置加载)
 {
-	ThreadPoolMgr& pool = sThrdPoolMgr;
+	hPoolMgr& pool = shPoolMgr;
 }
 
 TEST(读写锁测试)
@@ -128,18 +128,18 @@ TEST(智能指针测试5)
 
 TEST(创建任务测试)
 {
-	Task t(50, 2, TaskAttrTypeBit::Loop);
+	hTask t(50, 2, TaskAttrTypeBit::Loop);
 	Debug(cout, t) << endl;
 	t.initNodeData();
 	Debug(cout, t) << endl;
-	t.addNode(new TaskNode);
-	t.addNode(new TaskNode);
+	t.addNode(new hNode);
+	t.addNode(new hNode);
 	Debug(cout, t) << endl;
 }
 
 TEST(向任务添加自定义数据和节点)
 {
-	Task t(50, 2, TaskAttrType::Loop);
+	hTask t(50, 2, TaskAttrType::Loop);
 	t.initNodeData(new TestNodeData("test data"));
 	t.addNode(new TestTaskNode("test node1"));
 	t.addNode(new TestTaskNode("test node2"));
@@ -173,7 +173,7 @@ TEST(按权重随机生成)
 
 TEST(id生成器debug)
 {
-	hTool::hUniqueIdGen<size_t, Task> _tasksIdGen(50, 1, 100);
+	hTool::hUniqueIdGen<size_t, hTask> _tasksIdGen(50, 1, 100);
 	Debug(cout, _tasksIdGen) << endl;
 	InsertTask(t1);
 	InsertTask(t2);
@@ -189,22 +189,22 @@ TEST(id生成器debug)
 TEST(提交任务到管理器)
 {
 	TaskMgrCfgItem base;
-	TaskMgr tM(base);
+	hTaskMgr tM(base);
 	Debug(cout, tM) << endl;
-	PTask t1 = new Task(50, 2, TaskAttrType::Loop);
+	PhTask t1 = new hTask(50, 2, TaskAttrType::Loop);
 	t1->initNodeData(new TestNodeData("test data"));
 	t1->addNode(new TestTaskNode("test node1"));
 	t1->addNode(new TestTaskNode("test node2"));
 	tM.commitTasks(t1);
 	Debug(cout, tM) << endl;	
-	PTask t2[2] = 
+	PhTask t2[2] = 
 	{ 
-		new Task(50, 2, TaskAttrTypeBit::Loop), 
-		new Task(50, 2, TaskAttrTypeBit::Loop)
+		new hTask(50, 2, TaskAttrTypeBit::Loop), 
+		new hTask(50, 2, TaskAttrTypeBit::Loop)
 	};
 	t2[0]->initNodeData();
-	t2[0]->addNode(new TaskNode);
-	t2[0]->addNode(new TaskNode);
+	t2[0]->addNode(new hNode);
+	t2[0]->addNode(new hNode);
 	t2[1]->initNodeData(new TestNodeData("test data"));
 	t2[1]->addNode(new TestTaskNode("test node1"));
 	t2[1]->addNode(new TestTaskNode("test node2"));
@@ -214,25 +214,25 @@ TEST(提交任务到管理器)
 
 TEST(提交任务到线程池日志)
 {
-	PTask t1 = new Task(50, 2, TaskAttrType::Loop);
+	PhTask t1 = new hTask(50, 2, TaskAttrType::Loop);
 	t1->initNodeData(new TestNodeData("test data"));
 	t1->addNode(new TestTaskNode("test node1"));
 	t1->addNode(new TestTaskNode("test node2"));
-	sThrdPool.commitTasks(t1);
-	Debug(cout, sThrdPool) << endl;
-	PTask t2[2] =
+	shPool.commitTasks(t1);
+	Debug(cout, shPool) << endl;
+	PhTask t2[2] =
 	{
-		new Task(50, 2, TaskAttrTypeBit::Loop),
-		new Task(50, 2, TaskAttrTypeBit::Loop)
+		new hTask(50, 2, TaskAttrTypeBit::Loop),
+		new hTask(50, 2, TaskAttrTypeBit::Loop)
 	};
 	t2[0]->initNodeData();
-	t2[0]->addNode(new TaskNode);
-	t2[0]->addNode(new TaskNode);
+	t2[0]->addNode(new hNode);
+	t2[0]->addNode(new hNode);
 	t2[1]->initNodeData(new TestNodeData("test data"));
 	t2[1]->addNode(new TestTaskNode("test node1"));
 	t2[1]->addNode(new TestTaskNode("test node2"));
-	sThrdPool.commitTasks(t2, TaskMgrPriority::Higher);
-	Debug(cout, sThrdPool) << endl;
+	shPool.commitTasks(t2, TaskMgrPriority::Higher);
+	Debug(cout, shPool) << endl;
 }
 
 TEST(线程池运行5秒)
@@ -252,13 +252,13 @@ TEST(线程池运行5秒)
 */
 	}
 	//this_thread::sleep_for(1s);
-	sThrdPool.run();
+	shPool.run();
 	this_thread::sleep_for(1s);
 	{
 		string is;
-		PTask t;
+		PhTask t;
 		t.bind(new Test2Task);
-		sThrdPool.commitTasks(t);
+		shPool.commitTasks(t);
 		while (1)
 		{
 
@@ -270,13 +270,13 @@ TEST(线程池运行5秒)
 	}
 
 	ostringstream os;
-	Debug(os, sThrdPool);
+	Debug(os, shPool);
 	COUT_LK(os.str());
 
-	sThrdPool.stop();
+	shPool.stop();
 	Debug_PtrMap(cout);
 	hTool::hAutoPtr<hTool::hWeakPtrBase>::debugMap(cout);
-	sThrdPoolFin;
+	shPoolFin;
 	Debug_PtrMap(cout);
 	hTool::hAutoPtr<hTool::hWeakPtrBase>::debugMap(cout);
 }

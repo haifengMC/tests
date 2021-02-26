@@ -1,10 +1,10 @@
 #include "global.h"
 #include "hThread.h"
-#include "hThreadPoolMgr.h"
+#include "hPoolMgr.h"
 
 namespace hThread
 {
-	ThreadPoolMgr::ThreadPoolMgr() : _valid(true),
+	hPoolMgr::hPoolMgr() : _valid(true),
 		cfgData("hThread.yml")
 	{
 		if (!cfgData.loadCfg())

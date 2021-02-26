@@ -25,64 +25,28 @@ namespace hThread
 		size_t popTasks(Task** const& task, const size_t& num);
 	};
 #endif
-	
-	//任务静态数据(属性、节点静态数据)
-	struct TaskStaticData
-	{
-		DefLog_Init();
-		size_t _weight = 0;//权重
-		size_t _thrdExpect = 0;//期待线程数
 
-		size_t _incId = 0;//节点递增id
-		std::bitset<TaskAttrType::Max> _attr;//任务属性，对应 TaskAttrType
-		PNodeData _nodeData;//节点数据
-		NodeList _nodeList;//节点链表
-
-		void setAttr(const std::bitset<TaskAttrType::Max>& attr) { _attr = attr; }
-		bool addNode(TaskNode* pNode);//增加任务节点
-		bool initNodeData(NodeData* pData = NULL);//初始化节点数据
-
-		TaskStaticData(size_t weight, size_t thrdExpect, const std::bitset<TaskAttrType::Max>& attr);
-	};
-	//任务状态(运行时数据)
-	struct TaskDynamicData
-	{
-		DefLog_Init();
-		TaskStatType _stateTy = TaskStatType::Max;//当前状态
-		std::list<size_t>::iterator _stateIt;//指向当前状态的迭代器
-
-		PWTaskMgr _pMgr;//指向自己所在管理器
-		ThrdMemWorkList _thrds;//当前运行该任务的工作线程
-		NodeListIt 
-			_curNodeIt,//指向当前在运行节点
-			_nodeIt;//指向最后载入线程的节点
-
-		//重置状态数据
-		void resetData() { _curNodeIt = _nodeIt = NodeListIt(); }
-		~TaskDynamicData() {}//需要实现析构
-	};
-
-	class Task : public hThreadDataBase,  public hTool::hAutoPtrObj, public hTool::hUniqueMapVal<size_t, Task>
+	class hTask : public hDataBase, public hTool::hAutoPtrObj, public hTool::hUniqueMapVal<size_t, hTask>
 	{
 		DefLog_Init();
 		size_t _thisId = 0;//任务唯一id
 
-		PTaskStaticData _attrb;
-		PTaskDynamicData _state;
+		PhTskStcDt _attrb;
+		PhTskDynDt _state;
 	public:
 		virtual bool canRepeat() { return false; }
 
-		Task(size_t weight, size_t thrdExpect, uint16_t attr = 0);
-		Task(PTaskStaticData attr);
-		Task(Task&& t);
+		hTask(size_t weight, size_t thrdExpect, uint16_t attr = 0);
+		hTask(PhTskStcDt attr);
+		hTask(hTask&& t);
 
-		bool init(PWTaskMgr pMgr);
+		bool init(PWhTaskMgr pMgr);
 
 		size_t getId() const { return _thisId; }
 		size_t getWeight() const;
-		PTaskStaticData getAttr() { return _attrb; }
-		PTaskDynamicData getStat() { return _state; }
-		NodeListIt getNextNode();
+		PhTskStcDt getAttr() { return _attrb; }
+		PhTskDynDt getStat() { return _state; }
+		hNodeListIt getNextNode();
 
 		bool checkAttr(TaskAttrType attr);
 		bool checkStat(TaskStatType stat);
@@ -90,9 +54,9 @@ namespace hThread
 		设置属性
 		*/
 		//增加任务节点
-		bool addNode(TaskNode* pNode) { return _attrb && _attrb->addNode(pNode); }
+		bool addNode(hNode* pNode) { return _attrb && _attrb->addNode(pNode); }
 		//初始化节点数据
-		bool initNodeData(NodeData* pData = NULL) { return _attrb && _attrb->initNodeData(pData); }
+		bool initNodeData(hNodeData* pData = NULL) { return _attrb && _attrb->initNodeData(pData); }
 
 		/*
 		设置状态
@@ -101,13 +65,13 @@ namespace hThread
 		bool updateStat(TaskStatType state);
 		bool resetStatData();
 		//添加线程到任务,还未启用
-		bool addThrdMem(PWThrdMemWork pMem);
+		bool addThrdMem(PWhMemWork pMem);
 		//线程请求运行任务节点
-		bool runTaskNode(NodeListIt nodeIt);
+		bool runTaskNode(hNodeListIt nodeIt);
 		//完成当前节点，通知下一个线程
-		void finishCurNode(ThrdMemWorkListIt memIt);
+		void finishCurNode(hMemWorkListIt memIt);
 		//任务节点分配完成释放线程
-		void freeThrdMem(ThrdMemWorkListIt memIt);
+		void freeThrdMem(hMemWorkListIt memIt);
 		//根据当前线程数curThrd和期望线程数_thrdExpect确定最终需要的线程数
 		size_t calcNeedThrdNum(size_t curThrd);
 		//更新任务数据
@@ -119,6 +83,4 @@ namespace hThread
 	};
 
 }
-DefLog(hThread::TaskStaticData, _weight, _thrdExpect, _incId, _attr, _nodeData, _nodeList);
-DefLog(hThread::TaskDynamicData, _stateTy, _stateIt, _pMgr, _thrds, _curNodeIt, _nodeIt);
-DefLog(hThread::Task, _thisId, _attrb, _state);
+DefLog(hThread::hTask, _thisId, _attrb, _state);

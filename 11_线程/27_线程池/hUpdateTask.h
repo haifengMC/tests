@@ -25,12 +25,12 @@ namespace hThread
 		};
 		typedef std::map<size_t, ItemData> UpdateMap;
 	}
-	struct UpdateTaskData : public NodeData
+	struct hUpdateData : public hNodeData
 	{
 		UpdateTaskDefine::UpdateMap _updateMap;
 	};
 
-	struct UpdateTaskNode : public TaskNode
+	struct UpdateTaskNode : public hNode
 	{
 		UpdateTaskDefine::ExecFnList _execList;
 
@@ -39,10 +39,10 @@ namespace hThread
 		bool finalProc();
 	};
 
-	class UpdateTask : public Task
+	class hUpdateTask : public hTask
 	{
 	public:
-		UpdateTask();
+		hUpdateTask();
 		void updata(size_t taskId,
 			std::function<bool()>& checkFn,
 			std::function<void()>& execFn);

@@ -1,7 +1,7 @@
 #include "global.h"
 #include "hThread.h"
-#include "hThreadPoolMgr.h"
-#include "hThreadPool.h"
+#include "hPoolMgr.h"
+#include "hPool.h"
 
 namespace hThread
 {
@@ -10,73 +10,25 @@ namespace hThread
 //#define WT_LOCK sThreadPool.writeLock()
 //#define WT_UNLOCK sThreadPool.writeUnlock()
 
-	void ThreadMemData::init(size_t num)
-	{
-		ThreadMemStatType stat = ThreadMemStatType::Init;
-		for (size_t i = 0; i < num; ++i)
-		{
-			size_t id = _memArr.size();
-			auto it = _thrdId[stat].insert(_thrdId[stat].end(), id);
-			ThreadMem* pMem = createThrdMem(_type, id);
-			pMem->setStat(stat, it);
-			_memArr.push_back(pMem);
-		}
-	}
-
-	void ThreadMemData::run()
-	{
-		execEvery(ThreadMemStatType::Init,
-			[&](PThrdMem pMem) { pMem->run(); return true; });
-
-		std::this_thread::sleep_for(std::chrono::seconds(1));
-	}
-
-	void ThreadMemData::stop()
-	{
-		for (auto& mem : _memArr)
-			mem->stop();
-	}
-
-	void ThreadMemData::join()
-	{
-		for (auto& mem : _memArr)
-			mem->join();
-	}
-
-	void ThreadMemData::execEvery(ThreadMemStatType statTy,
-		std::function<bool(PThrdMem)> func)
-	{
-		auto& thrdIds = _thrdId[statTy];
-		for (auto it = thrdIds.begin(); it != thrdIds.end();)
-		{
-			auto pMem = _memArr[*it++];
-			if (!pMem)
-				continue;
-
-			if (!func(pMem))
-				break;
-		}
-	}
-
-	ThreadPool::ThreadPool() :
-		_valid(sThrdPoolMgr), 
-		_base(sThrdPoolMgr.getBaseCfg())
+	hPool::hPool() :
+		_valid(shPoolMgr), 
+		_base(shPoolMgr.getBaseCfg())
 	{ 
 		init(); 
 	}
 
-	ThreadPool::~ThreadPool() 
+	hPool::~hPool() 
 	{
 		final();
 	}
 
-	void ThreadPool::init()
+	void hPool::init()
 	{
 		if (!_valid)//Err
 			return;
 
-		for (auto& item : sThrdPoolMgr.getTaskMgrCfg())
-			_taskMgr.emplace_back(new TaskMgr(item.second));
+		for (auto& item : shPoolMgr.getTaskMgrCfg())
+			_taskMgr.emplace_back(new hTaskMgr(item.second));
 		for (auto& pMgr : _taskMgr)
 			pMgr->init();
 		COUT_LK("初始化任务管理器完毕...");
@@ -87,7 +39,7 @@ namespace hThread
 		COUT_LK("初始化线程成员完毕...");
 	}
 
-	void ThreadPool::final()
+	void hPool::final()
 	{
 #if 0
 		for (auto& pMem : memMgr)
@@ -97,13 +49,13 @@ namespace hThread
 
 	}
 
-	void ThreadPool::run()
+	void hPool::run()
 	{
 		for (auto& data : _memData)
 			data.run();
 	}
 
-	void ThreadPool::stop()
+	void hPool::stop()
 	{
 		COUT_LK("线程池停止开始...");
 		for (auto& data : _memData)
@@ -113,7 +65,7 @@ namespace hThread
 		COUT_LK("线程池停止完毕...");
 	}
 
-	size_t ThreadPool::commitTasks(PTask& task, TaskMgrPriority priority)
+	size_t hPool::commitTasks(PhTask& task, TaskMgrPriority priority)
 	{
 		if (TaskMgrPriority::Max <= priority)
 			return 0;
@@ -121,7 +73,7 @@ namespace hThread
 		return _taskMgr[priority]->commitTasks(task);
 	}
 
-	PTask ThreadPool::readyTasks()
+	PhTask hPool::readyTasks()
 	{
 		size_t busyThdNum = getThrdMemNum(ThreadMemType::Work, ThreadMemStatType::Run);
 		for (auto pMgr : _taskMgr)
@@ -129,26 +81,26 @@ namespace hThread
 			if (!pMgr)
 				continue;
 
-			PTask pTask = pMgr->readyTasks(busyThdNum);
+			PhTask pTask = pMgr->readyTasks(busyThdNum);
 			if (pTask)
 				return pTask;
 		}
 
-		return PTask();
+		return PhTask();
 	}
 
-	bool ThreadPool::initTasks(PTask pTask, size_t thrdNum)
+	bool hPool::initTasks(PhTask pTask, size_t thrdNum)
 	{
 		if (!pTask || !thrdNum)
 			return false;
 
 		size_t needNum = pTask->calcNeedThrdNum(thrdNum);
 		size_t initNum = 0;
-		ThreadMemData& memData = sThrdPool.getThrdMemData(ThreadMemType::Work);
+		hMemData& memData = shPool.getThrdMemData(ThreadMemType::Work);
 		memData.execEvery(ThreadMemStatType::Wait, 
-			[&](PThrdMem pMem)
+			[&](PhMem pMem)
 			{
-				PWThrdMemWork pDyMem = pMem.dynamic<ThreadMemWork>();
+				PWhMemWork pDyMem = pMem.dynamic<hMemWork>();
 				if (!pDyMem)
 				{
 					COUT_LK("[" <<
@@ -167,13 +119,13 @@ namespace hThread
 		return true;
 	}
 
-	void ThreadPool::runTasks()
+	void hPool::runTasks()
 	{
-		ThreadMemData& memData = sThrdPool.getThrdMemData(ThreadMemType::Work);
+		hMemData& memData = shPool.getThrdMemData(ThreadMemType::Work);
 		memData.execEvery(ThreadMemStatType::Ready,
-			[&](PThrdMem pMem)
+			[&](PhMem pMem)
 			{
-				PWThrdMemWork pDyMem = pMem.dynamic<ThreadMemWork>();
+				PWhMemWork pDyMem = pMem.dynamic<hMemWork>();
 				if (!pDyMem)
 				{
 					COUT_LK("[" <<
@@ -187,25 +139,25 @@ namespace hThread
 			});
 	}
 
-	void ThreadPool::createThrd(size_t num, ThreadMemType t)
+	void hPool::createThrd(size_t num, ThreadMemType t)
 	{
 		//rwLock.writeLock();
 		if (ThreadMemType::Max <= t)
 			return;
 
-		ThreadMemData& data = _memData[t];
+		hMemData& data = _memData[t];
 		data.init(num);
 
 		//rwLock.writeUnlock();
 	}
 
-	size_t ThreadPool::getThrdMemNum(ThreadMemType memTy, ThreadMemStatType statTy)
+	size_t hPool::getThrdMemNum(ThreadMemType memTy, ThreadMemStatType statTy)
 	{
-		ThreadMemData& data = _memData[memTy];
+		hMemData& data = _memData[memTy];
 		return data._thrdId[statTy].size();
 	}
 
-	void ThreadPool::notifyMgrThrd()
+	void hPool::notifyMgrThrd()
 	{
 		for (auto pMem : _memData[ThreadMemType::Mgr]._memArr)
 			pMem->notify();
