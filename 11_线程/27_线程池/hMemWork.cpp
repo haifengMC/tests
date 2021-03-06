@@ -58,8 +58,8 @@ namespace hThread
 
 				COUT_LK("memWork_" << _id << " 工作线程运行任务" <<
 					"task_" << _pTask->getIndex() << "...");
-				PhTskStcDt pAttr = _pTask->getAttr();
-				PhTskDynDt pStat = _pTask->getStat();
+				PhTskStcDt pAttr = _pTask->getStc();
+				PhTskDynDt pStat = _pTask->getDyn();
 				auto& nodeList = pAttr->_nodeList;
 				while (_nodeIt != nodeList.end())
 				{

@@ -77,7 +77,7 @@ namespace hThread
 					return;
 				}
 
-				PWhUpdDt pData = getAttr()->_nodeData.dynamic<hUpdateData>();
+				PWhUpdDt pData = getStc()->_nodeData.dynamic<hUpdateData>();
 				if (!pData)
 				{
 					COUT_LK("数据更新任务updata() 数据未初始化为UpdateTaskData对象...");
@@ -100,7 +100,7 @@ namespace hThread
 			return false;
 		}
 
-		PWhUpdDt pData = getAttr()->_nodeData.dynamic<hUpdateData>();
+		PWhUpdDt pData = getStc()->_nodeData.dynamic<hUpdateData>();
 		if (!pData)
 		{
 			COUT_LK("数据更新任务canRepeat() 数据未初始化为UpdateTaskData对象...");

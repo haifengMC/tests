@@ -64,7 +64,7 @@ namespace hThread
 			if (!pTask->init(getThis<hTaskMgr>()))
 				continue;//初始化任务
 
-			if (TaskStatType::Init != pTask->getStat()->_stateTy)
+			if (TaskStatType::Init != pTask->getDyn()->_stateTy)
 				continue;//检测初始化状态
 
 			if (!pTask->setStat(TaskStatType::Wait))
@@ -85,7 +85,7 @@ namespace hThread
 			//添加至状态管理
 			auto& stRef = _states[TaskStatType::Wait];
 			auto rsState = stRef.insert(stRef.end(), taskRef.getId());
-			taskRef.getStat()->_stateIt = rsState;
+			taskRef.getDyn()->_stateIt = rsState;
 		}
 
 		return ret;
@@ -210,10 +210,10 @@ namespace hThread
 			if (!pTask)
 				continue;
 
-			if (!pTask->getStat())
+			if (!pTask->getDyn())
 				continue;
 
-			hTaskDynamicData& stat = *pTask->getStat();
+			hTaskDynamicData& stat = *pTask->getDyn();
 			if (from != stat._stateTy)
 				continue;
 

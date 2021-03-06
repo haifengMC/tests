@@ -34,4 +34,20 @@ namespace hThread
 		_thrdExpect = thrdExpect;
 		_attr = attr;
 	}
+
+	hTaskStatData::hTaskStatData(PWhTaskMgr pMgr, PWhTask pTask)
+	{
+		_pMgr = pMgr;
+		_pTask = pTask;
+	}
+
+	bool hTaskDynamicData::checkStat(TaskStatType stat)
+	{
+
+		if (TaskStatType::Max <= stat)
+			return false;
+
+		return _dynData->_stateTy == stat;
+	}
+
 }

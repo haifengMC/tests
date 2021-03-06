@@ -128,27 +128,27 @@ namespace hThread
 
 	hTask::hTask(size_t weight, size_t thrdExpect, uint16_t attr) :
 		hTool::hUniqueMapVal<size_t, hTask>(_thisId, this),
-		_attrb(weight, thrdExpect, attr) {}
+		_stcData(weight, thrdExpect, attr) {}
 
 	hTask::hTask(hTool::hAutoPtr<hTaskStaticData> attr) :
 		hTool::hUniqueMapVal<size_t, hTask>(_thisId, this),
-		_attrb(attr) {}
+		_stcData(attr) {}
 
 	hTask::hTask(hTask&& t) :
 		hTool::hUniqueMapVal<size_t, hTask>(_thisId, this),
-		_attrb(std::move(t._attrb)), _state(std::move(t._state)) {}
+		_stcData(std::move(t._stcData)), _dynData(std::move(t._dynData)) {}
 
 	bool hTask::init(PWhTaskMgr pMgr)
 	{
 		if (!pMgr)
 			return false;
 
-		if (!_attrb)
+		if (!_stcData)
 			return false;
 
-		_state.emplace();
-		_state->_pMgr = pMgr;
-		_state->_stateTy = TaskStatType::Init; 
+		_dynData.emplace();
+		_dynData->_pMgr = pMgr;
+		_dynData->_stateTy = TaskStatType::Init; 
 
 		return true;
 	}
@@ -158,7 +158,7 @@ namespace hThread
 		if (!check())
 			return 0;
 
-		return _attrb->_weight;
+		return _stcData->_weight;
 	}
 
 	hNodeListIt hTask::getNextNode()
@@ -169,8 +169,8 @@ namespace hThread
 			return hNodeListIt();
 		}
 
-		hNodeList& nodeList = _attrb->_nodeList;
-		hNodeListIt& nodeIt = _state->_nodeIt;
+		hNodeList& nodeList = _stcData->_nodeList;
+		hNodeListIt& nodeIt = _dynData->_nodeIt;
 
 		if (!nodeIt._Ptr)
 		{
@@ -180,7 +180,7 @@ namespace hThread
 
 		if (nodeIt == nodeList.end())
 		{
-			if (!_attrb->_attr[TaskAttrType::Loop])
+			if (!_stcData->_attr[TaskAttrType::Loop])
 				return nodeList.end();
 
 			nodeIt = nodeList.begin();
@@ -195,24 +195,21 @@ namespace hThread
 
 	bool hTask::checkAttr(TaskAttrType attr)
 	{
-		if (!_attrb)
+		if (!_stcData)
 			return false;
 
 		if (TaskAttrType::Max <= attr)
 			return false;
 
-		return _attrb->_attr[attr];
+		return _stcData->_attr[attr];
 	}
 
 	bool hTask::checkStat(TaskStatType stat)
 	{
-		if (!_state)
+		if (!_dynData)
 			return false;
 
-		if (TaskStatType::Max <= stat)
-			return false;
-
-		return _state->_stateTy == stat;
+		_dynData->checkStat(stat);
 	}
 
 	bool hTask::setStat(TaskStatType state)
@@ -223,10 +220,10 @@ namespace hThread
 		if (!check())
 			return false;
 
-		if (_state->_stateTy == state)
+		if (_dynData->_stateTy == state)
 			return false;
 
-		_state->_stateTy = state;
+		_dynData->_stateTy = state;
 		return true;
 	}
 
@@ -238,20 +235,20 @@ namespace hThread
 		if (!check())
 			return false;
 
-		if (_state->_stateTy == state)
+		if (_dynData->_stateTy == state)
 			return false;
 
-		std::list<size_t>* newList = _state->_pMgr->getStateList(state);
+		std::list<size_t>* newList = _dynData->_pMgr->getStateList(state);
 		if (!newList)
 			return false;
 
-		std::list<size_t>* oldList = _state->_pMgr->getStateList(_state->_stateTy);
-		std::list<size_t>::iterator& it = _state->_stateIt;
+		std::list<size_t>* oldList = _dynData->_pMgr->getStateList(_dynData->_stateTy);
+		std::list<size_t>::iterator& it = _dynData->_stateIt;
 		if (!it._Ptr || !oldList || it == oldList->end())
 			it = newList->insert(newList->end(), _thisId);
 		else
 			newList->splice(newList->end(), *oldList, it);
-		_state->_stateTy = state;
+		_dynData->_stateTy = state;
 
 		return true;
 	}
@@ -264,7 +261,7 @@ namespace hThread
 			return false;
 		}
 
-		_state->resetData();
+		_dynData->resetData();
 		return true;
 	}
 	
@@ -290,16 +287,16 @@ namespace hThread
 			return false;
 		}
 
-		if (TaskStatType::Ready != _state->_stateTy)
+		if (TaskStatType::Ready != _dynData->_stateTy)
 		{
 			COUT_LK(_thisId << " 任务不在准备状态" <<
-				_state->_stateTy.getName() << "...");
+				_dynData->_stateTy.getName() << "...");
 			return false;
 		}
 
-		hMemWorkList& thrdsRef = _state->_thrds;
+		hMemWorkList& thrdsRef = _dynData->_thrds;
 		auto nodeIt = getNextNode();
-		if (!nodeIt._Ptr || nodeIt == _attrb->_nodeList.end())
+		if (!nodeIt._Ptr || nodeIt == _stcData->_nodeList.end())
 		{
 			COUT_LK(_thisId << " 无可用节点...");
 			return false;
@@ -334,14 +331,14 @@ namespace hThread
 			return false;
 		}
 
-		if (!nodeIt._Ptr || nodeIt == _attrb->_nodeList.end())
+		if (!nodeIt._Ptr || nodeIt == _stcData->_nodeList.end())
 		{
 			COUT_LK(_thisId << "无效节点");
 			return false;
 		}
 
-		if (!_state->_curNodeIt._Ptr)
-			_state->_curNodeIt = _attrb->_nodeList.begin();
+		if (!_dynData->_curNodeIt._Ptr)
+			_dynData->_curNodeIt = _stcData->_nodeList.begin();
 
 #if 0
 		//未加锁前从第一个节点开始逐个运行
@@ -360,7 +357,7 @@ namespace hThread
 			return;
 		}
 
-		hMemWorkList& thrdList = _state->_thrds;
+		hMemWorkList& thrdList = _dynData->_thrds;
 		if (!memIt._Ptr || memIt == thrdList.end())
 		{
 			COUT_LK(_thisId << "任务通知空节点...");
@@ -373,10 +370,10 @@ namespace hThread
 			return;
 		}
 
-		++_state->_curNodeIt;
-		if (_state->_curNodeIt == _attrb->_nodeList.end() &&
-			_attrb->_attr[TaskAttrType::Loop])
-			_state->_curNodeIt = _attrb->_nodeList.begin();
+		++_dynData->_curNodeIt;
+		if (_dynData->_curNodeIt == _stcData->_nodeList.end() &&
+			_stcData->_attr[TaskAttrType::Loop])
+			_dynData->_curNodeIt = _stcData->_nodeList.begin();
 
 		//任务已全部分配完成
 		//if (TaskStatType::Finish == _state->_stateTy)
@@ -398,7 +395,7 @@ namespace hThread
 			return;
 		}
 
-		hMemWorkList& thrdList = _state->_thrds;
+		hMemWorkList& thrdList = _dynData->_thrds;
 		if (!memIt._Ptr || memIt == thrdList.end())
 		{
 			COUT_LK(_thisId << "任务释放空线程...");
@@ -409,8 +406,8 @@ namespace hThread
 		if (thrdList.empty())
 		{
 			//节点还未运行完毕时任务异常
-			if (_state->_curNodeIt != _attrb->_nodeList.end() ||
-				_state->_nodeIt != _attrb->_nodeList.end())
+			if (_dynData->_curNodeIt != _stcData->_nodeList.end() ||
+				_dynData->_nodeIt != _stcData->_nodeList.end())
 			{
 				updateStat(TaskStatType::Error);
 				return;
@@ -429,7 +426,7 @@ namespace hThread
 				if (!canRepeat())
 					return;
 				
-				_state->_pMgr->_weights.pushBack(getWeight(), getId());
+				_dynData->_pMgr->_weights.pushBack(getWeight(), getId());
 				shPool.notifyMgrThrd();
 				return;
 			}
@@ -440,21 +437,21 @@ namespace hThread
 
 	size_t hTask::calcNeedThrdNum(size_t curThrd)
 	{
-		if (!_attrb)
+		if (!_stcData)
 			return 0;
 
-		return std::min({curThrd, _attrb->_thrdExpect, _attrb ->_nodeList.size()});
+		return std::min({curThrd, _stcData->_thrdExpect, _stcData ->_nodeList.size()});
 	}
 
 	bool hTask::check() const
 	{
-		if (!_attrb)
+		if (!_stcData)
 			return false;
 
-		if (!_state)
+		if (!_dynData)
 			return false;
 
-		if (!_state->_pMgr)
+		if (!_dynData->_pMgr)
 			return false;
 
 		return true;
@@ -462,9 +459,9 @@ namespace hThread
 
 	void hTask::checkErrOut() const
 	{
-		COUT_LK(_thisId << "任务异常,_attrb:" << _attrb <<
-			"_state:" << _state <<
-			"_pMgr" << (_state ? (bool)_state->_pMgr : false) << "...");
+		COUT_LK(_thisId << "任务异常,_attrb:" << _stcData <<
+			"_state:" << _dynData <<
+			"_pMgr" << (_dynData ? (bool)_dynData->_pMgr : false) << "...");
 
 	}
 

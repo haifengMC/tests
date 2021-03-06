@@ -21,26 +21,33 @@ namespace hThread
 			hTaskStaticData(size_t weight, size_t thrdExpect, const std::bitset<TaskAttrType::Max>& attr);
 		};
 
-		struct hTaskStatData
+		struct hTaskStatData : public hDataBase
 		{
-			size_t _id = 0;	//任务id
+			PWhTask _pTask;	//指向自己所在任务
+			PWhTaskMgr _pMgr;//指向自己所在管理器
+
+			size_t _taskId = 0;	//任务id
 			TaskStatType _stateTy = TaskStatType::Max;//当前状态
 			std::list<size_t>::iterator _stateIt;//指向当前状态的迭代器
+
+			hTaskStatData(PWhTaskMgr pMgr, PWhTask pTask);
 		};
 
 		//任务状态(运行时数据)
 		struct hTaskDynamicData
 		{
 			DefLog_Init();
-			TaskStatType _stateTy = TaskStatType::Max;//当前状态
-			std::list<size_t>::iterator _stateIt;//指向当前状态的迭代器
-
+			PWhTask _pTask;	//指向自己所在任务
 			PWhTaskMgr _pMgr;//指向自己所在管理器
+			
+			hTaskStatData _state;//任务状态数据
+			
 			hMemWorkList _thrds;//当前运行该任务的工作线程
 			hNodeListIt
 				_curNodeIt,//指向当前在运行节点
 				_nodeIt;//指向最后载入线程的节点
 
+			bool checkStat(TaskStatType stat);
 			//重置状态数据
 			void resetData() { _curNodeIt = _nodeIt = hNodeListIt(); }
 			~hTaskDynamicData() {}//需要实现析构

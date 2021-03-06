@@ -21,9 +21,7 @@ namespace hThread
 					if (!pTask)
 						return false;
 
-					bool ret = true;
-					pTask->readLk([&]() { ret = pTask->checkStat(TaskStatType::Wait); });
-					return ret;
+					return pTask->checkStat(TaskStatType::Wait);
 				}, taskId)),
 			std::function<void()>(std::bind(
 				[&](size_t id, std::function<void(hNodeData*)> memFn)
@@ -34,7 +32,7 @@ namespace hThread
 
 					pTask->writeLk([&]()
 						{
-							PhTskStcDt pAttr = pTask->getAttr();
+							PhTskStcDt pAttr = pTask->getStc();
 							if (!pAttr)
 								return;
 

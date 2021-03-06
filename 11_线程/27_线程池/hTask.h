@@ -26,13 +26,13 @@ namespace hThread
 	};
 #endif
 
-	class hTask : public hDataBase, public hTool::hAutoPtrObj, public hTool::hUniqueMapVal<size_t, hTask>
+	class hTask : public hTool::hAutoPtrObj, public hTool::hUniqueMapVal<size_t, hTask>
 	{
 		DefLog_Init();
 		size_t _thisId = 0;//任务唯一id
 
-		PhTskStcDt _attrb;
-		PhTskDynDt _state;
+		PhTskStcDt _stcData;
+		PhTskDynDt _dynData;
 	public:
 		virtual bool canRepeat() { return false; }
 
@@ -44,8 +44,8 @@ namespace hThread
 
 		size_t getId() const { return _thisId; }
 		size_t getWeight() const;
-		PhTskStcDt getAttr() { return _attrb; }
-		PhTskDynDt getStat() { return _state; }
+		PhTskStcDt getStc() { return _stcData; }
+		PhTskDynDt getDyn() { return _dynData; }
 		hNodeListIt getNextNode();
 
 		bool checkAttr(TaskAttrType attr);
@@ -54,9 +54,9 @@ namespace hThread
 		设置属性
 		*/
 		//增加任务节点
-		bool addNode(hNode* pNode) { return _attrb && _attrb->addNode(pNode); }
+		bool addNode(hNode* pNode) { return _stcData && _stcData->addNode(pNode); }
 		//初始化节点数据
-		bool initNodeData(hNodeData* pData = NULL) { return _attrb && _attrb->initNodeData(pData); }
+		bool initNodeData(hNodeData* pData = NULL) { return _stcData && _stcData->initNodeData(pData); }
 
 		/*
 		设置状态
@@ -83,4 +83,4 @@ namespace hThread
 	};
 
 }
-DefLog(hThread::hTask, _thisId, _attrb, _state);
+DefLog(hThread::hTask, _thisId, _stcData, _dynData);

@@ -8,6 +8,6 @@ namespace hThread
 		if (!check())
 			return;
 
-		_state->_pMgr->updateTaskData(_thisId, opt, args...);
+		_dynData->_pMgr->updateTaskData(_thisId, opt, args...);
 	}
 }
