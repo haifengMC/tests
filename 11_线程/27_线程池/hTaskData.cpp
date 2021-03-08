@@ -35,19 +35,32 @@ namespace hThread
 		_attr = attr;
 	}
 
+	bool hTaskStatData::checkStat(TaskStatType stat) const
+	{
+		if (TaskStatType::Max <= stat)
+			return false;
+
+		bool ret = true;
+		readLk([&]() { ret = _dynData->_stateTy == stat; });
+		return ret;
+	}
+
 	hTaskStatData::hTaskStatData(PWhTaskMgr pMgr, PWhTask pTask)
 	{
 		_pMgr = pMgr;
 		_pTask = pTask;
 	}
 
-	bool hTaskDynamicData::checkStat(TaskStatType stat)
+	hTaskRunData::hTaskRunData(PWhTaskMgr pMgr, PWhTask pTask)
 	{
-
-		if (TaskStatType::Max <= stat)
-			return false;
-
-		return _dynData->_stateTy == stat;
+		_pMgr = pMgr;
+		_pTask = pTask;
 	}
 
+	hTaskDynamicData::hTaskDynamicData(PWhTaskMgr pMgr, PWhTask pTask) :
+		_state(pMgr, pTask), _run(pMgr, pTask)
+	{
+		_pMgr = pMgr;
+		_pTask = pTask;
+	}
 }
