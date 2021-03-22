@@ -4,26 +4,28 @@ namespace hThread
 {
 	namespace hTask
 	{
-		struct hAttrData;//属性数据
-		struct hStcNodeData;//静态节点数据
+		//任务静态数据管理(属性、节点静态数据)
+		class hStaticDataMgr
+		{
+			DefLog_Init();
+
+			hAttrData _attrData;
+			hStcNodeData _nodeData;
+
+		public:
+			void setAttr(const std::bitset<TaskAttrType::Max>& attr) { _attrData.setAttr(attr); }
+			//增加任务节点
+			bool addNode(hNode* pNode) { return _nodeData.addNode(pNode); }
+			//初始化节点数据
+			bool initNodeData(hNodeData* pData = NULL) { return _nodeData.initNodeData(pData); }
+
+			hStaticDataMgr(size_t weight, size_t thrdExpect, const std::bitset<TaskAttrType::Max>& attr);
+		};
 	}
 	struct hTaskStatData;//任务状态数据
 	struct hTaskRunData;//任务运行数据
 
-	//任务静态数据(属性、节点静态数据)
-	struct hTaskStaticData
-	{
-		DefLog_Init();
 
-		hTask::hAttrData _attr;
-		hTask::hStcNodeData _node;
-
-		void setAttr(const std::bitset<TaskAttrType::Max>& attr) { _attr = attr; }
-		bool addNode(hNode* pNode);//增加任务节点
-		bool initNodeData(hNodeData* pData = NULL);//初始化节点数据
-
-		hTaskStaticData(size_t weight, size_t thrdExpect, const std::bitset<TaskAttrType::Max>& attr);
-	};
 
 	//动态数据
 	struct hTaskDynamicData
@@ -52,6 +54,9 @@ namespace hThread
 			size_t _weight = 0;//权重
 			size_t _thrdExpect = 0;//期待线程数
 			std::bitset<TaskAttrType::Max> _attr;//任务属性，对应 TaskAttrType
+
+			void setAttr(const std::bitset<TaskAttrType::Max>& attr);
+
 		};
 
 		//静态节点数据
@@ -61,6 +66,9 @@ namespace hThread
 
 			PhNodeData _nodeData;//节点数据
 			hNodeList _nodeList;//节点链表
+
+			bool addNode(hNode* pNode);//增加任务节点
+			bool initNodeData(hNodeData* pData);
 		};
 
 	}

@@ -17,6 +17,11 @@ namespace hThread
 	typedef std::list<PhNode> hNodeList;
 	typedef hNodeList::iterator hNodeListIt;
 
+	namespace hTask
+	{
+		struct hAttrData;//属性数据
+		struct hStcNodeData;//静态节点数据
+	}
 	struct hTaskStaticData;
 	typedef hTool::hAutoPtr<hTaskStaticData> PhTskStcDt;
 

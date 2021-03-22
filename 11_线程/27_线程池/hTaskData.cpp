@@ -4,26 +4,44 @@
 
 namespace hThread
 {
-	bool hTaskStaticData::addNode(hNode* pNode)
+	namespace hTask
 	{
-		if (!pNode)
-			return false;
+		void hAttrData::setAttr(const std::bitset<TaskAttrType::Max>& attr)
+		{
+			writeLk([&]() { _attr = attr; });
+		}
 
-		if (!_nodeData)
-			return false;
+		bool hStcNodeData::addNode(hNode* pNode)
+		{
+			if (!pNode)
+				return false;
 
-		pNode->init(++_incId, _nodeData);
+			bool ret = true;
+			writeLk([&]() 
+				{
+					if (!_nodeData)
+					{
+						ret = false;
+						return;
+					}
 
-		_nodeList.push_back(hTool::hAutoPtr<hNode>(pNode));
-		return pNode;
+					pNode->init(++_incId, _nodeData);
+					_nodeList.push_back(hTool::hAutoPtr<hNode>(pNode));
+				});
+		
+			return ret;
+		}
 	}
 
 	bool hTaskStaticData::initNodeData(hNodeData* pData)
 	{
-		if (pData)
-			_nodeData.bind(pData);
-		else
-			_nodeData.emplace();
+		writeLk([&]()
+			{
+				if (pData)
+					_nodeData.bind(pData);
+				else
+					_nodeData.emplace();
+			});
 
 		return true;
 	}
