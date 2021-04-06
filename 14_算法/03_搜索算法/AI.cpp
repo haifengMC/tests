@@ -396,7 +396,8 @@ int main()
             A_Star_Search("Arad", "Bucharest");
         }
         else {
-            break;
+            cout << "unknown select search:" << select_Search << endl;
+            continue;
         }
         end = clock();
         printf("\nRun Time : %6.3f ms\n", (double)(end - start - over) / CLOCKS_PER_SEC * 1000);
