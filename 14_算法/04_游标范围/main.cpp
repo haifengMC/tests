@@ -1,13 +1,12 @@
 #include <iostream>
 #include <set>
+#include "hRange.h"
 
 using namespace std;
 
 int main()
 {
-	set<int> s = { 1, 3, 4, 6 };
-	auto it = std::prev(s.end());
-	cout << *it << endl;
+	hRange range;
 
 	return 0;
 }
