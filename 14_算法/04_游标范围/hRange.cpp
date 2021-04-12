@@ -1,4 +1,5 @@
 #include <set>
+#include <map>
 #include "hRange.h"
 
 hVernier::hVernier(int val)
@@ -16,12 +17,12 @@ bool hVernier::check(int val) const
 {
 	switch (_ty)
 	{
-	case VernierType_Equal: return _val == val;
-	case VernierType_Unequal: return _val != val;
-	case VernierType_Greater: return _val > val;
-	case VernierType_Less: return _val < val;
-	case VernierType_GreaterEqual: return _val >= val;
-	case VernierType_LessEqual: return _val <= val;
+	case VernierType_Equal: return val == _val;
+	case VernierType_Unequal: return val != _val;
+	case VernierType_Greater: return val > _val;
+	case VernierType_Less: return val < _val;
+	case VernierType_GreaterEqual: return val >= _val;
+	case VernierType_LessEqual: return val <= _val;
 	default:
 		break;
 	}
@@ -29,36 +30,12 @@ bool hVernier::check(int val) const
     return false;
 }
 
-void hRange::inserVern(uint8_t tp, int val)
+void hRange::insert(uint8_t tp, int val)
 {
 	if (!tp || tp >= VernierType_Max)
 		return;
 
-	auto it = _vern.find(val);
-	bool ret = check(val);
-
-	switch (tp)
-	{
-	case VernierType_Equal: 
-	{
-		if (ret)
-			return;
-
-		if (it == _vern.end())
-			_vern.insert()
-	}
-	break;
-	case VernierType_Unequal: 
-	{
-		if (!ret)
-			return;
-
-	}
-	break;
-	default:
-		break;
-	}
-	
+	_vern.insert(std::make_pair(val, hVernier(tp, val)));
 }
 
 bool hRange::check(int val) const
@@ -68,11 +45,11 @@ bool hRange::check(int val) const
 
     auto itRight = _vern.lower_bound(val);
     if (itRight != _vern.end())
-        return itRight->check(val);
+        return itRight->second.check(val);
 
 	auto itLeft = std::prev(itRight);
 	if (itLeft == _vern.end())
 		return false;
 
-	return itLeft->check(val);
+	return itLeft->second.check(val);
 }
