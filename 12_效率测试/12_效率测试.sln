@@ -17,6 +17,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "06_指针传递和引用传
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "07_内存比较和vector自带比较函数", "07_内存比较和vector自带比较函数\07_内存比较和vector自带比较函数.vcxproj", "{64C715E2-638C-4E01-874A-575C53B60777}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "08_游标范围和普通范围", "08_游标范围和普通范围\08_游标范围和普通范围.vcxproj", "{D0C11350-A485-429B-9D43-6BB8000E69E5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -81,6 +83,14 @@ Global
 		{64C715E2-638C-4E01-874A-575C53B60777}.Release|x64.Build.0 = Release|x64
 		{64C715E2-638C-4E01-874A-575C53B60777}.Release|x86.ActiveCfg = Release|Win32
 		{64C715E2-638C-4E01-874A-575C53B60777}.Release|x86.Build.0 = Release|Win32
+		{D0C11350-A485-429B-9D43-6BB8000E69E5}.Debug|x64.ActiveCfg = Debug|x64
+		{D0C11350-A485-429B-9D43-6BB8000E69E5}.Debug|x64.Build.0 = Debug|x64
+		{D0C11350-A485-429B-9D43-6BB8000E69E5}.Debug|x86.ActiveCfg = Debug|Win32
+		{D0C11350-A485-429B-9D43-6BB8000E69E5}.Debug|x86.Build.0 = Debug|Win32
+		{D0C11350-A485-429B-9D43-6BB8000E69E5}.Release|x64.ActiveCfg = Release|x64
+		{D0C11350-A485-429B-9D43-6BB8000E69E5}.Release|x64.Build.0 = Release|x64
+		{D0C11350-A485-429B-9D43-6BB8000E69E5}.Release|x86.ActiveCfg = Release|Win32
+		{D0C11350-A485-429B-9D43-6BB8000E69E5}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
