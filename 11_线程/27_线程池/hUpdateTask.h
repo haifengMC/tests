@@ -25,7 +25,7 @@ namespace hThread
 		};
 		typedef std::map<size_t, ItemData> UpdateMap;
 	}
-	struct hUpdateData : public hNodeData
+	struct hUpdateData : public hUserData
 	{
 		UpdateTaskDefine::UpdateMap _updateMap;
 	};

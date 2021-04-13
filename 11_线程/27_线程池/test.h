@@ -5,7 +5,7 @@ void readFunc(int i);
 void writeFunc(int i);
 
 //向任务添加自定义数据和节点
-struct TestNodeData : public hThread::hNodeData
+struct TestNodeData : public hThread::hUserData
 {
 	std::string testInfo;
 	
@@ -98,7 +98,7 @@ struct Test1TaskNode : public hThread::hNode
 	bool onProc();
 };
 
-struct Test2TaskData : public hThread::hNodeData
+struct Test2TaskData : public hThread::hUserData
 {
 	std::string _s;
 	void update(size_t opt, ...);

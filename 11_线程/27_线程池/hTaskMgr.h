@@ -9,7 +9,8 @@ namespace hThread
 		std::map<size_t, TaskStatType> _stateMap;//状态map<thisId state>
 	public:
 		std::list<size_t>* getStateList(TaskStatType state);
-		bool updateState(size_t id, TaskStatType state);
+		bool updateState(size_t tskId, std::list<size_t>::iterator& statIt,
+			TaskStatType oldStat, TaskStatType newStat);
 	};
 
 	class hTaskMgr : public hTool::hAutoPtrObj
@@ -44,6 +45,10 @@ namespace hThread
 		//更新任务数据
 		template <typename ... Args >
 		void updateTaskData(size_t taskId, size_t opt, Args ... args);
+
+		//更新任务状态
+		bool updateTaskState(size_t tskId, std::list<size_t>::iterator& statIt,
+			TaskStatType oldStat, TaskStatType newStat);
 #if 0
 
 		//取消已准备任务,将就绪任务放回等待状态

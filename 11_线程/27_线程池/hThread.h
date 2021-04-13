@@ -7,8 +7,8 @@
 
 namespace hThread 
 {
-	struct hNodeData;
-	typedef hTool::hAutoPtr<hNodeData> PhNodeData;
+	struct hUserData;
+	typedef hTool::hAutoPtr<hUserData> PhUserData;
 	struct hUpdateData;
 	typedef hTool::hWeakPtr<hUpdateData> PWhUpdDt;
 
@@ -19,14 +19,25 @@ namespace hThread
 
 	namespace hTask
 	{
-		struct hAttrData;//属性数据
-		struct hStcNodeData;//静态节点数据
-	}
-	struct hTaskStaticData;
-	typedef hTool::hAutoPtr<hTaskStaticData> PhTskStcDt;
+		namespace hStatic
+		{
+			struct hAttrData;//属性数据
+			struct hNodeData;//静态节点数据
+		}
+		//任务静态数据管理(属性、节点静态数据)
+		class hStaticDataMgr;
+		typedef hTool::hAutoPtr<hStaticDataMgr> PhStcDt;
 
-	struct hTaskDynamicData;
-	typedef hTool::hAutoPtr<hTaskDynamicData> PhTskDynDt;
+		namespace hDynamic
+		{
+			struct hStatData;//任务状态数据
+			struct hRunData;//任务运行数据
+		}
+		//任务动态数据管理(状态、运行数据)
+		class hDynamicDataMgr;
+		typedef hTool::hAutoPtr<hDynamicDataMgr> PhDynDt;
+	}
+
 
 	class hTask;
 	typedef hTool::hAutoPtr<hTask> PhTask;

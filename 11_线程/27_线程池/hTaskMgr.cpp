@@ -16,9 +16,33 @@ namespace hThread
 		return pList;
 	}
 
-	bool TaskStatMgr::updateState(size_t id, TaskStatType state)
+	bool TaskStatMgr::updateState(size_t tskId, std::list<size_t>::iterator& statIt,
+		TaskStatType oldStat, TaskStatType newStat)
 	{
-		return false;
+		if (!tskId)
+			return false;
+
+		if (TaskStatType::Max <= oldStat)
+			return false;
+
+		if (TaskStatType::Max <= newStat)
+			return false;
+
+		if (oldStat == newStat)
+			return false;
+
+		writeLk([&]() 
+			{
+				std::list<size_t>& oldList = _states[oldStat];
+				std::list<size_t>& newList = _states[newStat];
+
+				if (!statIt._Ptr || statIt == oldList.end())
+					statIt = newList.insert(newList.end(), tskId);
+				else
+					newList.splice(newList.end(), oldList, statIt);
+			});
+
+		return true;
 	}
 
 	hTaskMgr::hTaskMgr(const TaskMgrCfgItem& base) : 
@@ -117,6 +141,13 @@ namespace hThread
 
 		spliceTasks(TaskStatType::Wait, TaskStatType::Ready, tIds);
 		return pTask;
+	}
+
+	//更新任务状态
+	bool hTaskMgr::updateTaskState(size_t tskId, std::list<size_t>::iterator& statIt,
+		TaskStatType oldStat, TaskStatType newStat)
+	{
+		return _stateMgr.updateState(tskId, statIt, oldStat, newStat);
 	}
 
 #if 0

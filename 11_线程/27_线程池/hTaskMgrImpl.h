@@ -24,7 +24,7 @@ namespace hThread
 					return pTask->checkStat(TaskStatType::Wait);
 				}, taskId)),
 			std::function<void()>(std::bind(
-				[&](size_t id, std::function<void(hNodeData*)> memFn)
+				[&](size_t id, std::function<void(hUserData*)> memFn)
 				{
 					PhTask pTask = _tasks.get(id);
 					if (!pTask)
@@ -40,8 +40,8 @@ namespace hThread
 						});
 					_weights.pushBack(pTask->getWeight(), id);
 				}, taskId,
-				std::function<void(hNodeData*)>(bind(
-					std::mem_fn(&hNodeData::update),
+				std::function<void(hUserData*)>(bind(
+					std::mem_fn(&hUserData::update),
 					std::placeholders::_1, opt, args...)))));
 	}
 }

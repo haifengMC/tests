@@ -1,6 +1,6 @@
 #pragma once
 
-struct Test2TaskData : public hThread::hNodeData
+struct Test2TaskData : public hThread::hUserData
 {
 	std::string _s;
 	void update(size_t opt, ...);
