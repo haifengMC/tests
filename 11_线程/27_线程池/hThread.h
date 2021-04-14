@@ -50,10 +50,10 @@ namespace hThread
 	typedef hTool::hWeakPtr<hTaskMgr> PWhTaskMgr;
 
 	typedef hTool::hAutoPtr<std::thread> PThread;
-	class hMem;
-	typedef hTool::hAutoPtr<hMem> PhMem;
-	class hMemWork;
-	typedef hTool::hWeakPtr<hMemWork> PWhMemWork;
+	class hMemBase;
+	typedef hTool::hAutoPtr<hMemBase> PhMemBase;
+	class hWorkMem;
+	typedef hTool::hWeakPtr<hWorkMem> PWhMemWork;
 	typedef std::list<PWhMemWork> hMemWorkList;
 	typedef hMemWorkList::iterator hMemWorkListIt;
 }
@@ -76,8 +76,8 @@ namespace hThread
 #include "hUpdateTask.h"
 #include "hTaskMgr.h"
 #include "hMem.h"
-#include "hMemWork.h"
-#include "hMemMgr.h"
+#include "hWorkMem.h"
+#include "hMgrMem.h"
 #include "hPool.h"
 
 #include "hDataBaseImpl.h"

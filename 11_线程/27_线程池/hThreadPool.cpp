@@ -98,9 +98,9 @@ namespace hThread
 		size_t initNum = 0;
 		hMemData& memData = shPool.getThrdMemData(ThreadMemType::Work);
 		memData.execEvery(ThreadMemStatType::Wait, 
-			[&](PhMem pMem)
+			[&](PhMemBase pMem)
 			{
-				PWhMemWork pDyMem = pMem.dynamic<hMemWork>();
+				PWhMemWork pDyMem = pMem.dynamic<hWorkMem>();
 				if (!pDyMem)
 				{
 					COUT_LK("[" <<
@@ -123,9 +123,9 @@ namespace hThread
 	{
 		hMemData& memData = shPool.getThrdMemData(ThreadMemType::Work);
 		memData.execEvery(ThreadMemStatType::Ready,
-			[&](PhMem pMem)
+			[&](PhMemBase pMem)
 			{
-				PWhMemWork pDyMem = pMem.dynamic<hMemWork>();
+				PWhMemWork pDyMem = pMem.dynamic<hWorkMem>();
 				if (!pDyMem)
 				{
 					COUT_LK("[" <<

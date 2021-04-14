@@ -6,7 +6,7 @@ namespace hThread
 	class hPool : public Singleton<hPool>
 	{
 		DefLog_Init();
-		friend class hMem;
+		friend class hMemBase;
 		friend class hTask;
 
 		bool _valid;

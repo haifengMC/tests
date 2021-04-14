@@ -4,7 +4,7 @@
 
 namespace hThread
 {
-	void hMemMgr::setFunc()
+	void hMgrMem::setFunc()
 	{
 		_func = [&]()
 		{
@@ -58,14 +58,14 @@ namespace hThread
 		};
 	}
 
-	hMemMgr::hMemMgr(size_t id) :
-		hMem(id)
+	hMgrMem::hMgrMem(size_t id) :
+		hMemBase(id)
 	{
 		_type = ThreadMemType::Mgr;
 		COUT_LK("memMgr_" << _id << " 管理线程创建...");
 	}
 
-	hMemMgr::~hMemMgr()
+	hMgrMem::~hMgrMem()
 	{
 		COUT_LK("memMgr_" << _id << " 管理线程释放...");
 	}

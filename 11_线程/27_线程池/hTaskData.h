@@ -45,8 +45,14 @@ namespace hThread
 			//重置状态数据
 			void resetData() { _run.resetData(); }
 			//获取下一个节点
-			hNodeListIt getNextNodeIt(hNodeListIt beg, hNodeListIt end);
-
+			hNodeListIt getNextNodeIt(hNodeListIt beg, hNodeListIt end, bool isLoop) { return _run.getNextNodeIt(beg, end, isLoop); }
+			//添加线程到任务,还未启用
+			hMemWorkListIt addThrdMem(PWhMemWork pMem) { return _run.addThrdMem(pMem); }
+			//初始化当前运行节点
+			void initCurNodeIt(hNodeListIt initIt) { _run.initCurNodeIt(initIt); }
+			//完成当前节点，通知下一个线程
+			bool finishCurNode(hMemWorkListIt memIt, hNodeListIt beg, hNodeListIt end, bool isLoop);
+			
 			hDynamicDataMgr(PWhTaskMgr pMgr, PWhTask pTask);
 		};
 
@@ -113,6 +119,15 @@ namespace hThread
 				//重置状态数据
 				void resetData() { writeLk([&]() { _curNodeIt = _nodeIt = hNodeListIt(); }); }
 				hNodeListIt getNextNodeIt(hNodeListIt beg, hNodeListIt end, bool isLoop);
+				//添加线程到任务,还未启用
+				hMemWorkListIt addThrdMem(PWhMemWork pMem);
+				//初始化当前运行节点
+				void initCurNodeIt(hNodeListIt initIt);
+				bool isValidThrdIt(hMemWorkListIt memIt);
+				//递增当前运行节点
+				void incCurNodeIt(hNodeListIt beg, hNodeListIt end, bool isLoop);
+				hMemWorkListIt getBegThrdIt();
+				hMemWorkListIt getEndThrdIt();
 
 				hRunData(PWhTaskMgr pMgr, PWhTask pTask);
 			};

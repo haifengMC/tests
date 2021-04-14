@@ -3,12 +3,12 @@
 namespace hThread
 {
 	//管理线程成员
-	class hMemMgr : public hMem
+	class hMgrMem : public hMemBase
 	{
 	protected:
 		void setFunc();
 	public:
-		hMemMgr(size_t id);
-		~hMemMgr();
+		hMgrMem(size_t id);
+		~hMgrMem();
 	};
 }

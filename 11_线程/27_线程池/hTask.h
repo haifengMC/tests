@@ -34,6 +34,12 @@ namespace hThread
 		bool resetStatData();
 		//添加线程到任务,还未启用
 		bool addThrdMem(PWhMemWork pMem);
+		//初始化当前运行节点
+		void initCurNodeIt() { _dynData && _dynData->initCurNodeIt(_stcData->getBegNodeIt()); }
+		//线程请求运行任务节点
+		bool runTaskNode(hNodeListIt nodeIt);
+		//完成当前节点，通知下一个线程
+		void finishCurNode(hMemWorkListIt memIt);
 
 		bool init(PWhTaskMgr pMgr);
 
@@ -44,15 +50,6 @@ namespace hThread
 
 	class hTask : public hTool::hAutoPtrObj, public hTool::hUniqueMapVal<size_t, hTask>
 	{
-
-		
-		/*
-		设置状态
-		*/
-		//线程请求运行任务节点
-		bool runTaskNode(hNodeListIt nodeIt);
-		//完成当前节点，通知下一个线程
-		void finishCurNode(hMemWorkListIt memIt);
 		//任务节点分配完成释放线程
 		void freeThrdMem(hMemWorkListIt memIt);
 		//根据当前线程数curThrd和期望线程数_thrdExpect确定最终需要的线程数

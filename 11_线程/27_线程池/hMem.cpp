@@ -4,14 +4,14 @@
 
 namespace hThread
 {
-	hMem* createThrdMem(ThreadMemType t, size_t id)
+	hMemBase* createThrdMem(ThreadMemType t, size_t id)
 	{
 		switch (t)
 		{
 		case ThreadMemType::Work:
-			return new hMemWork(id);
+			return new hWorkMem(id);
 		case ThreadMemType::Mgr:
-			return new hMemMgr(id);
+			return new hMgrMem(id);
 		default:
 			break;
 		}
@@ -26,7 +26,7 @@ namespace hThread
 		{
 			size_t id = _memArr.size();
 			auto it = _thrdId[stat].insert(_thrdId[stat].end(), id);
-			hMem* pMem = createThrdMem(_type, id);
+			hMemBase* pMem = createThrdMem(_type, id);
 			pMem->setStat(stat, it);
 			_memArr.push_back(pMem);
 		}
@@ -35,7 +35,7 @@ namespace hThread
 	void hMemData::run()
 	{
 		execEvery(ThreadMemStatType::Init,
-			[&](PhMem pMem) { pMem->run(); return true; });
+			[&](PhMemBase pMem) { pMem->run(); return true; });
 
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
@@ -53,7 +53,7 @@ namespace hThread
 	}
 
 	void hMemData::execEvery(ThreadMemStatType statTy,
-		std::function<bool(PhMem)> func)
+		std::function<bool(PhMemBase)> func)
 	{
 		auto& thrdIds = _thrdId[statTy];
 		for (auto it = thrdIds.begin(); it != thrdIds.end();)
@@ -67,9 +67,9 @@ namespace hThread
 		}
 	}
 
-	hMem::hMem(size_t id) : _id(id) {}
+	hMemBase::hMemBase(size_t id) : _id(id) {}
 
-	void hMem::run()
+	void hMemBase::run()
 	{
 		if (!updateStat(ThreadMemStatType::Wait))
 			return;
@@ -79,7 +79,7 @@ namespace hThread
 		//_pThrd->detach();
 	}
 
-	void hMem::stop()
+	void hMemBase::stop()
 	{
 		if (!updateStat(ThreadMemStatType::Init))
 			return;
@@ -88,12 +88,12 @@ namespace hThread
 		notify();
 	}
 
-	void hMem::join()
+	void hMemBase::join()
 	{
 		_pThrd->join();
 	}
 
-	bool hMem::setStat(ThreadMemStatType type, std::list<size_t>::iterator& it)
+	bool hMemBase::setStat(ThreadMemStatType type, std::list<size_t>::iterator& it)
 	{
 		if (_statType == type)
 			return false;
@@ -106,7 +106,7 @@ namespace hThread
 		return true;
 	}
 
-	bool hMem::updateStat(ThreadMemStatType type)
+	bool hMemBase::updateStat(ThreadMemStatType type)
 	{
 		if (_statType == type)
 			return false;

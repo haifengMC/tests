@@ -4,7 +4,7 @@
 
 namespace hThread
 {
-	void hMemWork::reset()
+	void hWorkMem::reset()
 	{
 		_pTask = PWhTask();
 		_nodeIt = hNodeListIt();
@@ -12,7 +12,7 @@ namespace hThread
 		updateStat(ThreadMemStatType::Wait);
 	}
 
-	void hMemWork::setFunc()
+	void hWorkMem::setFunc()
 	{
 		_func = [&]()
 		{
@@ -135,19 +135,19 @@ namespace hThread
 		};
 	}
 
-	hMemWork::hMemWork(size_t id) :
-		hMem(id)
+	hWorkMem::hWorkMem(size_t id) :
+		hMemBase(id)
 	{
 		_type = ThreadMemType::Work;
 		COUT_LK("memWork_" << _id << " 工作线程创建...");
 	}
 
-	hMemWork::~hMemWork()
+	hWorkMem::~hWorkMem()
 	{
 		COUT_LK("memWork_" << _id << " 工作线程释放...");
 	}
 
-	void hMemWork::initTask(PWhTask pTask, hNodeListIt nodeIt, hMemWorkListIt memIt)
+	void hWorkMem::initTask(PWhTask pTask, hNodeListIt nodeIt, hMemWorkListIt memIt)
 	{
 		COUT_LK("memWork_" << _id << " 初始化工作线程任务" <<
 			"task_" << pTask->getIndex() << "...");
@@ -157,7 +157,7 @@ namespace hThread
 		updateStat(ThreadMemStatType::Ready);
 	}
 
-	void hMemWork::runTask()
+	void hWorkMem::runTask()
 	{
 		COUT_LK("memWork_" << _id << " 通知工作线程运行任务" <<
 			"task_" << _pTask->getIndex() << "...");

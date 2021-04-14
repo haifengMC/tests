@@ -90,10 +90,10 @@ namespace hThread
 			return false;
 		}
 
-		if (ThreadMemStatType::Wait != pMem->getStat())
+		if (!pMem->checkStat(ThreadMemStatType::Wait))
 		{
 			COUT_LK(_thisId << "[" <<
-				pMem->getStat().getName() <<
+				pMem->getStatName() <<
 				pMem->getId() << "]线程不在等待状态...");
 			return false;
 		}
@@ -111,14 +111,15 @@ namespace hThread
 			COUT_LK(_thisId << " 无可用节点...");
 			return false;
 		}
-		auto memIt = thrdsRef.insert(thrdsRef.end(), pMem);
+
+		auto memIt = _dynData->addThrdMem(pMem);
 		pMem->initTask(getThis<hTask>(), nodeIt, memIt);
 
 		return true;
 	}
 
 	//线程请求运行任务节点
-	bool hTask::runTaskNode(hNodeListIt nodeIt)
+	bool hTaskBase::runTaskNode(hNodeListIt nodeIt)
 	{
 		if (!check())
 		{
@@ -126,31 +127,27 @@ namespace hThread
 			return false;
 		}
 
-		if (!nodeIt._Ptr || nodeIt == _stcData->_nodeList.end())
+		if (!nodeIt._Ptr || nodeIt == _stcData->getEndNodeIt())
 		{
 			COUT_LK(_thisId << "无效节点");
 			return false;
 		}
 
-		if (!_dynData->_curNodeIt._Ptr)
-			_dynData->_curNodeIt = _stcData->_nodeList.begin();
-
-#if 0
-		//未加锁前从第一个节点开始逐个运行
-		if (_state->_curNodeIt != nodeIt)
-			return false;
-#endif
+		initCurNodeIt();
 		updateStat(TaskStatType::Run);
 		return true;
 	}
 
-	void hTask::finishCurNode(hMemWorkListIt memIt)
+	void hTaskBase::finishCurNode(hMemWorkListIt memIt)
 	{
 		if (!check())
 		{
 			checkErrOut();
 			return;
 		}
+
+		if (!_dynData->finishCurNode(memIt))
+			return;
 
 		hMemWorkList& thrdList = _dynData->_thrds;
 		if (!memIt._Ptr || memIt == thrdList.end())

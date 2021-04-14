@@ -13,6 +13,25 @@ namespace hThread
 			_attr = attr;
 		}
 
+		bool hDynamicDataMgr::finishCurNode(hMemWorkListIt memIt, hNodeListIt beg, hNodeListIt end, bool isLoop)
+		{
+			if (!_run.isValidThrdIt(memIt))
+				return false;
+
+			_run.incCurNodeIt(beg, end, isLoop);
+
+			//任务已全部分配完成
+			//if (TaskStatType::Finish == _state->_stateTy)
+			//	return;
+
+			hMemWorkListIt nextIt = std::next(memIt);
+			if (nextIt == _run.getEndThrdIt())
+				nextIt = _run.getBegThrdIt();
+
+			if (nextIt != memIt && nextIt != _run.getEndThrdIt())
+			return true;
+		}
+
 		hDynamicDataMgr::hDynamicDataMgr(PWhTaskMgr pMgr, PWhTask pTask) :
 			_state(pMgr, pTask), _run(pMgr, pTask)
 		{
@@ -173,6 +192,85 @@ namespace hThread
 					return it;
 				else
 					return getNextNodeIt(beg, end, isLoop);
+			}
+
+			hMemWorkListIt hRunData::addThrdMem(PWhMemWork pMem)
+			{
+				hMemWorkListIt it;
+				writeLk([&]() { it = _thrds.insert(_thrds.end(), pMem); });
+				return it;
+			}
+
+			void hRunData::initCurNodeIt(hNodeListIt initIt)
+			{
+				writeLk([&]() 
+					{
+						if (!_dynData->_curNodeIt._Ptr)
+							_dynData->_curNodeIt = initIt;
+					});
+
+			}
+
+			bool hRunData::isValidThrdIt(hMemWorkListIt memIt)
+			{
+				if (!memIt._Ptr)
+				{
+					COUT_LK(_thisId << "任务通知空节点[1]...");
+					return false;
+				}
+
+				bool ret = false;
+				readLk([&]()
+					{
+						if (memIt == _thrds.end())
+						{
+							COUT_LK(_thisId << "任务通知空节点[2]...");
+							return;
+						}
+
+						if (_thrds.empty())
+						{
+							COUT_LK(_thisId << "任务无可用工作线程...");
+							return;
+						}
+
+						ret = true;
+					});
+
+				return ret;
+			}
+
+			void hRunData::incCurNodeIt(hNodeListIt beg, hNodeListIt end, bool isLoop)
+			{
+				writeLk([&]()
+					{
+						if (!_curNodeIt._Ptr)
+						{
+							_curNodeIt = beg;
+							return;
+						}
+
+						if (_curNodeIt == end)
+							return;
+
+						++_curNodeIt;
+						if (_curNodeIt == end && isLoop)
+							_curNodeIt = beg;
+					});
+			}
+
+			hMemWorkListIt hRunData::getBegThrdIt()
+			{
+				hMemWorkListIt it;
+				readLk([&]() { it = _thrds.begin(); });
+				return it;
+			}
+
+			hMemWorkListIt hRunData::getEndThrdIt()
+			{
+				hMemWorkListIt it;
+				readLk([&]() { it = _thrds.end(); });
+				return it;
 			}
 
 			hRunData::hRunData(PWhTaskMgr pMgr, PWhTask pTask)

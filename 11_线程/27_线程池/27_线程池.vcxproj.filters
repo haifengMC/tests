@@ -51,10 +51,10 @@
     <ClCompile Include="hMemMgr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="hMemWork.cpp">
+    <ClCompile Include="hTaskData.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="hTaskData.cpp">
+    <ClCompile Include="hWorkMem.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -92,9 +92,6 @@
     <ClInclude Include="hMem.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="hMemWork.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="hMemMgr.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -114,6 +111,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="hTaskData.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="hWorkMem.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
