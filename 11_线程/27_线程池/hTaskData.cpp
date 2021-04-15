@@ -24,12 +24,19 @@ namespace hThread
 			//if (TaskStatType::Finish == _state->_stateTy)
 			//	return;
 
-			hMemWorkListIt nextIt = std::next(memIt);
-			if (nextIt == _run.getEndThrdIt())
-				nextIt = _run.getBegThrdIt();
-
-			if (nextIt != memIt && nextIt != _run.getEndThrdIt())
+			memIt->notifyNext(_run.getBegThrdIt(), _run.getEndThrdIt());
 			return true;
+		}
+
+		void hDynamicDataMgr::freeThrdMem(hMemWorkListIt memIt, hNodeListIt end, size_t attr)
+		{
+			if (!_run.isValidThrdIt(memIt))
+				return;
+
+			if (!_run.eraseThrdMem(memIt))
+				return;
+
+
 		}
 
 		hDynamicDataMgr::hDynamicDataMgr(PWhTaskMgr pMgr, PWhTask pTask) :
@@ -46,6 +53,13 @@ namespace hThread
 				size_t weight = 0;
 				readLk([&]() { weight = _weight; });
 				return weight;
+			}
+
+			size_t hAttrData::getAttr() const
+			{
+				size_t ret = 0;
+				readLk([&]() { ret = _attr.to_ulong(); });
+				return ret;
 			}
 
 			void hAttrData::setAttr(const std::bitset<TaskAttrType::Max>& attr)
@@ -257,6 +271,62 @@ namespace hThread
 						if (_curNodeIt == end && isLoop)
 							_curNodeIt = beg;
 					});
+			}
+
+			//任务节点分配完成释放线程
+			bool hRunData::eraseThrdMem(hMemWorkListIt memIt)
+			{
+				bool ret = false;
+				writeLk([&]()
+					{
+						_thrds.erase(memIt);
+						ret = _thrds.empty();
+					});
+				return ret;
+			}
+
+			TaskStatType hRunData::checkFinishState(hNodeListIt end, size_t attr) const
+			{
+				TaskStatType ret = TaskStatType::Finish;
+				readLk([&]() 
+					{
+						//节点还未运行完毕时任务异常
+						if (_curNodeIt != end || _nodeIt != end)
+						{
+							ret = TaskStatType::Error;
+							COUT_LK(_pTask->getId() << "节点还未运行完毕时任务异常...");
+							return;
+						}
+						//设置分离的任务完成时稍后等待删除
+						if (attr & TaskAttrTypeBit::Detach)
+						{
+							ret = TaskStatType::Detach;
+							COUT_LK(_pTask->getId() << "设置分离的任务完成时稍后等待删除...");
+							return;
+						}
+						//设置重复的任务完成时放回等待重复执行
+						if (attr & TaskAttrTypeBit::Repeat)
+						{
+							ret = TaskStatType::Wait;
+							resetStatData();
+							if (!canRepeat())
+								return;
+
+							_dynData->_pMgr->_weights.pushBack(getWeight(), getId());
+							shPool.notifyMgrThrd();
+							return;
+						}
+
+					});
+
+				switch (ret)
+				{
+				case TaskStatType::Wait:
+				default:
+					break;
+				}
+
+				return ret;
 			}
 
 			hMemWorkListIt hRunData::getBegThrdIt()

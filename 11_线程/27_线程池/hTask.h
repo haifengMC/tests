@@ -40,26 +40,23 @@ namespace hThread
 		bool runTaskNode(hNodeListIt nodeIt);
 		//完成当前节点，通知下一个线程
 		void finishCurNode(hMemWorkListIt memIt);
+		//任务节点分配完成释放线程
+		void freeThrdMem(hMemWorkListIt memIt);
 
 		bool init(PWhTaskMgr pMgr);
 
-	private:
+	protected:
 		bool check() const;//一般性检测
 		void checkErrOut() const;
 	};
 
 	class hTask : public hTool::hAutoPtrObj, public hTool::hUniqueMapVal<size_t, hTask>
 	{
-		//任务节点分配完成释放线程
-		void freeThrdMem(hMemWorkListIt memIt);
 		//根据当前线程数curThrd和期望线程数_thrdExpect确定最终需要的线程数
 		size_t calcNeedThrdNum(size_t curThrd);
 		//更新任务数据
 		template <typename ... Args >
 		void updateTaskData(size_t opt, Args ... args);
-	protected:
-		bool check() const;//一般性检测
-		void checkErrOut() const;
 	};
 
 }

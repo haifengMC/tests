@@ -16,6 +16,7 @@ namespace hThread
 		hWorkMem(size_t id);
 		~hWorkMem();
 
+		void notifyNext(hMemWorkListIt beg, hMemWorkListIt end);
 		void initTask(PWhTask pTask, hNodeListIt nodeIt, hMemWorkListIt memIt);
 		void runTask();
 

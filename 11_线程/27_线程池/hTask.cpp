@@ -146,46 +146,19 @@ namespace hThread
 			return;
 		}
 
-		if (!_dynData->finishCurNode(memIt))
-			return;
-
-		hMemWorkList& thrdList = _dynData->_thrds;
-		if (!memIt._Ptr || memIt == thrdList.end())
-		{
-			COUT_LK(_thisId << "任务通知空节点...");
-			return;
-		}
-
-		if (thrdList.empty())
-		{
-			COUT_LK(_thisId << "任务无可用工作线程...");
-			return;
-		}
-
-		++_dynData->_curNodeIt;
-		if (_dynData->_curNodeIt == _stcData->_nodeList.end() &&
-			_stcData->_attr[TaskAttrType::Loop])
-			_dynData->_curNodeIt = _stcData->_nodeList.begin();
-
-		//任务已全部分配完成
-		//if (TaskStatType::Finish == _state->_stateTy)
-		//	return;
-
-		hMemWorkListIt nextIt = std::next(memIt);
-		if (nextIt == thrdList.end())
-			nextIt = thrdList.begin();
-
-		if (nextIt != memIt && nextIt != thrdList.end())
-			(*nextIt)->notify();
+		_dynData->finishCurNode(memIt);
 	}
 
-	void hTask::freeThrdMem(hMemWorkListIt memIt)
+	void hTaskBase::freeThrdMem(hMemWorkListIt memIt)
 	{
 		if (!check())
 		{
 			checkErrOut();
 			return;
 		}
+
+		_dynData->freeThrdMem(memIt, _stcData->getEndNodeIt(), _stcData->getAttr());
+
 
 		hMemWorkList& thrdList = _dynData->_thrds;
 		if (!memIt._Ptr || memIt == thrdList.end())

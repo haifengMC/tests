@@ -13,6 +13,7 @@ namespace hThread
 
 		public:
 			size_t getWeight() const { return _attrData.getWeight(); }
+			size_t getAttr() const { return _attrData.getAttr(); }
 			void setAttr(const std::bitset<TaskAttrType::Max>& attr) { _attrData.setAttr(attr); }
 			bool checkAttr(TaskAttrType attr) const { return _attrData.checkAttr(attr); }
 			//增加任务节点
@@ -52,7 +53,9 @@ namespace hThread
 			void initCurNodeIt(hNodeListIt initIt) { _run.initCurNodeIt(initIt); }
 			//完成当前节点，通知下一个线程
 			bool finishCurNode(hMemWorkListIt memIt, hNodeListIt beg, hNodeListIt end, bool isLoop);
-			
+			//任务节点分配完成释放线程
+			void freeThrdMem(hMemWorkListIt memIt, hNodeListIt end, size_t attr);
+
 			hDynamicDataMgr(PWhTaskMgr pMgr, PWhTask pTask);
 		};
 
@@ -66,6 +69,7 @@ namespace hThread
 				std::bitset<TaskAttrType::Max> _attr;//任务属性，对应 TaskAttrType
 
 				size_t getWeight() const;
+				size_t getAttr() const;
 				void setAttr(const std::bitset<TaskAttrType::Max>& attr);
 				bool checkAttr(TaskAttrType attr) const;
 			};
@@ -126,6 +130,10 @@ namespace hThread
 				bool isValidThrdIt(hMemWorkListIt memIt);
 				//递增当前运行节点
 				void incCurNodeIt(hNodeListIt beg, hNodeListIt end, bool isLoop);
+				//任务节点分配完成释放线程
+				void eraseThrdMem(hMemWorkListIt memIt);
+				//检测完成状态
+				TaskStatType checkFinishState(hNodeListIt end, size_t attr) const;
 				hMemWorkListIt getBegThrdIt();
 				hMemWorkListIt getEndThrdIt();
 

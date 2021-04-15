@@ -147,6 +147,22 @@ namespace hThread
 		COUT_LK("memWork_" << _id << " 工作线程释放...");
 	}
 
+	void hWorkMem::notifyNext(hMemWorkListIt beg, hMemWorkListIt end)
+	{
+		if (!_memIt._Ptr)
+			return;
+
+		if (_memIt == end)
+			return;
+
+		hMemWorkListIt nextIt = std::next(memIt);
+		if (nextIt == end)
+			nextIt = beg;
+
+		if (nextIt != _memIt && nextIt != end)
+			(*nextIt)->notify();
+	}
+
 	void hWorkMem::initTask(PWhTask pTask, hNodeListIt nodeIt, hMemWorkListIt memIt)
 	{
 		COUT_LK("memWork_" << _id << " 初始化工作线程任务" <<
