@@ -2,18 +2,25 @@
 
 using namespace std;
 
+enum
+{
+	Type_None,
+	Type_A1,
+	Type_A2,
+};
+
 struct A 
 {
 	virtual ~A() {}
-	virtual void printMe() { cout << "A" << endl; }
+	virtual void printMe() = 0;
 };
 
 template <size_t N>
-A* factor() { return new A(); }
+A* factory() { return NULL; }
 template <size_t N>
-void printMe()
+void printA()
 {
-	A* pA = factor<N>();
+	A* pA = factory<N>();
 
 	cout << N << ":" << pA << endl;
 	if (pA)
@@ -22,17 +29,25 @@ void printMe()
 	delete pA;
 }
 
-struct B :public A
+struct A1 :public A
 {
-	void printMe() { cout << "B" << endl; }
+	void printMe() { cout << "A1" << endl; }
 };
 template <>
-A* factor<1>() { return new B(); }
+A* factory<Type_A1>() { return new A1(); }
+
+struct A2 :public A
+{
+	void printMe() { cout << "A2" << endl; }
+};
+template <>
+A* factory<Type_A2>() { return new A2(); }
 
 int main()
 {
-	printMe<0>();
-	printMe<1>();
+	printA<Type_None>();
+	printA<Type_A1>();
+	printA<Type_A2>();
 
 	return 0;
 }
