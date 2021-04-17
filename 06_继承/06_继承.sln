@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "07_多态", "07_多态\07_�
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "08_智能指针测试", "08_智能指针测试\08_智能指针测试.vcxproj", "{EBA09107-F73E-469A-85DF-47BCABA280FD}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "09_模块化初探", "09_模块化初探\09_模块化初探.vcxproj", "{E9FADA0F-65BD-430A-89BF-D03DD2E1F82F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -91,6 +93,14 @@ Global
 		{EBA09107-F73E-469A-85DF-47BCABA280FD}.Release|x64.Build.0 = Release|x64
 		{EBA09107-F73E-469A-85DF-47BCABA280FD}.Release|x86.ActiveCfg = Release|Win32
 		{EBA09107-F73E-469A-85DF-47BCABA280FD}.Release|x86.Build.0 = Release|Win32
+		{E9FADA0F-65BD-430A-89BF-D03DD2E1F82F}.Debug|x64.ActiveCfg = Debug|x64
+		{E9FADA0F-65BD-430A-89BF-D03DD2E1F82F}.Debug|x64.Build.0 = Debug|x64
+		{E9FADA0F-65BD-430A-89BF-D03DD2E1F82F}.Debug|x86.ActiveCfg = Debug|Win32
+		{E9FADA0F-65BD-430A-89BF-D03DD2E1F82F}.Debug|x86.Build.0 = Debug|Win32
+		{E9FADA0F-65BD-430A-89BF-D03DD2E1F82F}.Release|x64.ActiveCfg = Release|x64
+		{E9FADA0F-65BD-430A-89BF-D03DD2E1F82F}.Release|x64.Build.0 = Release|x64
+		{E9FADA0F-65BD-430A-89BF-D03DD2E1F82F}.Release|x86.ActiveCfg = Release|Win32
+		{E9FADA0F-65BD-430A-89BF-D03DD2E1F82F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
