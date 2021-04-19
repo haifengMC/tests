@@ -1,29 +1,31 @@
 #pragma once
-#include "hTool.h"
 
 namespace hThread
 {
-	class TaskStatMgr : public hDataBase
+	class hTaskMgrBase : public hTool::hAutoPtrObj
 	{
-		std::list<size_t> _states[TaskStatType::Max];//状态管理<thisId>
-		std::map<size_t, TaskStatType> _stateMap;//状态map<thisId state>
+		DefLog_Init();
+		hTaskMgr::hCfgData _cfg;
+		hTaskMgr::hTaskMgrData _taskMgr;//<id-Task>id生成器
+		hTaskMgr::hWeightMgrData _weightMgr;//权重管理<task thisId>
+		hTaskMgr::hStatMgrData _statMgr;//状态管理<thisId>
+		hTaskMgr::hUpdateMgrData _updateMgr;//数据更新 任务id
 	public:
-		std::list<size_t>* getStateList(TaskStatType state);
-		bool updateState(size_t tskId, std::list<size_t>::iterator& statIt,
-			TaskStatType oldStat, TaskStatType newStat);
+		hTaskMgrBase(const TaskMgrCfgItem& base);
+		~hTaskMgrBase();
+
 	};
+
 
 	class hTaskMgr : public hTool::hAutoPtrObj
 	{
-		DefLog_Init();
-		friend class hTask;
-
 		const TaskMgrCfgItem& _base;
 
 		hTool::hUniqueIdGen<size_t, hTask> _tasks;//<id-Task>id生成器
 		hTool::hRWeightMap<size_t> _weights;//权重管理<task thisId>
+		WeightsMgr _weightsMgr;//权重管理<task thisId>
 		std::list<size_t> _states[TaskStatType::Max];//状态管理<thisId>
-		TaskStatMgr _stateMgr;//状态管理
+		hStatMgrData _stateMgr;//状态管理
 
 		size_t _updateId = 0;//数据更新 任务id
 	public:
@@ -49,13 +51,9 @@ namespace hThread
 		//更新任务状态
 		bool updateTaskState(size_t tskId, std::list<size_t>::iterator& statIt,
 			TaskStatType oldStat, TaskStatType newStat);
-#if 0
+		//将任务加入
+		void pushTask2Weights(PWhTask pTask) { _weightsMgr.pushTask(pTask); }
 
-		//取消已准备任务,将就绪任务放回等待状态
-		void cancelReadyTasks();
-		//执行任务，就绪任务，返回实际执行的任务,numThr可用线程数
-		size_t runTasks(size_t numThr, size_t rate);
-#endif
 	private:
 		//向更新任务添加函数
 		void addUpdateTaskFunc(size_t taskId, 

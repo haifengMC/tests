@@ -37,17 +37,23 @@ namespace hThread
 		class hDynamicDataMgr;
 		typedef hTool::hAutoPtr<hDynamicDataMgr> PhDynDt;
 	}
-
-
-	class hTask;
-	typedef hTool::hAutoPtr<hTask> PhTask;
-	typedef hTool::hWeakPtr<hTask> PWhTask;
+	class hTaskBase;
+	typedef hTool::hAutoPtr<hTaskBase> PhTask;
+	typedef hTool::hWeakPtr<hTaskBase> PWhTask;
 	class hUpdateTask;
 	typedef hTool::hWeakPtr<hUpdateTask> PWhUpdTsk;
 
-	class hTaskMgr;
-	typedef hTool::hAutoPtr<hTaskMgr> PhTaskMgr;
-	typedef hTool::hWeakPtr<hTaskMgr> PWhTaskMgr;
+	namespace hTaskMgr
+	{
+		class hCfgData;//配置数据
+		class hTaskMgrData;//任务管理数据
+		class hWeightMgrData;//权重管理数据
+		class hStatMgrData;//状态管理数据
+		class hUpdateMgrData;//更新管理数据
+	}
+	class hTaskMgrBase;
+	typedef hTool::hAutoPtr<hTaskMgrBase> PhTaskMgr;
+	typedef hTool::hWeakPtr<hTaskMgrBase> PWhTaskMgr;
 
 	typedef hTool::hAutoPtr<std::thread> PThread;
 	class hMemBase;
@@ -71,16 +77,21 @@ namespace hThread
 #include "hRWLock.h"
 #include "hDataBase.h"
 #include "hNode.h"
+
 #include "hTaskData.h"
 #include "hTask.h"
 #include "hUpdateTask.h"
+
+#include "hTaskMgrData.h"
 #include "hTaskMgr.h"
+
 #include "hMem.h"
 #include "hWorkMem.h"
 #include "hMgrMem.h"
 #include "hPool.h"
 
 #include "hDataBaseImpl.h"
+#include "hTaskDataImpl.h"
 #include "hTaskImpl.h"
 #include "hTaskMgrImpl.h"
 #include "hPoolImpl.h"

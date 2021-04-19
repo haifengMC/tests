@@ -13,6 +13,7 @@ namespace hThread
 
 		public:
 			size_t getWeight() const { return _attrData.getWeight(); }
+			size_t getNeedThrdNum() const { return std::min(_attrData.getExpectThrd(), _nodeData.getNodeNum()); }
 			size_t getAttr() const { return _attrData.getAttr(); }
 			void setAttr(const std::bitset<TaskAttrType::Max>& attr) { _attrData.setAttr(attr); }
 			bool checkAttr(TaskAttrType attr) const { return _attrData.checkAttr(attr); }
@@ -55,6 +56,9 @@ namespace hThread
 			bool finishCurNode(hMemWorkListIt memIt, hNodeListIt beg, hNodeListIt end, bool isLoop);
 			//任务节点分配完成释放线程
 			void freeThrdMem(hMemWorkListIt memIt, hNodeListIt end, size_t attr);
+			//更新任务数据
+			template <typename ... Args >
+			void updateTaskData(size_t opt, Args ... args);
 
 			hDynamicDataMgr(PWhTaskMgr pMgr, PWhTask pTask);
 		};
@@ -65,10 +69,11 @@ namespace hThread
 			struct hAttrData : public hDataBase
 			{
 				size_t _weight = 0;//权重
-				size_t _thrdExpect = 0;//期待线程数
+				size_t _expectThrd = 0;//期待线程数
 				std::bitset<TaskAttrType::Max> _attr;//任务属性，对应 TaskAttrType
 
 				size_t getWeight() const;
+				size_t getExpectThrd() const;
 				size_t getAttr() const;
 				void setAttr(const std::bitset<TaskAttrType::Max>& attr);
 				bool checkAttr(TaskAttrType attr) const;
@@ -82,6 +87,7 @@ namespace hThread
 				PhUserData _nodeData;//节点数据
 				hNodeList _nodeList;//节点链表
 
+				size_t getNodeNum() const;
 				bool addNode(hNode* pNode);//增加任务节点
 				bool initNodeData(hUserData* pData);
 
@@ -127,6 +133,7 @@ namespace hThread
 				hMemWorkListIt addThrdMem(PWhMemWork pMem);
 				//初始化当前运行节点
 				void initCurNodeIt(hNodeListIt initIt);
+				bool isValidNodeIt(hNodeListIt end);
 				bool isValidThrdIt(hMemWorkListIt memIt);
 				//递增当前运行节点
 				void incCurNodeIt(hNodeListIt beg, hNodeListIt end, bool isLoop);
@@ -142,5 +149,9 @@ namespace hThread
 		}
 	}
 }
-DefLog(hThread::hTaskStaticData, _weight, _thrdExpect, _incId, _attr, _nodeData, _nodeList);
-DefLog(hThread::hTaskDynamicData, _stateTy, _stateIt, _pMgr, _thrds, _curNodeIt, _nodeIt);
+DefLog(hThread::hTask::hStatic::hAttrData, _weight, _expectThrd, _attr);
+DefLog(hThread::hTask::hStatic::hNodeData, _incId, _nodeData, _nodeList);
+DefLog(hThread::hTask::hStaticDataMgr, _attrData, _nodeData);
+DefLog(hThread::hTask::hDynamic::hStatData, _stateTy, _stateIt);
+DefLog(hThread::hTask::hDynamic::hRunData, _thrds, _curNodeIt, _nodeIt);
+DefLog(hThread::hTask::hDynamicDataMgr, _pTask, _pMgr, _state, _run);

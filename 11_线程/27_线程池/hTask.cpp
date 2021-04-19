@@ -36,6 +36,14 @@ namespace hThread
 		return _stcData->getWeight();
 	}
 
+	size_t hTaskBase::getNeedThrdNum() const
+	{
+		if (!_stcData)
+			return 0;
+
+		return _stcData->getNeedThrdNum();
+	}
+
 	hNodeListIt hTaskBase::getNextNode()
 	{
 		if (!check())
@@ -158,52 +166,15 @@ namespace hThread
 		}
 
 		_dynData->freeThrdMem(memIt, _stcData->getEndNodeIt(), _stcData->getAttr());
-
-
-		hMemWorkList& thrdList = _dynData->_thrds;
-		if (!memIt._Ptr || memIt == thrdList.end())
-		{
-			COUT_LK(_thisId << "任务释放空线程...");
-			return;
-		}
-
-		thrdList.erase(memIt);
-		if (thrdList.empty())
-		{
-			//节点还未运行完毕时任务异常
-			if (_dynData->_curNodeIt != _stcData->_nodeList.end() ||
-				_dynData->_nodeIt != _stcData->_nodeList.end())
-			{
-				updateStat(TaskStatType::Error);
-				return;
-			}
-			//设置分离的任务完成时稍后等待删除
-			if (checkAttr(TaskAttrType::Detach))
-			{
-				updateStat(TaskStatType::Detach);
-				return;
-			}
-			//设置重复的任务完成时放回等待重复执行
-			if (checkAttr(TaskAttrType::Repeat))
-			{
-				updateStat(TaskStatType::Wait);
-				resetStatData();
-				if (!canRepeat())
-					return;
-				
-				_dynData->_pMgr->_weights.pushBack(getWeight(), getId());
-				shPool.notifyMgrThrd();
-				return;
-			}
-			
-			updateStat(TaskStatType::Finish);
-		}
 	}
 
-	size_t hTask::calcNeedThrdNum(size_t curThrd)
+	size_t hTaskBase::calcNeedThrdNum(size_t curThrd)
 	{
-		if (!_stcData)
-			return 0;
+		if (!check())
+		{
+			checkErrOut();
+			return;
+		}
 
 		return std::min({curThrd, _stcData->_thrdExpect, _stcData ->_nodeList.size()});
 	}

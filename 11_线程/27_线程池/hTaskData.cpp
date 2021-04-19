@@ -36,7 +36,35 @@ namespace hThread
 			if (!_run.eraseThrdMem(memIt))
 				return;
 
+			//节点还未运行完毕时任务异常
+			if (_run.isValidNodeIt(end))
+			{
+				COUT_LK(_pTask->getId() << "节点还未运行完毕时任务异常...");
+				_state.updateStat(TaskStatType::Error);
+				return;
+			}
 
+			//设置分离的任务完成时稍后等待删除
+			if (attr & TaskAttrTypeBit::Detach)
+			{
+				COUT_LK(_pTask->getId() << "设置分离的任务完成时稍后等待删除...");
+				_state.updateStat(TaskStatType::Detach);
+				return;
+			} 
+
+			//设置重复的任务完成时放回等待重复执行
+			if (checkAttr(TaskAttrType::Repeat))
+			{
+				COUT_LK(_pTask->getId() << "设置重复的任务完成时放回等待重复执行...");
+				updateStat(TaskStatType::Wait);
+				resetData();
+
+				_pMgr->pushTask2Weights(_pTask);
+				shPool.notifyMgrThrd();
+				return;
+			}
+
+			updateStat(TaskStatType::Finish);
 		}
 
 		hDynamicDataMgr::hDynamicDataMgr(PWhTaskMgr pMgr, PWhTask pTask) :
@@ -53,6 +81,13 @@ namespace hThread
 				size_t weight = 0;
 				readLk([&]() { weight = _weight; });
 				return weight;
+			}
+
+			size_t hAttrData::getExpectThrd() const
+			{
+				size_t expectThrd = 0;
+				readLk([&]() { expectThrd = _expectThrd; });
+				return expectThrd;
 			}
 
 			size_t hAttrData::getAttr() const
@@ -96,6 +131,13 @@ namespace hThread
 					});
 
 				return ret;
+			}
+
+			size_t hNodeData::getNodeNum() const
+			{
+				size_t nodeNum = 0;
+				readLk([&]() { nodeNum = _nodeList.size(); });
+				return nodeNum;
 			}
 
 			bool hNodeData::initNodeData(hUserData* pData)
@@ -223,6 +265,23 @@ namespace hThread
 							_dynData->_curNodeIt = initIt;
 					});
 
+			}
+
+			bool hRunData::isValidNodeIt(hNodeListIt end)
+			{
+				bool ret = true;
+				readLk([&]()
+					{
+						if (_curNodeIt != end)
+							return;
+
+						if (_nodeIt != end)
+							return;
+
+						ret = false;
+					});
+
+				return ret;
 			}
 
 			bool hRunData::isValidThrdIt(hMemWorkListIt memIt)

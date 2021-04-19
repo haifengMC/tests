@@ -5,7 +5,7 @@
 
 namespace hThread
 {
-	std::list<size_t>* TaskStatMgr::getStateList(TaskStatType state)
+	std::list<size_t>* hStatMgrData::getStateList(TaskStatType state)
 	{
 		if (TaskStatType::Max <= state)
 			return NULL;
@@ -16,7 +16,7 @@ namespace hThread
 		return pList;
 	}
 
-	bool TaskStatMgr::updateState(size_t tskId, std::list<size_t>::iterator& statIt,
+	bool hStatMgrData::updateState(size_t tskId, std::list<size_t>::iterator& statIt,
 		TaskStatType oldStat, TaskStatType newStat)
 	{
 		if (!tskId)
@@ -45,14 +45,36 @@ namespace hThread
 		return true;
 	}
 
-	hTaskMgr::hTaskMgr(const TaskMgrCfgItem& base) : 
-		_base(base), _tasks(50)
+	void WeightsMgrData::pushTask(size_t weight, size_t tskId)
+	{
+		if (!weight || !tskId)
+		{
+			COUT_LK(" 添加权重管理器失败，无效任务" << weight << "," << tskId << "...");
+			return;
+		}
+
+		writeLk([&]() { pushBack(weight, tskId); });
+	}
+
+	void WeightsMgrData::pushTask(PWhTask pTask)
+	{
+		if (!pTask)
+		{
+			COUT_LK(" 添加权重管理器失败，空任务指针...");
+			return;
+		}
+
+		pushTask(pTask->getWeight(), pTask->getId());
+	}
+
+	hTaskMgrBase::hTaskMgrBase(const TaskMgrCfgItem& base) :
+		_cfg()
 	{ 
 		COUT_LK(_base.index().getName() << " 任务管理器创建...");
 		_tasks.resize(10000, 99999);
 	} 
 
-	hTaskMgr::~hTaskMgr()
+	hTaskMgrBase::~hTaskMgrBase()
 	{
 		COUT_LK(_base.index().getName() << " 任务管理器释放...");
 	}

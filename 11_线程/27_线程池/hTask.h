@@ -20,6 +20,7 @@ namespace hThread
 		属性相关
 		*/
 		size_t getWeight() const;
+		size_t getNeedThrdNum() const;
 		//增加任务节点
 		bool addNode(hNode* pNode) { return _stcData && _stcData->addNode(pNode); }
 		//初始化节点数据
@@ -42,6 +43,11 @@ namespace hThread
 		void finishCurNode(hMemWorkListIt memIt);
 		//任务节点分配完成释放线程
 		void freeThrdMem(hMemWorkListIt memIt);
+		//根据当前线程数curThrd和期望线程数_thrdExpect确定最终需要的线程数
+		size_t calcNeedThrdNum(size_t curThrd);
+		//更新任务数据
+		template <typename ... Args >
+		void updateTaskData(size_t opt, Args ... args);
 
 		bool init(PWhTaskMgr pMgr);
 
@@ -49,15 +55,5 @@ namespace hThread
 		bool check() const;//一般性检测
 		void checkErrOut() const;
 	};
-
-	class hTask : public hTool::hAutoPtrObj, public hTool::hUniqueMapVal<size_t, hTask>
-	{
-		//根据当前线程数curThrd和期望线程数_thrdExpect确定最终需要的线程数
-		size_t calcNeedThrdNum(size_t curThrd);
-		//更新任务数据
-		template <typename ... Args >
-		void updateTaskData(size_t opt, Args ... args);
-	};
-
 }
-DefLog(hThread::hTask, _thisId, _stcData, _dynData);
+DefLog(hThread::hTaskBase, _thisId, _stcData, _dynData);
