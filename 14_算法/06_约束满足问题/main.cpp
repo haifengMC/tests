@@ -2,6 +2,7 @@
 #include <list>
 #include <set>
 #include <map>
+#include <chrono>
 #include <functional>
 #include <unordered_set>
 #include <unordered_map>
@@ -20,21 +21,21 @@ unordered_map<string, unordered_set<string>> constraints =
 	{"V", {"NSW", "SA"}},
 	{"SA", {"WA", "NT", "Q", "NSW", "V"}}
 };
-list<map<string, string>> resultList;
+list<unordered_map<string, string>> resultList;
 
-bool check(const string& v, const string& d, map<string, string>& result)
+bool check(const string& v, const string& d, unordered_map<string, string>& result)
 {
 	if (result.empty())
 		return true;
 
 	auto itSet = constraints.find(v);
-	if (itSet == constraints.end())
+	if (itSet == end(constraints))
 		return true;
 
 	for (auto& vC : itSet->second)
 	{
 		auto itRes = result.find(vC);
-		if (itRes == result.end())
+		if (itRes == end(result))
 			continue;
 
 		if (d == itRes->second)
@@ -44,35 +45,34 @@ bool check(const string& v, const string& d, map<string, string>& result)
 	return true;
 }
 
-void solute(map<string, string> result = map<string, string>(),pair<string, string> lastV = make_pair("", ""), set<string>::const_iterator curVIt = variables.begin())
+void solute(
+	unordered_map<string, string> result = unordered_map<string, string>(), 
+	set<string>::const_iterator curVIt = begin(variables))
 {
 	if (variables.empty())
 		return;
 
 	for (auto& d : domain)
 	{
-		if (!check(*curVIt, d, result))
+		auto tempRes = result;
+		if (!check(*curVIt, d, tempRes))
 			continue;
 
-		result[*curVIt] = d;
-		if (++curVIt == variables.end())
-		{
-			resultList.push_back(result);
-			return;
-		}
-		
-		solute(result, std::make_pair(*curVIt, d), curVIt);
+		tempRes[*curVIt] = d;
+		if (next(curVIt) == end(variables))
+			resultList.push_back(tempRes);
+		else
+			solute(tempRes, next(curVIt));
 	}
-
 }
 
-void print()
+void print(size_t elapsed)
 {
-	cout << "生成" << resultList.size() << "个结果" << endl;
+	cout << "生成" << resultList.size() << "个结果,用时" << elapsed << "ms" << endl;
 	for (auto& result : resultList)
 	{
 		for (auto& var : result)
-			cout << var.first << ":" << var.second << " ";
+			cout << var.first << ":" << var.second << "  ";
 
 		cout << endl;
 	}
@@ -80,8 +80,9 @@ void print()
 
 int main()
 {
+	auto start = chrono::high_resolution_clock::now();	
 	solute();
-	print();
+	print(chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::now() - start).count());
 
 	return 0;
 }
