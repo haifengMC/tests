@@ -1,18 +1,17 @@
 #include "global.h"
 #include "hThread.h"
 #include "hPoolMgr.h"
-#include "hTask.h"
 
 namespace hThread
 {
 	hTaskBase::hTaskBase(size_t weight, size_t thrdExpect, uint16_t attr = 0) :
-		hTool::hUniqueMapVal<size_t, hTask>(_thisId, this),
+		hTool::hUniqueMapVal<size_t, hTaskBase>(_thisId, this),
 		_stcData(weight, thrdExpect, attr) {}
 	hTaskBase::hTaskBase(hTask::PhStcDt attr) :
-		hTool::hUniqueMapVal<size_t, hTask>(_thisId, this),
+		hTool::hUniqueMapVal<size_t, hTaskBase>(_thisId, this),
 		_stcData(attr) {}
-	hTaskBase::hTaskBase(hTask&& t) :
-		hTool::hUniqueMapVal<size_t, hTask>(_thisId, this),
+	hTaskBase::hTaskBase(hTaskBase&& t) :
+		hTool::hUniqueMapVal<size_t, hTaskBase>(_thisId, this),
 		_stcData(std::move(t._stcData)), _dynData(std::move(t._dynData)) {}
 
 	bool hTaskBase::init(PWhTaskMgr pMgr)
@@ -62,7 +61,7 @@ namespace hThread
 	hNodeListIt hTaskBase::getCurNodeIt()
 	{
 		if (!_dynData)
-			return false;
+			return hNodeListIt();
 
 		return _dynData->getCurNodeIt();
 	}
@@ -70,15 +69,15 @@ namespace hThread
 	TaskStatType hTaskBase::getStat() const
 	{
 		if (!_dynData)
-			return false;
+			return TaskStatType::Max;
 
 		return _dynData->getStat();
 	}
 
-	std::list<size_t>::iterator getStatIt()
+	std::list<size_t>::iterator hTaskBase::getStatIt()
 	{
 		if (!_dynData)
-			return false;
+			return std::list<size_t>::iterator();
 
 		return _dynData->getStatIt();
 	}
@@ -103,6 +102,22 @@ namespace hThread
 			return false;
 
 		return _dynData->updateStat(state);
+	}
+
+	void hTaskBase::setStat(TaskStatType state)
+	{ 
+		if (_dynData)
+			return;
+		
+		_dynData->setStat(state); 
+	}
+
+	void hTaskBase::setStatIt(std::list<size_t>::iterator it)
+	{
+		if (_dynData)
+			return;
+
+		_dynData->setStatIt(it);
 	}
 
 	bool hTaskBase::resetStatData()
@@ -154,9 +169,17 @@ namespace hThread
 		}
 
 		auto memIt = _dynData->addThrdMem(pMem);
-		pMem->initTask(getThis<hTask>(), nodeIt, memIt);
+		pMem->initTask(getThis<hTaskBase>(), nodeIt, memIt);
 
 		return true;
+	}
+
+	void hTaskBase::initCurNodeIt()
+	{
+		if (_dynData)
+			return;
+
+		_dynData->initCurNodeIt(_stcData->getBegNodeIt());
 	}
 
 	//线程请求运行任务节点

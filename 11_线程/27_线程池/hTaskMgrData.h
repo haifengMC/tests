@@ -7,6 +7,7 @@ namespace hThread
 		//配置数据
 		class hCfgData : public hDataBase
 		{
+			DefLog_Init();
 			PWhTaskMgr _pMgr;//指向自己所在管理器
 			const TaskMgrCfgItem& _base;
 		public:
@@ -46,6 +47,7 @@ namespace hThread
 		//状态管理数据
 		class hStatMgrData : public hDataBase
 		{
+			DefLog_Init();
 			PWhTaskMgr _pMgr;//指向自己所在管理器
 			std::list<size_t> _states[TaskStatType::Max];//状态管理<thisId>
 			std::map<size_t, TaskStatType> _stateMap;//状态map<thisId state>
@@ -61,6 +63,7 @@ namespace hThread
 		//更新管理数据
 		class hUpdateMgrData : public hDataBase
 		{
+			DefLog_Init();
 			PWhTaskMgr _pMgr;//指向自己所在管理器
 			size_t _updateId = 0;//数据更新 任务id
 		public:

@@ -4,6 +4,41 @@ namespace hThread
 {
 	namespace hTask
 	{
+		namespace hStatic
+		{
+			//属性数据
+			struct hAttrData : public hDataBase
+			{
+				size_t _weight = 0;//权重
+				size_t _expectThrd = 0;//期待线程数
+				std::bitset<TaskAttrType::Max> _attr;//任务属性，对应 TaskAttrType
+
+				size_t getWeight() const;
+				size_t getExpectThrd() const;
+				size_t getAttr() const;
+				void setAttr(const std::bitset<TaskAttrType::Max>& attr);
+				bool checkAttr(TaskAttrType attr) const;
+
+				hAttrData(size_t weight, size_t expectThrd, const std::bitset<TaskAttrType::Max>& attr);
+			};
+
+			//静态节点数据
+			struct hNodeData : public hDataBase
+			{
+				size_t _incId = 0;//节点递增id
+
+				PhUserData _nodeData;//节点数据
+				hNodeList _nodeList;//节点链表
+
+				size_t getNodeNum() const;
+				bool addNode(hNode* pNode);//增加任务节点
+				bool initNodeData(hUserData* pData);
+
+				hNodeListIt getBegNodeIt();
+				hNodeListIt getEndNodeIt();
+			};
+		}
+
 		//任务静态数据管理(属性、节点静态数据)
 		class hStaticDataMgr
 		{
@@ -24,83 +59,8 @@ namespace hThread
 			hNodeListIt getBegNodeIt() { return _nodeData.getBegNodeIt(); }
 			hNodeListIt getEndNodeIt() { return _nodeData.getEndNodeIt(); }
 
-			hStaticDataMgr(size_t weight, size_t thrdExpect, const std::bitset<TaskAttrType::Max>& attr);
+			hStaticDataMgr(size_t weight, size_t expectThrd, const std::bitset<TaskAttrType::Max>& attr);
 		};
-
-		//任务动态数据管理(状态、运行数据)
-		class hDynamicDataMgr
-		{
-			DefLog_Init();
-			PWhTask _pTask;	//指向自己所在任务
-			PWhTaskMgr _pMgr;//指向自己所在管理器
-
-			hDynamic::hStatData _state;//任务状态数据
-			hDynamic::hRunData _run;//任务运行数据
-
-		public:
-			TaskStatType getStat() const { return _state.getStat(); }
-			std::list<size_t>::iterator getStatIt() { return _state.getStatIt(); }
-			const char* getStatName() const { return _state.getStatName(); }
-			//设置状态
-			void setStat(TaskStatType stat) { _state.setStat(stat); }
-			void setStatIt(std::list<size_t>::iterator it) { _state.setStatIt(it); }
-			//检测状态
-			bool checkStat(TaskStatType stat) const { return _state.checkStat(stat); }
-			bool updateStat(TaskStatType stat) { return _state.updateStat(stat); }
-			//重置状态数据
-			void resetData() { _run.resetData(); }
-			hNodeListIt getCurNodeIt() { return _run.getCurNodeIt(); }
-			//获取下一个节点
-			hNodeListIt getNextNodeIt(hNodeListIt beg, hNodeListIt end, bool isLoop) { return _run.getNextNodeIt(beg, end, isLoop); }
-			//添加线程到任务,还未启用
-			hWorkMemListIt addThrdMem(PWhWorkMem pMem) { return _run.addThrdMem(pMem); }
-			//初始化当前运行节点
-			void initCurNodeIt(hNodeListIt initIt) { _run.initCurNodeIt(initIt); }
-			//完成当前节点，通知下一个线程
-			bool finishCurNode(hWorkMemListIt memIt, hNodeListIt beg, hNodeListIt end, bool isLoop);
-			//任务节点分配完成释放线程
-			void freeThrdMem(hWorkMemListIt memIt, hNodeListIt end, size_t attr);
-			//是否可执行
-			bool canProc(hNodeListIt it) { return _run.canProc(it); }
-			//更新任务数据
-			template <typename ... Args >
-			void updateTaskData(size_t opt, Args ... args);
-
-			hDynamicDataMgr(PWhTaskMgr pMgr, PWhTask pTask);
-		};
-
-		namespace hStatic
-		{
-			//属性数据
-			struct hAttrData : public hDataBase
-			{
-				size_t _weight = 0;//权重
-				size_t _expectThrd = 0;//期待线程数
-				std::bitset<TaskAttrType::Max> _attr;//任务属性，对应 TaskAttrType
-
-				size_t getWeight() const;
-				size_t getExpectThrd() const;
-				size_t getAttr() const;
-				void setAttr(const std::bitset<TaskAttrType::Max>& attr);
-				bool checkAttr(TaskAttrType attr) const;
-			};
-
-			//静态节点数据
-			struct hNodeData : public hDataBase
-			{
-				size_t _incId = 0;//节点递增id
-
-				PhUserData _nodeData;//节点数据
-				hNodeList _nodeList;//节点链表
-
-				size_t getNodeNum() const;
-				bool addNode(hNode* pNode);//增加任务节点
-				bool initNodeData(hUserData* pData);
-
-				hNodeListIt getBegNodeIt();
-				hNodeListIt getEndNodeIt();
-			};
-		}
 
 		namespace hDynamic
 		{
@@ -159,6 +119,48 @@ namespace hThread
 				hRunData(PWhTaskMgr pMgr, PWhTask pTask);
 			};
 		}
+
+		//任务动态数据管理(状态、运行数据)
+		class hDynamicDataMgr
+		{
+			DefLog_Init();
+			PWhTask _pTask;	//指向自己所在任务
+			PWhTaskMgr _pMgr;//指向自己所在管理器
+
+			hDynamic::hStatData _state;//任务状态数据
+			hDynamic::hRunData _run;//任务运行数据
+
+		public:
+			TaskStatType getStat() const { return _state.getStat(); }
+			std::list<size_t>::iterator getStatIt() { return _state.getStatIt(); }
+			const char* getStatName() const { return _state.getStatName(); }
+			//设置状态
+			void setStat(TaskStatType stat) { _state.setStat(stat); }
+			void setStatIt(std::list<size_t>::iterator it) { _state.setStatIt(it); }
+			//检测状态
+			bool checkStat(TaskStatType stat) const { return _state.checkStat(stat); }
+			bool updateStat(TaskStatType stat) { return _state.updateStat(stat); }
+			//重置状态数据
+			void resetData() { _run.resetData(); }
+			hNodeListIt getCurNodeIt() { return _run.getCurNodeIt(); }
+			//获取下一个节点
+			hNodeListIt getNextNodeIt(hNodeListIt beg, hNodeListIt end, bool isLoop) { return _run.getNextNodeIt(beg, end, isLoop); }
+			//添加线程到任务,还未启用
+			hWorkMemListIt addThrdMem(PWhWorkMem pMem) { return _run.addThrdMem(pMem); }
+			//初始化当前运行节点
+			void initCurNodeIt(hNodeListIt initIt) { _run.initCurNodeIt(initIt); }
+			//完成当前节点，通知下一个线程
+			bool finishCurNode(hWorkMemListIt memIt, hNodeListIt beg, hNodeListIt end, bool isLoop);
+			//任务节点分配完成释放线程
+			void freeThrdMem(hWorkMemListIt memIt, hNodeListIt end, size_t attr);
+			//是否可执行
+			bool canProc(hNodeListIt it) { return _run.canProc(it); }
+			//更新任务数据
+			template <typename ... Args >
+			void updateTaskData(size_t opt, Args ... args);
+
+			hDynamicDataMgr(PWhTaskMgr pMgr, PWhTask pTask);
+		};
 	}
 }
 DefLog(hThread::hTask::hStatic::hAttrData, _weight, _expectThrd, _attr);

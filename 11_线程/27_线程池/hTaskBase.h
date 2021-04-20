@@ -4,7 +4,7 @@ namespace hThread
 {
 	class hTaskBase : 
 		public hTool::hAutoPtrObj, 
-		public hTool::hUniqueMapVal<size_t, hTaskBase>,
+		public hTool::hUniqueMapVal<size_t, hTaskBase>
 	{
 		DefLog_Init();
 		size_t _thisId = 0;//任务唯一id
@@ -17,7 +17,7 @@ namespace hThread
 
 		hTaskBase(size_t weight, size_t thrdExpect, uint16_t attr = 0);
 		hTaskBase(hTask::PhStcDt attr);
-		hTaskBase(hTask&& t);
+		hTaskBase(hTaskBase&& t);
 
 		size_t getId() const { return _thisId; }
 		/*
@@ -41,13 +41,13 @@ namespace hThread
 		std::list<size_t>::iterator getStatIt();
 		bool checkStat(TaskStatType state) const;
 		bool updateStat(TaskStatType state);
-		void setStat(TaskStatType state) { _dynData && _dynData->setStat(state); }
-		void setStatIt(std::list<size_t>::iterator it) { _dynData&& _dynData->setStatIt(it); }
+		void setStat(TaskStatType state);
+		void setStatIt(std::list<size_t>::iterator it);
 		bool resetStatData();
 		//添加线程到任务,还未启用
 		bool addThrdMem(PWhWorkMem pMem);
 		//初始化当前运行节点
-		void initCurNodeIt() { _dynData && _dynData->initCurNodeIt(_stcData->getBegNodeIt()); }
+		void initCurNodeIt();
 		//线程请求运行任务节点
 		bool runTaskNode(hNodeListIt nodeIt);
 		//完成当前节点，通知下一个线程

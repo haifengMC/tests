@@ -13,7 +13,11 @@ namespace hThread
 		template<typename T>
 		void readLk(T func);
 		template<typename T>
+		void readLk(T func) const;
+		template<typename T>
 		void writeLk(T func);
+		template<typename T>
+		void writeLk(T func) const;
 
 		virtual ~hDataBase() {}
 	};

@@ -7,7 +7,7 @@ namespace hThread
 	{
 		DefLog_Init();
 		friend class hMemBase;
-		friend class hTask;
+		friend class hTaskBase;
 
 		bool _valid;
 		const ThreadBaseCfg& _base;
