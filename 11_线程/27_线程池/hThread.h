@@ -46,10 +46,15 @@ namespace hThread
 	namespace hTaskMgr
 	{
 		class hCfgData;//配置数据
+		typedef hTool::hAutoPtr<hCfgData> PhCfgDt;
 		class hTaskMgrData;//任务管理数据
+		typedef hTool::hAutoPtr<hTaskMgrData> PhTskMgrDt;
 		class hWeightMgrData;//权重管理数据
+		typedef hTool::hAutoPtr<hWeightMgrData> PhWtMgrDt;
 		class hStatMgrData;//状态管理数据
+		typedef hTool::hAutoPtr<hStatMgrData> PhStatMgrDt;
 		class hUpdateMgrData;//更新管理数据
+		typedef hTool::hAutoPtr<hUpdateMgrData> PhUpMgrDt;
 	}
 	class hTaskMgrBase;
 	typedef hTool::hAutoPtr<hTaskMgrBase> PhTaskMgr;
@@ -59,31 +64,31 @@ namespace hThread
 	class hMemBase;
 	typedef hTool::hAutoPtr<hMemBase> PhMemBase;
 	class hWorkMem;
-	typedef hTool::hWeakPtr<hWorkMem> PWhMemWork;
-	typedef std::list<PWhMemWork> hMemWorkList;
-	typedef hMemWorkList::iterator hMemWorkListIt;
+	typedef hTool::hWeakPtr<hWorkMem> PWhWorkMem;
+	typedef std::list<PWhWorkMem> hWorkMemList;
+	typedef hWorkMemList::iterator hWorkMemListIt;
 }
 
-#define Debug_PtrMap(os)\
-	PhNodeData::debugMap(cout);\
-	PhNode::debugMap(cout);\
-	PhTskStcDt::debugMap(cout);\
-	PhTskDynDt::debugMap(cout);\
-	PhTask::debugMap(cout);\
-	PhTaskMgr::debugMap(cout);\
-	PThread::debugMap(cout);\
-	PhMem::debugMap(cout);
+#define Debug_PtrMap(os)
+	//PhNodeData::debugMap(cout);\
+	//PhNode::debugMap(cout);\
+	//PhTskStcDt::debugMap(cout);\
+	//PhTskDynDt::debugMap(cout);\
+	//PhTask::debugMap(cout);\
+	//PhTaskMgr::debugMap(cout);\
+	//PThread::debugMap(cout);\
+	//PhMem::debugMap(cout);
 
 #include "hRWLock.h"
 #include "hDataBase.h"
 #include "hNode.h"
 
 #include "hTaskData.h"
-#include "hTask.h"
+#include "hTaskBase.h"
 #include "hUpdateTask.h"
 
 #include "hTaskMgrData.h"
-#include "hTaskMgr.h"
+#include "hTaskMgrBase.h"
 
 #include "hMem.h"
 #include "hWorkMem.h"
@@ -92,8 +97,8 @@ namespace hThread
 
 #include "hDataBaseImpl.h"
 #include "hTaskDataImpl.h"
-#include "hTaskImpl.h"
-#include "hTaskMgrImpl.h"
+#include "hTaskBaseImpl.h"
+#include "hTaskMgrBaseImpl.h"
 #include "hPoolImpl.h"
 
 

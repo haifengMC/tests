@@ -3,14 +3,14 @@
 namespace hThread
 {
 	template <size_t N>
-	size_t hTaskMgr::commitTasks(PhTask(&task)[N])
+	size_t hTaskMgrBase::commitTasks(PhTask(&task)[N])
 	{
 		if (!N) return 0;
 		return commitTasks(task, N);
 	}
 
 	template <typename ... Args >
-	void hTaskMgr::updateTaskData(size_t taskId, size_t opt, Args ... args)
+	void hTaskMgrBase::updateTaskData(size_t taskId, size_t opt, Args ... args)
 	{
 		addUpdateTaskFunc(
 			taskId,

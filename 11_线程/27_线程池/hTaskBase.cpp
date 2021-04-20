@@ -1,6 +1,7 @@
 #include "global.h"
 #include "hThread.h"
 #include "hPoolMgr.h"
+#include "hTask.h"
 
 namespace hThread
 {
@@ -58,6 +59,38 @@ namespace hThread
 			_stcData->checkAttr(TaskAttrType::Loop));
 	}
 
+	hNodeListIt hTaskBase::getCurNodeIt()
+	{
+		if (!_dynData)
+			return false;
+
+		return _dynData->getCurNodeIt();
+	}
+
+	TaskStatType hTaskBase::getStat() const
+	{
+		if (!_dynData)
+			return false;
+
+		return _dynData->getStat();
+	}
+
+	std::list<size_t>::iterator getStatIt()
+	{
+		if (!_dynData)
+			return false;
+
+		return _dynData->getStatIt();
+	}
+
+	bool hTaskBase::checkStat(TaskStatType state) const
+	{
+		if (!_dynData)
+			return false;
+
+		return _dynData->checkStat(state);
+	}
+
 	bool hTaskBase::updateStat(TaskStatType state)
 	{
 		if (TaskStatType::Max <= state)
@@ -84,7 +117,7 @@ namespace hThread
 		return true;
 	}
 	
-	bool hTaskBase::addThrdMem(PWhMemWork pMem)
+	bool hTaskBase::addThrdMem(PWhWorkMem pMem)
 	{
 		if (!pMem)
 		{
@@ -146,7 +179,7 @@ namespace hThread
 		return true;
 	}
 
-	void hTaskBase::finishCurNode(hMemWorkListIt memIt)
+	void hTaskBase::finishCurNode(hWorkMemListIt memIt)
 	{
 		if (!check())
 		{
@@ -157,7 +190,7 @@ namespace hThread
 		_dynData->finishCurNode(memIt);
 	}
 
-	void hTaskBase::freeThrdMem(hMemWorkListIt memIt)
+	void hTaskBase::freeThrdMem(hWorkMemListIt memIt)
 	{
 		if (!check())
 		{
@@ -173,10 +206,21 @@ namespace hThread
 		if (!check())
 		{
 			checkErrOut();
-			return;
+			return 0;
 		}
 
-		return std::min({curThrd, _stcData->_thrdExpect, _stcData ->_nodeList.size()});
+		if (!curThrd)
+			return;
+
+		return std::min({curThrd, _stcData->getNeedThrdNum()});
+	}
+
+	bool hTaskBase::canProc(hNodeListIt it)
+	{
+		if (!_dynData)
+			return false;
+
+		return _dynData->canProc(it);
 	}
 
 	bool hTaskBase::check() const

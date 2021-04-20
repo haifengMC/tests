@@ -145,9 +145,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="hRWLock.cpp" />
-    <ClCompile Include="hTask.cpp" />
+    <ClCompile Include="hTaskBase.cpp" />
     <ClCompile Include="hTaskData.cpp" />
-    <ClCompile Include="hTaskMgr.cpp" />
+    <ClCompile Include="hTaskMgrBase.cpp" />
     <ClCompile Include="hNode.cpp" />
     <ClCompile Include="hTaskMgrData.cpp" />
     <ClCompile Include="hThread.cpp" />
@@ -162,13 +162,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hRWLock.h" />
-    <ClInclude Include="hTask.h" />
+    <ClInclude Include="hTaskBase.h" />
     <ClInclude Include="hTaskData.h" />
     <ClInclude Include="hTaskDataImpl.h" />
-    <ClInclude Include="hTaskImpl.h" />
-    <ClInclude Include="hTaskMgr.h" />
+    <ClInclude Include="hTaskBaseImpl.h" />
+    <ClInclude Include="hTaskMgrBase.h" />
     <ClInclude Include="hTaskMgrData.h" />
-    <ClInclude Include="hTaskMgrImpl.h" />
+    <ClInclude Include="hTaskMgrBaseImpl.h" />
     <ClInclude Include="hNode.h" />
     <ClInclude Include="hThread.h" />
     <ClInclude Include="hThreadCfg.h" />

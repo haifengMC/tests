@@ -7,10 +7,7 @@ namespace hThread
 		template <typename ... Args >
 		void hDynamicDataMgr::updateTaskData(size_t opt, Args ... args)
 		{
-			if (!check())
-				return;
-
-			_pMgr->updateTaskData(_thisId, opt, args...);
+			_pMgr->updateTaskData(_pTask->getId(), opt, args...);
 		}
 	}
 }

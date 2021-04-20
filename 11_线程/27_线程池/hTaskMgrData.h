@@ -10,6 +10,10 @@ namespace hThread
 			PWhTaskMgr _pMgr;//指向自己所在管理器
 			const TaskMgrCfgItem& _base;
 		public:
+			TaskMgrPriority getId() const;
+			const char* getName() const;
+			size_t getMaxBusyThd() const;
+
 			hCfgData(PWhTaskMgr pMgr, const TaskMgrCfgItem& base);
 		};
 
@@ -18,6 +22,10 @@ namespace hThread
 		{
 			PWhTaskMgr _pMgr;//指向自己所在管理器
 		public:
+			auto insert(PhTask pTask) ->
+				std::pair<std::map<size_t, hTool::hAutoPtr<hTaskBase>>::iterator, bool>;
+				
+
 			hTaskMgrData(PWhTaskMgr pMgr);
 		};
 
@@ -26,6 +34,9 @@ namespace hThread
 		{
 			PWhTaskMgr _pMgr;//指向自己所在管理器
 		public:
+			//随机获取一个任务
+			size_t getTaskAtRand();
+
 			void pushTask(size_t weight, size_t tskId);
 			void pushTask(PWhTask pTask);
 
@@ -39,9 +50,10 @@ namespace hThread
 			std::list<size_t> _states[TaskStatType::Max];//状态管理<thisId>
 			std::map<size_t, TaskStatType> _stateMap;//状态map<thisId state>
 		public:
-			std::list<size_t>* getStateList(TaskStatType state);
-			bool updateState(size_t tskId, std::list<size_t>::iterator& statIt,
+			bool updateState(size_t tskId, std::list<size_t>::iterator statIt,
 				TaskStatType oldStat, TaskStatType newStat);
+
+			std::list<size_t>::iterator pushTask(PhTask pTask);
 
 			hStatMgrData(PWhTaskMgr pMgr);
 		};
@@ -52,7 +64,13 @@ namespace hThread
 			PWhTaskMgr _pMgr;//指向自己所在管理器
 			size_t _updateId = 0;//数据更新 任务id
 		public:
+			void setId(size_t id);
+			size_t getId() const;
+
 			hUpdateMgrData(PWhTaskMgr pMgr);
 		};
 	}
 }
+DefLog(hThread::hTaskMgr::hCfgData, _pMgr, _base);
+DefLog(hThread::hTaskMgr::hStatMgrData, _pMgr, _states, _stateMap);
+DefLog(hThread::hTaskMgr::hUpdateMgrData, _pMgr, _updateId);

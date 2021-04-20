@@ -100,7 +100,7 @@ namespace hThread
 		memData.execEvery(ThreadMemStatType::Wait, 
 			[&](PhMemBase pMem)
 			{
-				PWhMemWork pDyMem = pMem.dynamic<hWorkMem>();
+				PWhWorkMem pDyMem = pMem.dynamic<hWorkMem>();
 				if (!pDyMem)
 				{
 					COUT_LK("[" <<
@@ -125,7 +125,7 @@ namespace hThread
 		memData.execEvery(ThreadMemStatType::Ready,
 			[&](PhMemBase pMem)
 			{
-				PWhMemWork pDyMem = pMem.dynamic<hWorkMem>();
+				PWhWorkMem pDyMem = pMem.dynamic<hWorkMem>();
 				if (!pDyMem)
 				{
 					COUT_LK("[" <<

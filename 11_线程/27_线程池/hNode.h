@@ -3,7 +3,7 @@
 
 namespace hThread
 {
-	struct hUserData
+	struct hUserData : public hDataBase
 	{
 		DefLog_Init();
 	protected:
@@ -34,7 +34,7 @@ namespace hThread
 	public:
 		virtual ~hNode() {}
 
-		void init(size_t id, PhNodeData _data);
+		void init(size_t id, PhUserData data);
 
 		const size_t& getId() const { return _id; }
 
@@ -42,7 +42,11 @@ namespace hThread
 		virtual bool preProc() { return true; }//预处理，上读锁，检测节点数据，设置下个节点数据
 		virtual bool onProc() { return true; }//处理函数，上写锁
 		virtual bool finalProc() { return true; }//
-		
+
+		bool handle_initProc();
+		bool handle_preProc();
+		bool handle_onProc();
+		bool handle_finalProc();
 	};
 
 }

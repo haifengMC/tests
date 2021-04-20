@@ -7,7 +7,7 @@ namespace hThread
 	{
 		PWhTask _pTask;//指向当前执行任务
 		hNodeListIt _nodeIt;//指向本线程运行的节点
-		hMemWorkListIt _memIt;//任务线程链表中自己的迭代器
+		hWorkMemListIt _memIt;//任务线程链表中自己的迭代器
 		hRWLock* _pRwLock;//任务锁(由线程池提供)
 	protected:
 		void reset();
@@ -16,8 +16,8 @@ namespace hThread
 		hWorkMem(size_t id);
 		~hWorkMem();
 
-		void notifyNext(hMemWorkListIt beg, hMemWorkListIt end);
-		void initTask(PWhTask pTask, hNodeListIt nodeIt, hMemWorkListIt memIt);
+		void notifyNext(hWorkMemListIt beg, hWorkMemListIt end);
+		void initTask(PWhTask pTask, hNodeListIt nodeIt, hWorkMemListIt memIt);
 		void runTask();
 
 	};

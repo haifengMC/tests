@@ -39,7 +39,7 @@ namespace hThread
 		bool finalProc();
 	};
 
-	class hUpdateTask : public hTask
+	class hUpdateTask : public hTaskBase
 	{
 	public:
 		hUpdateTask();
