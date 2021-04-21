@@ -10,11 +10,10 @@ DefLog(A, a);
 
 class B : public A
 {
-	typename A Base;
 	DefLog_Init();
 	int b = 20;
 };
-DefLog(B, b, Base);
+DefLog(B, b, a);
 
 int main()
 {
