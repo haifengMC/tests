@@ -23,11 +23,15 @@ namespace hThread
 				_execList.push_back(execFn);
 			}
 		};
-		typedef std::map<size_t, ItemData> UpdateMap;
+		typedef std::unordered_map<size_t, ItemData> UpdateMap;
 	}
 	struct hUpdateData : public hUserData
 	{
 		UpdateTaskDefine::UpdateMap _updateMap;
+
+		void updateTask(size_t taskId,
+			std::function<bool()>& checkFn,
+			std::function<void()>& execFn);
 	};
 
 	struct UpdateTaskNode : public hNode

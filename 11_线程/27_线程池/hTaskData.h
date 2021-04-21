@@ -27,9 +27,11 @@ namespace hThread
 			{
 				size_t _incId = 0;//节点递增id
 
-				PhUserData _nodeData;//节点数据
+				PhUserDt _nodeData;//节点数据
 				hNodeList _nodeList;//节点链表
 
+				template <typename T = hUserData>
+				hTool::hWeakPtr<T> getUserData();
 				size_t getNodeNum() const;
 				bool addNode(hNode* pNode);//增加任务节点
 				bool initNodeData(hUserData* pData);
@@ -46,7 +48,9 @@ namespace hThread
 			hStatic::hAttrData _attrData;
 			hStatic::hNodeData _nodeData;
 
-		public:
+		public:		
+			template <typename T = hUserData>
+			hTool::hWeakPtr<T> getUserData() { return _nodeData.getUserData<T>(); }
 			size_t getWeight() const { return _attrData.getWeight(); }
 			size_t getNeedThrdNum() const;
 			size_t getAttr() const { return _attrData.getAttr(); }
@@ -108,11 +112,9 @@ namespace hThread
 				//递增当前运行节点
 				void incCurNodeIt(hNodeListIt beg, hNodeListIt end, bool isLoop);
 				//任务节点分配完成释放线程
-				void eraseThrdMem(hWorkMemListIt memIt);
+				bool eraseThrdMem(hWorkMemListIt memIt);
 				//是否可执行
 				bool canProc(hNodeListIt it);
-				//检测完成状态
-				TaskStatType checkFinishState(hNodeListIt end, size_t attr) const;
 				hWorkMemListIt getBegThrdIt();
 				hWorkMemListIt getEndThrdIt();
 

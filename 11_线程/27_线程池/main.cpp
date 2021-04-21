@@ -128,7 +128,7 @@ TEST(智能指针测试5)
 
 TEST(创建任务测试)
 {
-	hTask t(50, 2, TaskAttrTypeBit::Loop);
+	hTaskBase t(50, 2, TaskAttrTypeBit::Loop);
 	Debug(cout, t) << endl;
 	t.initNodeData();
 	Debug(cout, t) << endl;
@@ -139,7 +139,7 @@ TEST(创建任务测试)
 
 TEST(向任务添加自定义数据和节点)
 {
-	hTask t(50, 2, TaskAttrType::Loop);
+	hTaskBase t(50, 2, TaskAttrType::Loop);
 	t.initNodeData(new TestNodeData("test data"));
 	t.addNode(new TestTaskNode("test node1"));
 	t.addNode(new TestTaskNode("test node2"));
@@ -173,7 +173,7 @@ TEST(按权重随机生成)
 
 TEST(id生成器debug)
 {
-	hTool::hUniqueIdGen<size_t, hTask> _tasksIdGen(50, 1, 100);
+	hTool::hUniqueIdGen<size_t, hTaskBase> _tasksIdGen(50, 1, 100);
 	Debug(cout, _tasksIdGen) << endl;
 	InsertTask(t1);
 	InsertTask(t2);
@@ -189,9 +189,10 @@ TEST(id生成器debug)
 TEST(提交任务到管理器)
 {
 	TaskMgrCfgItem base;
-	hTaskMgr tM(base);
+	hTaskMgrBase tM;
+	tM.init(base);
 	Debug(cout, tM) << endl;
-	PhTask t1 = new hTask(50, 2, TaskAttrType::Loop);
+	PhTask t1 = new hTaskBase(50, 2, TaskAttrType::Loop);
 	t1->initNodeData(new TestNodeData("test data"));
 	t1->addNode(new TestTaskNode("test node1"));
 	t1->addNode(new TestTaskNode("test node2"));
@@ -199,8 +200,8 @@ TEST(提交任务到管理器)
 	Debug(cout, tM) << endl;	
 	PhTask t2[2] = 
 	{ 
-		new hTask(50, 2, TaskAttrTypeBit::Loop), 
-		new hTask(50, 2, TaskAttrTypeBit::Loop)
+		new hTaskBase(50, 2, TaskAttrTypeBit::Loop), 
+		new hTaskBase(50, 2, TaskAttrTypeBit::Loop)
 	};
 	t2[0]->initNodeData();
 	t2[0]->addNode(new hNode);
@@ -214,7 +215,7 @@ TEST(提交任务到管理器)
 
 TEST(提交任务到线程池日志)
 {
-	PhTask t1 = new hTask(50, 2, TaskAttrType::Loop);
+	PhTask t1 = new hTaskBase(50, 2, TaskAttrType::Loop);
 	t1->initNodeData(new TestNodeData("test data"));
 	t1->addNode(new TestTaskNode("test node1"));
 	t1->addNode(new TestTaskNode("test node2"));
@@ -222,8 +223,8 @@ TEST(提交任务到线程池日志)
 	Debug(cout, shPool) << endl;
 	PhTask t2[2] =
 	{
-		new hTask(50, 2, TaskAttrTypeBit::Loop),
-		new hTask(50, 2, TaskAttrTypeBit::Loop)
+		new hTaskBase(50, 2, TaskAttrTypeBit::Loop),
+		new hTaskBase(50, 2, TaskAttrTypeBit::Loop)
 	};
 	t2[0]->initNodeData();
 	t2[0]->addNode(new hNode);
@@ -238,36 +239,35 @@ TEST(提交任务到线程池日志)
 TEST(线程池运行5秒)
 {
 	{
-/*
-		PTask t1 = new Task(50, 2, TaskAttrTypeBit::Loop);
-		t1->initNodeData(new NodeData());
-		t1->addNode(new Test1TaskNode());
-		t1->addNode(new Test1TaskNode());
-		sThrdPool.commitTasks(t1);
-		PTask t2 = new Task(50, 2);
-		t2->initNodeData(new NodeData());
+		//PhTask t1 = new hTaskBase(50, 2, TaskAttrTypeBit::Loop);
+		//t1->initNodeData(new NodeData());
+		//t1->addNode(new Test1TaskNode());
+		//t1->addNode(new Test1TaskNode());
+		//shPool.commitTasks(t1);
+		PhTask t2 = new hTaskBase(50, 2, TaskAttrTypeBit::Loop);
+		t2->initNodeData(new hUserData());
 		t2->addNode(new Test1TaskNode());
 		t2->addNode(new Test1TaskNode());
-		sThrdPool.commitTasks(t2);
-*/
+		shPool.commitTasks(t2);
 	}
 	//this_thread::sleep_for(1s);
 	shPool.run();
-	this_thread::sleep_for(1s);
-	{
-		string is;
-		PhTask t;
-		t.bind(new Test2Task);
-		shPool.commitTasks(t);
-		while (1)
-		{
-
-			cin >> is;
-			if (is == "quit")
-				break;
-			t->updateTaskData(0, is.c_str());
-		}
-	}
+	system("pause");
+	//this_thread::sleep_for(10s);
+	//{
+	//	string is;
+	//	PhTask t;
+	//	t.bind(new Test2Task);
+	//	shPool.commitTasks(t);
+	//	while (1)
+	//	{
+	//
+	//		cin >> is;
+	//		if (is == "quit")
+	//			break;
+	//		t->updateTaskData(0, is.c_str());
+	//	}
+	//}
 
 	ostringstream os;
 	Debug(os, shPool);

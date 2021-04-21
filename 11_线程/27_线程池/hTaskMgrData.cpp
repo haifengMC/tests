@@ -9,7 +9,7 @@ namespace hThread
 	{
 		TaskMgrPriority hCfgData::getId() const
 		{
-			TaskMgrPriority ret = 0;
+			TaskMgrPriority ret;
 			readLk([&]() { ret = _base.index(); });
 			return ret;
 		}
@@ -31,11 +31,18 @@ namespace hThread
 		hCfgData::hCfgData(PWhTaskMgr pMgr, const TaskMgrCfgItem& base) :
 			_pMgr(pMgr), _base(base) {}
 
-		auto hTaskMgrData::insert(PhTask pTask) ->
+		auto hTaskMgrData::insertTask(PhTask pTask) ->
 			std::pair<std::map<size_t, hTool::hAutoPtr<hTaskBase>>::iterator, bool>
 		{
-			std::pair < std::map<size_t, hTool::hAutoPtr<hTaskBase>>::iterator ret;
+			std::pair <std::map<size_t, hTool::hAutoPtr<hTaskBase>>::iterator, bool> ret;
 			writeLk([&]() { ret = insert(pTask); });
+			return ret;
+		}
+
+		PhTask hTaskMgrData::getTask(size_t tskId)
+		{
+			PhTask ret;
+			readLk([&]() { ret = get(tskId); });
 			return ret;
 		}
 
@@ -62,6 +69,17 @@ namespace hThread
 			}
 
 			writeLk([&]() { pushBack(weight, tskId); });
+		}
+
+		void hWeightMgrData::pushTask(PhTask pTask)
+		{
+			if (!pTask)
+			{
+				COUT_LK(" 添加权重管理器失败，空任务指针...");
+				return;
+			}
+
+			pushTask(pTask->getWeight(), pTask->getId());
 		}
 
 		void hWeightMgrData::pushTask(PWhTask pTask)
@@ -109,20 +127,21 @@ namespace hThread
 
 		std::list<size_t>::iterator hStatMgrData::pushTask(PhTask pTask)
 		{
+			std::list<size_t>::iterator it;
+
 			if (!pTask)
 			{
 				COUT_LK(" 添加状态管理器失败，空任务指针...");
-				return;
+				return it;
 			}
 
 			TaskStatType stat = pTask->getStat();
 			if (!stat || stat >= TaskStatType::Max)
 			{
-				COUT_LK(" 添加状态管理器失败，异常状态" << stat.getName() <<"...");
-				return;
+				COUT_LK(pTask->getId() << " 添加状态管理器失败，异常状态" << stat.getName() <<"...");
+				return it;
 			}
 
-			std::list<size_t>::iterator it;
 			writeLk([&]() 
 				{ 
 					auto& stRef = _states[stat];
@@ -138,6 +157,13 @@ namespace hThread
 
 		void hUpdateMgrData::setId(size_t id)
 		{
+			if (!id)
+			{
+				COUT_LK(_pMgr->getName() << " 更新管理器id设置异常...");
+				return;
+			}
+
+
 			writeLk([&]() { _updateId = id; });
 		}
 

@@ -39,11 +39,19 @@ namespace hThread
 
 						//不是重复型任务执行
 						if (!_pTask->checkAttr(TaskAttrType::Repeat))
+						{
+							COUT_LK("Tsk_" << _pTask->getId() << " 不是重复型任务,由WorkMem_" << _id << "执行...");
 							return true;
+						}
 
 						//当前可重复继续执行
 						if (_pTask->canRepeat())
+						{
+							COUT_LK("Tsk_" << _pTask->getId() << " 可重复执行,由WorkMem_" << _id << "执行...");
 							return true;
+						}
+
+						COUT_LK("Tsk_" << _pTask->getId() << " 不可执行,释放WorkMem_" << _id << "...");
 
 						_pTask->freeThrdMem(_memIt);
 						reset();
@@ -77,8 +85,8 @@ namespace hThread
 					{
 						COUT_LK("task_" << _pTask->getIndex() << " 任务节点" <<
 							"node_" << nodeRef.getId() << "预处理失败,做后续处理,线程" <<
-							"memWork_" << getId() << "准备重置...");
-						nodeRef.handle_finalProc();
+							"WorkMem_" << getId() << "准备重置...");
+						nodeRef.handle_failProc();
 						break;
 					}
 
@@ -87,26 +95,13 @@ namespace hThread
 							if (_close)
 								return true;
 
-							bool canProcV = _pTask->canProc(_nodeIt);
-							if (!canProcV)
-							{
-								COUT_LK("memWork_" << getId() << " " << "task_" << _pTask->getIndex() <<
-									"任务等待前置节点完成_curNodeIt:" << (*_pTask->getCurNodeIt())->getId() <<
-									"_nodeIt:" << (*_nodeIt)->getId() << "...");
-							}
-
-							return canProcV;
+							return nodeRef.handle_waitProc(_pTask, _nodeIt);
 						});
 					if (_close)
 						break;
 
 					nodeRef.handle_onProc();
-					nodeRef.handle_finalProc();
-					_pTask->finishCurNode(_memIt);
-					_nodeIt = _pTask->getNextNode();
-
-					COUT_LK("memWork_" << getId() << " 任务" << "task_" << _pTask->getIndex() << "节点" << nodeRef.getId() <<
-						"处理完成...");
+					_nodeIt = nodeRef.handle_succProc(_pTask, _memIt);
 
 				}
 				//线程工作完毕
@@ -115,7 +110,7 @@ namespace hThread
 			}
 			//std::this_thread::sleep_for(std::chrono::seconds(1));
 			//reset();
-			COUT_LK("memWork_" << _id << " 工作线程停止工作...");
+			COUT_LK("WorkMem_" << _id << " 工作线程停止工作...");
 		};
 	}
 
@@ -123,12 +118,12 @@ namespace hThread
 		hMemBase(id)
 	{
 		_type = ThreadMemType::Work;
-		COUT_LK("memWork_" << _id << " 工作线程创建...");
+		COUT_LK("WorkMem_" << _id << " 工作线程创建...");
 	}
 
 	hWorkMem::~hWorkMem()
 	{
-		COUT_LK("memWork_" << _id << " 工作线程释放...");
+		COUT_LK("WorkMem_" << _id << " 工作线程释放...");
 	}
 
 	void hWorkMem::notifyNext(hWorkMemListIt beg, hWorkMemListIt end)
@@ -139,7 +134,7 @@ namespace hThread
 		if (_memIt == end)
 			return;
 
-		hWorkMemListIt nextIt = std::next(memIt);
+		hWorkMemListIt nextIt = std::next(_memIt);
 		if (nextIt == end)
 			nextIt = beg;
 
@@ -149,7 +144,7 @@ namespace hThread
 
 	void hWorkMem::initTask(PWhTask pTask, hNodeListIt nodeIt, hWorkMemListIt memIt)
 	{
-		COUT_LK("memWork_" << _id << " 初始化工作线程任务" <<
+		COUT_LK("WorkMem_" << _id << " 初始化工作线程任务" <<
 			"task_" << pTask->getIndex() << "...");
 		_pTask = pTask;
 		_nodeIt = nodeIt;
@@ -159,7 +154,7 @@ namespace hThread
 
 	void hWorkMem::runTask()
 	{
-		COUT_LK("memWork_" << _id << " 通知工作线程运行任务" <<
+		COUT_LK("WorkMem_" << _id << " 通知工作线程运行任务" <<
 			"task_" << _pTask->getIndex() << "...");
 		if (!_pTask || !_nodeIt._Ptr || !_memIt._Ptr)
 		{

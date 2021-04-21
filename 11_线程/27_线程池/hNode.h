@@ -29,12 +29,12 @@ namespace hThread
 		DefLog_Init();
 	protected:
 		size_t _id = 0;
-		PhUserData _data;
+		PhUserDt _data;
 		typedef hNode Base;
 	public:
 		virtual ~hNode() {}
 
-		void init(size_t id, PhUserData data);
+		void init(size_t id, PhUserDt data);
 
 		const size_t& getId() const { return _id; }
 
@@ -45,8 +45,10 @@ namespace hThread
 
 		bool handle_initProc();
 		bool handle_preProc();
+		bool handle_waitProc(PWhTask pTsk, hNodeListIt nodeIt);
 		bool handle_onProc();
-		bool handle_finalProc();
+		hNodeListIt handle_succProc(PWhTask pTsk, hWorkMemListIt memIt);
+		bool handle_failProc();
 	};
 
 }

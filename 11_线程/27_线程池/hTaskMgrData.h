@@ -21,24 +21,27 @@ namespace hThread
 		//任务管理数据
 		class hTaskMgrData : public hTool::hUniqueIdGen<size_t, hTaskBase>, public hDataBase
 		{
+			DefLog_Init();
 			PWhTaskMgr _pMgr;//指向自己所在管理器
 		public:
-			auto insert(PhTask pTask) ->
+			auto insertTask(PhTask pTask) ->
 				std::pair<std::map<size_t, hTool::hAutoPtr<hTaskBase>>::iterator, bool>;
-				
-
+			PhTask getTask(size_t tskId);
+			
 			hTaskMgrData(PWhTaskMgr pMgr);
 		};
 
 		//权重管理数据
 		class hWeightMgrData : public hTool::hRWeightMap<size_t>, public hDataBase
 		{
+			DefLog_Init();
 			PWhTaskMgr _pMgr;//指向自己所在管理器
 		public:
 			//随机获取一个任务
 			size_t getTaskAtRand();
 
 			void pushTask(size_t weight, size_t tskId);
+			void pushTask(PhTask pTask);
 			void pushTask(PWhTask pTask);
 
 			hWeightMgrData(PWhTaskMgr pMgr);
@@ -75,5 +78,7 @@ namespace hThread
 	}
 }
 DefLog(hThread::hTaskMgr::hCfgData, _pMgr, _base);
+DefLog(hThread::hTaskMgr::hTaskMgrData, _pMgr, _minN, _maxN, _curN, _genRange, _keySet, _mapData);
+DefLog(hThread::hTaskMgr::hWeightMgrData, _pMgr, _total, _weights);
 DefLog(hThread::hTaskMgr::hStatMgrData, _pMgr, _states, _stateMap);
 DefLog(hThread::hTaskMgr::hUpdateMgrData, _pMgr, _updateId);

@@ -170,6 +170,9 @@ namespace hThread
 						ret = true;
 					});
 
+				if (ret)
+					setStat(stat);
+
 				return ret;
 			}
 
@@ -198,7 +201,7 @@ namespace hThread
 
 			hNodeListIt hRunData::getNextNodeIt(hNodeListIt beg, hNodeListIt end, bool isLoop)
 			{
-				hNodeListIt it;
+				hNodeListIt it = end;
 				writeLk([&]()
 					{
 						if (!_nodeIt._Ptr)
@@ -211,20 +214,17 @@ namespace hThread
 						{
 							if (isLoop)
 								it = _nodeIt = beg;
-							else
-								it = end;
 
 							return;
 						}
 
-						if (++_nodeIt != end)
+						if (++_nodeIt == end && isLoop)
+							it = _nodeIt = beg;
+						else
 							it = _nodeIt;
 					});
 
-				if (_nodeIt._Ptr)
-					return it;
-				else
-					return getNextNodeIt(beg, end, isLoop);
+				return it;
 			}
 
 			hWorkMemListIt hRunData::addThrdMem(PWhWorkMem pMem)
@@ -328,50 +328,6 @@ namespace hThread
 				return ret;
 			}
 
-			TaskStatType hRunData::checkFinishState(hNodeListIt end, size_t attr) const
-			{
-				TaskStatType ret = TaskStatType::Finish;
-				readLk([&]()
-					{
-						//节点还未运行完毕时任务异常
-						if (_curNodeIt != end || _nodeIt != end)
-						{
-							ret = TaskStatType::Error;
-							COUT_LK(_pTask->getId() << "节点还未运行完毕时任务异常...");
-							return;
-						}
-						//设置分离的任务完成时稍后等待删除
-						if (attr & TaskAttrTypeBit::Detach)
-						{
-							ret = TaskStatType::Detach;
-							COUT_LK(_pTask->getId() << "设置分离的任务完成时稍后等待删除...");
-							return;
-						}
-						//设置重复的任务完成时放回等待重复执行
-						if (attr & TaskAttrTypeBit::Repeat)
-						{
-							ret = TaskStatType::Wait;
-							resetStatData();
-							if (!canRepeat())
-								return;
-
-							_dynData->_pMgr->_weights.pushBack(getWeight(), getId());
-							shPool.notifyMgrThrd();
-							return;
-						}
-
-					});
-
-				switch (ret)
-				{
-				case TaskStatType::Wait:
-				default:
-					break;
-				}
-
-				return ret;
-			}
-
 			hWorkMemListIt hRunData::getBegThrdIt()
 			{
 				hWorkMemListIt it;
@@ -433,7 +389,7 @@ namespace hThread
 			} 
 
 			//设置重复的任务完成时放回等待重复执行
-			if (attr & TaskAttrType::Repeat))
+			if (attr & TaskAttrType::Repeat)
 			{
 				COUT_LK(_pTask->getId() << "设置重复的任务完成时放回等待重复执行...");
 				updateStat(TaskStatType::Wait);

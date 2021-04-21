@@ -16,10 +16,18 @@ namespace hThread
 		_pStatMgr.emplace(getThis<hTaskMgrBase>());
 		_pUpdateMgr.emplace(getThis<hTaskMgrBase>());
 
-		PhTask pTsk;
-		pTsk.bind(new hUpdateTask);
-		commitTasks(pTsk);
-		_pUpdateMgr->setId(pTsk->getId());
+		//PhTask pTsk;
+		//pTsk.bind(new hUpdateTask);
+		//commitTasks(pTsk);
+		//_pUpdateMgr->setId(pTsk->getId());
+	}
+
+	const char* hTaskMgrBase::getName() const
+	{
+		if (!_pCfg)
+			return NULL;
+
+		return _pCfg->getName();
 	}
 
 	//提交任务，将新任务提交给管理器，提交后默认状态为等待
@@ -35,21 +43,22 @@ namespace hThread
 			if (!pTask->init(getThis<hTaskMgrBase>()))
 				continue;//初始化任务
 
-			if (pTask->checkStat(TaskStatType::Init))
+			if (!pTask->checkStat(TaskStatType::Init))
 				continue;//检测初始化状态
 
-			auto rsPair = _pTaskMgr->insert(pTask);
+			auto rsPair = _pTaskMgr->insertTask(pTask);
 			if (!rsPair.second)
 				continue;
 
 			++ret;
 
 			//提交后默认状态为等待
-			pTask->setStat(TaskStatType::Wait)
+			pTask->setStat(TaskStatType::Wait);
 			//添加至权重管理
 			pushTask2Weight(pTask);
 			//添加至状态管理
-			pTask->setStatIt(pushTask2Stat(pTask));
+			auto it = pushTask2Stat(pTask);
+			pTask->setStatIt(it);
 		}
 
 		return ret;
@@ -65,20 +74,23 @@ namespace hThread
 	{
 		//忙碌线程超过最大忙碌限制
 		if (busy >= _pCfg->getMaxBusyThd())
+		{
+			COUT_LK(getName() << "忙碌线程超过最大忙碌限制(" << busy << "/" << _pCfg->getMaxBusyThd() << ")...")
 			return PhTask();
+		}
 
 		size_t tskId = _pWeightMgr->getTaskAtRand();
 		if (!tskId)
 			return PhTask();
 
-		PhTask pTask = _tasks.get(tskId);
+		PhTask pTask = _pTaskMgr->getTask(tskId);
 		if (!pTask)
 		{
 			COUT_LK(_pCfg->getName() << "中，任务" << tskId << "不存在...");
 			return PhTask();
 		}
 
-		updateTaskState(tskId, pTask->getStatIt(), TaskStatType::Wait, TaskStatType::Ready);
+		pTask->updateStat(TaskStatType::Ready);
 		return pTask;
 	}
 
@@ -93,22 +105,22 @@ namespace hThread
 		std::function<bool()> checkFn,
 		std::function<void()> execFn)
 	{
-		PhTask pUpdateTask = _tasks.get(_pUpdateMgr->getId());
+		PhTask pUpdateTask = _pTaskMgr->getTask(_pUpdateMgr->getId());
 		if (!pUpdateTask)
 		{
-			COUT_LK(_base.index() << "数据更新 任务未初始化,_updateId:" << _pUpdateMgr->getId() << "...");
+			COUT_LK(_pCfg->getName() << "数据更新 任务未初始化,_updateId:" << _pUpdateMgr->getId() << "...");
 			return;
 		}
 
 		PWhUpdTsk pUpTask = pUpdateTask.dynamic<hUpdateTask>();
 		if (!pUpTask)
 		{
-			COUT_LK(_base.index() << "数据更新 任务未初始化为UpdateTask对象,_updateId:" << _pUpdateMgr->getId() << "...");
+			COUT_LK(_pCfg->getName() << "数据更新 任务未初始化为UpdateTask对象,_updateId:" << _pUpdateMgr->getId() << "...");
 			return;
 		}
 
 		pUpTask->updata(taskId, checkFn, execFn);
-		_weights.pushBack(pUpTask->getWeight(), _updateId);
+		pushTask2Weight(pUpdateTask);
 		shPool.notifyMgrThrd();
 	}
 }

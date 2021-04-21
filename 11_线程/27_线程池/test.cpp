@@ -135,8 +135,7 @@ bool Test2Task::canRepeat()
 		return false;
 	}
 
-	hTool::hWeakPtr<Test2TaskData> pData = 
-		getStc()->_nodeData.dynamic<Test2TaskData>();
+	hTool::hWeakPtr<Test2TaskData> pData = getUserData<Test2TaskData>();
 	if (!pData)
 	{
 		COUT_LK("test2任务canRepeat() 数据未初始化为Test2TaskData对象...");

@@ -12,6 +12,7 @@ namespace hThread
 		hTaskMgr::PhUpMgrDt _pUpdateMgr;//数据更新 任务id
 	public:
 		void init(const TaskMgrCfgItem& base);
+		const char* getName() const;
 
 		//提交任务，将新任务提交给管理器，提交后默认状态为等待
 		template <size_t N>
@@ -32,10 +33,10 @@ namespace hThread
 			std::function<void()> execFn);
 
 		//将任务加入权重管理
-		void pushTask2Weight(PhTask pTask) { _pWeightMgr->pushTask(pTask->getWeight(), pTask->getId()); }
+		void pushTask2Weight(PhTask pTask) { _pWeightMgr->pushTask(pTask); }
 		void pushTask2Weight(PWhTask pTask) { _pWeightMgr->pushTask(pTask); }
 		//将任务加入状态管理
-		void pushTask2Stat(PhTask pTask) { _pStatMgr->pushTask(pTask); }
+		std::list<size_t>::iterator pushTask2Stat(PhTask pTask) { return _pStatMgr->pushTask(pTask); }
 	};
 }
 DefLog(hThread::hTaskMgrBase, _pCfg, _pTaskMgr, _pWeightMgr, _pStatMgr, _pUpdateMgr);

@@ -4,7 +4,7 @@
 
 namespace hThread
 {
-	hTaskBase::hTaskBase(size_t weight, size_t thrdExpect, uint16_t attr = 0) :
+	hTaskBase::hTaskBase(size_t weight, size_t thrdExpect, uint16_t attr) :
 		hTool::hUniqueMapVal<size_t, hTaskBase>(_thisId, this),
 		_stcData(weight, thrdExpect, attr) {}
 	hTaskBase::hTaskBase(hTask::PhStcDt attr) :
@@ -106,7 +106,7 @@ namespace hThread
 
 	void hTaskBase::setStat(TaskStatType state)
 	{ 
-		if (_dynData)
+		if (!_dynData)
 			return;
 		
 		_dynData->setStat(state); 
@@ -114,7 +114,7 @@ namespace hThread
 
 	void hTaskBase::setStatIt(std::list<size_t>::iterator it)
 	{
-		if (_dynData)
+		if (!_dynData)
 			return;
 
 		_dynData->setStatIt(it);
@@ -176,7 +176,7 @@ namespace hThread
 
 	void hTaskBase::initCurNodeIt()
 	{
-		if (_dynData)
+		if (!_dynData)
 			return;
 
 		_dynData->initCurNodeIt(_stcData->getBegNodeIt());
@@ -210,7 +210,7 @@ namespace hThread
 			return;
 		}
 
-		_dynData->finishCurNode(memIt);
+		_dynData->finishCurNode(memIt, _stcData->getBegNodeIt(), _stcData->getEndNodeIt(), _stcData->checkAttr(TaskAttrType::Loop));
 	}
 
 	void hTaskBase::freeThrdMem(hWorkMemListIt memIt)
@@ -233,7 +233,7 @@ namespace hThread
 		}
 
 		if (!curThrd)
-			return;
+			return 0;
 
 		return std::min({curThrd, _stcData->getNeedThrdNum()});
 	}

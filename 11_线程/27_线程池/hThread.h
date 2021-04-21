@@ -8,7 +8,8 @@
 namespace hThread 
 {
 	struct hUserData;
-	typedef hTool::hAutoPtr<hUserData> PhUserData;
+	typedef hTool::hAutoPtr<hUserData> PhUserDt;
+	typedef hTool::hWeakPtr<hUserData> PWhUserDt;
 	struct hUpdateData;
 	typedef hTool::hWeakPtr<hUpdateData> PWhUpdDt;
 

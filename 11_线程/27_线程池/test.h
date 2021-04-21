@@ -21,7 +21,7 @@ struct TestTaskNode : public hThread::hNode
 
 //idÉú³ÉÆ÷debug
 #define InsertTask(va)\
-	hTask* va = new hTaskBase(50, 2, TaskAttrType::Loop);\
+	hTaskBase* va = new hTaskBase(50, 2, TaskAttrType::Loop);\
 	va->initNodeData(new TestNodeData("test data"));\
 	va->addNode(new TestTaskNode("test node1"));\
 	va->addNode(new TestTaskNode("test node2"));\

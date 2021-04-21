@@ -28,9 +28,11 @@ namespace hThread
 			return;
 
 		for (auto& item : shPoolMgr.getTaskMgrCfg())
-			_taskMgr.emplace_back(new hTaskMgr(item.second));
-		for (auto& pMgr : _taskMgr)
-			pMgr->init();
+		{
+			PhTaskMgr pMgr = new hTaskMgrBase();
+			pMgr->init(item.second);
+			_taskMgr.push_back(pMgr);
+		}
 		COUT_LK("初始化任务管理器完毕...");
 		_memData[ThreadMemType::Work]._type = ThreadMemType::Work;
 		_memData[ThreadMemType::Mgr]._type = ThreadMemType::Mgr;

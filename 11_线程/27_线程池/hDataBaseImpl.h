@@ -11,9 +11,9 @@ namespace hThread
 			return;
 		}
 
-		rwLock.lock();
+		pRWLock->lock();
 		func();
-		rwLock.unlock();
+		pRWLock->unlock();
 	}
 
 	template<typename T>
@@ -25,9 +25,9 @@ namespace hThread
 			return;
 		}
 
-		rwLock.lock();
+		pRWLock->lock();
 		func();
-		rwLock.unlock();
+		pRWLock->unlock();
 	}
 
 	template<typename T>
@@ -39,9 +39,9 @@ namespace hThread
 			return;
 		}
 
-		rwLock.lock();
+		pRWLock->lock();
 		func();
-		rwLock.unlock();
+		pRWLock->unlock();
 	}
 
 	template<typename T>
@@ -53,8 +53,8 @@ namespace hThread
 			return;
 		}
 
-		rwLock.lock();
+		pRWLock->lock();
 		func();
-		rwLock.unlock();
+		pRWLock->unlock();
 	}
 }

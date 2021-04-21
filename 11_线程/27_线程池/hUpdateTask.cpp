@@ -5,6 +5,20 @@
 
 namespace hThread
 {
+	void hUpdateData::updateTask(size_t taskId,
+		std::function<bool()>& checkFn,
+		std::function<void()>& execFn)
+	{
+		writeLk([&]()
+			{
+				auto it = _updateMap.find(taskId);
+				if (it == _updateMap.end())
+					_updateMap.insert(std::make_pair(taskId, UpdateTaskDefine::ItemData(taskId, checkFn, execFn)));
+				else
+					it->second._execList.push_back(execFn);
+			});
+	}
+
 	bool UpdateTaskNode::preProc()
 	{
 		PWhUpdDt pData = _data.dynamic<hUpdateData>();
@@ -59,7 +73,7 @@ namespace hThread
 		return true;
 	}
 
-	hUpdateTask::hUpdateTask() : hTask(50, 1, TaskAttrTypeBit::Repeat)
+	hUpdateTask::hUpdateTask() : hTaskBase(50, 1, TaskAttrTypeBit::Repeat)
 	{
 		initNodeData(new hUpdateData);
 		addNode(new UpdateTaskNode);
@@ -69,27 +83,20 @@ namespace hThread
 		std::function<bool()>& checkFn,
 		std::function<void()>& execFn)
 	{
-		writeLk([&]() 
-			{
-				if (!check())
-				{
-					checkErrOut();
-					return;
-				}
+		if (!check())
+		{
+			checkErrOut();
+			return;
+		}
 
-				PWhUpdDt pData = getStc()->_nodeData.dynamic<hUpdateData>();
-				if (!pData)
-				{
-					COUT_LK("数据更新任务updata() 数据未初始化为UpdateTaskData对象...");
-					return;
-				}
-				
-				auto it = pData->_updateMap.find(taskId);
-				if (it == pData->_updateMap.end())
-					pData->_updateMap.insert(std::make_pair(taskId, UpdateTaskDefine::ItemData(taskId, checkFn, execFn)));
-				else
-					it->second._execList.push_back(execFn);
-			});
+		PWhUpdDt pData = getUserData<hUpdateData>();
+		if (!pData)
+		{
+			COUT_LK("数据更新任务updata() 数据未初始化为UpdateTaskData对象...");
+			return;
+		}
+
+		pData->updateTask(taskId, checkFn, execFn);
 	}
 
 	bool hUpdateTask::canRepeat()
@@ -100,7 +107,7 @@ namespace hThread
 			return false;
 		}
 
-		PWhUpdDt pData = getStc()->_nodeData.dynamic<hUpdateData>();
+		PWhUpdDt pData = getUserData<hUpdateData>();
 		if (!pData)
 		{
 			COUT_LK("数据更新任务canRepeat() 数据未初始化为UpdateTaskData对象...");

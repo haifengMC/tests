@@ -4,7 +4,7 @@ namespace hThread
 {
 	class hDataBase
 	{
-		std::mutex rwLock;//自锁，暂时用互斥锁代替
+		std::mutex* const pRWLock;//自锁，暂时用互斥锁代替
 	protected:
 		virtual bool check() const { return true; }//一般性检测
 		virtual void checkErrOut() const {}
@@ -19,6 +19,7 @@ namespace hThread
 		template<typename T>
 		void writeLk(T func) const;
 
-		virtual ~hDataBase() {}
+		hDataBase() : pRWLock(new std::mutex) {}
+		virtual ~hDataBase() { delete pRWLock; }
 	};
 }

@@ -13,13 +13,15 @@ namespace hThread
 		hTask::PhDynDt _dynData;
 
 	public:
-		virtual bool canRepeat() { return false; }
+		virtual bool canRepeat() const { return false; }
 
 		hTaskBase(size_t weight, size_t thrdExpect, uint16_t attr = 0);
 		hTaskBase(hTask::PhStcDt attr);
 		hTaskBase(hTaskBase&& t);
 
 		size_t getId() const { return _thisId; }
+		template <typename T = hUserData>
+		hTool::hWeakPtr<T> getUserData();
 		/*
 		 Ù–‘œ‡πÿ
 		*/
