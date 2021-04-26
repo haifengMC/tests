@@ -11,23 +11,31 @@ namespace hThread
 			readLk([&]() { pData = _nodeData.dynamic<T>(); });
 			return pData;
 		}
+
+
+		template <typename T>
+		hTool::hWeakPtr<const T> hStatic::hNodeData::getUserData() const
+		{
+			hTool::hWeakPtr<const T> pData;
+			readLk([&]() { pData = _nodeData.dynamic<T>(); });
+			return pData;
+		}
 	}
 
 	template <typename T>
 	hTool::hWeakPtr<T> hTaskBase::getUserData()
 	{
-		if (_stcData)
+		if (!_stcData)
 			return hTool::hWeakPtr<T>();
 		
 		return _stcData->getUserData<T>();
 	}
-
-	template <typename ... Args >
-	void hTaskBase::updateTaskData(size_t opt, Args ... args)
+	template <typename T>
+	hTool::hWeakPtr<const T> hTaskBase::getUserData() const
 	{
-		if (!check())
-			return;
+		if (!_stcData)
+			return hTool::hWeakPtr<const T>();
 
-		_dynData->updateTaskData(_thisId, opt, args...);
+		return _stcData->getUserData<T>();
 	}
 }

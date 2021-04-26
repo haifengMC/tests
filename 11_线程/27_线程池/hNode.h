@@ -19,7 +19,7 @@ namespace hThread
 		virtual ~hUserData() {}
 
 		//更新数据，上写锁
-		virtual void update(size_t opt, ...) {}
+		virtual void update(size_t opt, void* data, size_t len) {}
 
 		operator bool() { return _needDel; }
 	};

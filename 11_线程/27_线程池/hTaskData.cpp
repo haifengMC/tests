@@ -389,11 +389,14 @@ namespace hThread
 			} 
 
 			//设置重复的任务完成时放回等待重复执行
-			if (attr & TaskAttrType::Repeat)
+			if (attr & TaskAttrTypeBit::Repeat)
 			{
 				COUT_LK(_pTask->getId() << "设置重复的任务完成时放回等待重复执行...");
 				updateStat(TaskStatType::Wait);
 				resetData();
+
+				if (!_pTask->canRepeat())
+					return;
 
 				_pMgr->pushTask2Weight(_pTask);
 				shPool.notifyMgrThrd();
@@ -401,6 +404,11 @@ namespace hThread
 			}
 
 			updateStat(TaskStatType::Finish);
+		}
+
+		void hDynamicDataMgr::updateTaskData(size_t opt, const void* data, size_t len)
+		{
+			_pMgr->updateTaskData(_pTask->getId(), opt, data, len);
 		}
 
 		hDynamicDataMgr::hDynamicDataMgr(PWhTaskMgr pMgr, PWhTask pTask) :

@@ -79,7 +79,7 @@ namespace hThread
 		addNode(new UpdateTaskNode);
 	}
 
-	void hUpdateTask::updata(size_t taskId,
+	void hUpdateTask::update(size_t taskId,
 		std::function<bool()>& checkFn,
 		std::function<void()>& execFn)
 	{
@@ -92,14 +92,14 @@ namespace hThread
 		PWhUpdDt pData = getUserData<hUpdateData>();
 		if (!pData)
 		{
-			COUT_LK("数据更新任务updata() 数据未初始化为UpdateTaskData对象...");
+			COUT_LK("数据更新任务update() 数据未初始化为hUpdateData对象...");
 			return;
 		}
 
 		pData->updateTask(taskId, checkFn, execFn);
 	}
 
-	bool hUpdateTask::canRepeat()
+	bool hUpdateTask::canRepeat() const
 	{
 		if (!check())
 		{
@@ -107,7 +107,7 @@ namespace hThread
 			return false;
 		}
 
-		PWhUpdDt pData = getUserData<hUpdateData>();
+		PWChUpdDt pData = getUserData<hUpdateData>();
 		if (!pData)
 		{
 			COUT_LK("数据更新任务canRepeat() 数据未初始化为UpdateTaskData对象...");

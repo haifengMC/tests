@@ -16,10 +16,10 @@ namespace hThread
 		_pStatMgr.emplace(getThis<hTaskMgrBase>());
 		_pUpdateMgr.emplace(getThis<hTaskMgrBase>());
 
-		//PhTask pTsk;
-		//pTsk.bind(new hUpdateTask);
-		//commitTasks(pTsk);
-		//_pUpdateMgr->setId(pTsk->getId());
+		PhTask pTsk;
+		pTsk.bind(new hUpdateTask);
+		commitTasks(pTsk);
+		_pUpdateMgr->setId(pTsk->getId());
 	}
 
 	const char* hTaskMgrBase::getName() const
@@ -55,7 +55,9 @@ namespace hThread
 			//提交后默认状态为等待
 			pTask->setStat(TaskStatType::Wait);
 			//添加至权重管理
-			pushTask2Weight(pTask);
+			if (pTask->checkAttr(TaskAttrType::Repeat) 
+				&& pTask->canRepeat())
+				pushTask2Weight(pTask);
 			//添加至状态管理
 			auto it = pushTask2Stat(pTask);
 			pTask->setStatIt(it);
@@ -101,6 +103,53 @@ namespace hThread
 		return _pStatMgr->updateState(tskId, statIt, oldStat, newStat);
 	}
 
+	void hTaskMgrBase::updateTaskData(size_t taskId, size_t opt, const void* data, size_t len)
+	{
+		void* tmpData = malloc(len);
+		if (!tmpData)
+		{
+			COUT_LK(getName() << " 更新" <<
+				"Tsk_" << taskId << "数据失败(" <<
+				"opt:" << opt << ", len:" << len << ")，" <<
+				"创建存储空间失败...");
+			return;
+		}
+		memset(tmpData, 0, len);
+		memcpy(tmpData, data, len);
+
+		addUpdateTaskFunc(
+			taskId,
+			std::function<bool()>(std::bind(
+				[&](size_t id)
+				{
+					PhTask pTask = _pTaskMgr->getTask(id);
+					if (!pTask)
+						return false;
+
+					return pTask->checkStat(TaskStatType::Wait);
+				}, taskId)),
+			std::function<void()>(std::bind(
+				[&](size_t id, void* tmpData,
+					std::function<void(PWhUserDt, void*)> memFn)
+				{
+					PhTask pTask = _pTaskMgr->getTask(id);
+					if (!pTask)
+						return;
+
+					PWhUserDt pData = pTask->getUserData();
+					if (!pData)
+						return;
+
+					pData->writeLk([&]() { memFn(pData, tmpData); });
+					free(tmpData);
+					pushTask2Weight(pTask);
+				}, taskId, tmpData,
+				std::function<void(PWhUserDt, void*)>(bind(
+					std::mem_fn(&hUserData::update),
+					std::placeholders::_1, opt, 
+					std::placeholders::_2, len)))));
+	}
+
 	void hTaskMgrBase::addUpdateTaskFunc(size_t taskId,
 		std::function<bool()> checkFn,
 		std::function<void()> execFn)
@@ -119,7 +168,7 @@ namespace hThread
 			return;
 		}
 
-		pUpTask->updata(taskId, checkFn, execFn);
+		pUpTask->update(taskId, checkFn, execFn);
 		pushTask2Weight(pUpdateTask);
 		shPool.notifyMgrThrd();
 	}

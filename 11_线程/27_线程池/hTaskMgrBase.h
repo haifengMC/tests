@@ -25,8 +25,7 @@ namespace hThread
 		bool updateTaskState(size_t tskId, std::list<size_t>::iterator statIt,
 			TaskStatType oldStat, TaskStatType newStat);
 		//更新任务数据
-		template <typename ... Args >
-		void updateTaskData(size_t taskId, size_t opt, Args ... args);
+		void updateTaskData(size_t taskId, size_t opt, const void* data, size_t len);
 		//向更新任务添加函数
 		void addUpdateTaskFunc(size_t taskId,
 			std::function<bool()> checkFn,

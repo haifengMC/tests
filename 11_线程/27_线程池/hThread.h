@@ -12,6 +12,7 @@ namespace hThread
 	typedef hTool::hWeakPtr<hUserData> PWhUserDt;
 	struct hUpdateData;
 	typedef hTool::hWeakPtr<hUpdateData> PWhUpdDt;
+	typedef hTool::hWeakPtr<const hUpdateData> PWChUpdDt;
 
 	class hNode;
 	typedef hTool::hAutoPtr<hNode> PhNode;

@@ -148,7 +148,7 @@ namespace hThread
 
 		if (!pMem->checkStat(ThreadMemStatType::Wait))
 		{
-			COUT_LK(_thisId << "[" <<
+			COUT_LK("Tsk_" << _thisId << "[" <<
 				pMem->getStatName() <<
 				pMem->getId() << "]线程不在等待状态...");
 			return false;
@@ -156,7 +156,7 @@ namespace hThread
 
 		if (!_dynData->checkStat(TaskStatType::Ready))
 		{
-			COUT_LK(_thisId << " 任务不在准备状态" <<
+			COUT_LK("Tsk_" << _thisId << " 任务不在准备状态" <<
 				_dynData->getStatName() << "...");
 			return false;
 		}
@@ -164,7 +164,7 @@ namespace hThread
 		auto nodeIt = getNextNode();
 		if (!nodeIt._Ptr || nodeIt == _stcData->getEndNodeIt())
 		{
-			COUT_LK(_thisId << " 无可用节点...");
+			COUT_LK("Tsk_" << _thisId << " 无可用节点...");
 			return false;
 		}
 
@@ -256,6 +256,15 @@ namespace hThread
 
 		return true;
 	}
+
+	void hTaskBase::updateTaskData(size_t opt, const void* data, size_t len)
+	{
+		if (!_dynData)
+			return;
+
+		_dynData->updateTaskData(opt, data, len);
+	}
+
 
 	void hTaskBase::checkErrOut() const
 	{

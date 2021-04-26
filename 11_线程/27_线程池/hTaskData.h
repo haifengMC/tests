@@ -32,6 +32,9 @@ namespace hThread
 
 				template <typename T = hUserData>
 				hTool::hWeakPtr<T> getUserData();
+				template <typename T = hUserData>
+				hTool::hWeakPtr<const T> getUserData() const;
+
 				size_t getNodeNum() const;
 				bool addNode(hNode* pNode);//增加任务节点
 				bool initNodeData(hUserData* pData);
@@ -51,6 +54,8 @@ namespace hThread
 		public:		
 			template <typename T = hUserData>
 			hTool::hWeakPtr<T> getUserData() { return _nodeData.getUserData<T>(); }
+			template <typename T = hUserData>
+			hTool::hWeakPtr<const T> getUserData() const { return _nodeData.getUserData<T>(); }
 			size_t getWeight() const { return _attrData.getWeight(); }
 			size_t getNeedThrdNum() const;
 			size_t getAttr() const { return _attrData.getAttr(); }
@@ -158,8 +163,7 @@ namespace hThread
 			//是否可执行
 			bool canProc(hNodeListIt it) { return _run.canProc(it); }
 			//更新任务数据
-			template <typename ... Args >
-			void updateTaskData(size_t opt, Args ... args);
+			void updateTaskData(size_t opt, const void* data, size_t len);
 
 			hDynamicDataMgr(PWhTaskMgr pMgr, PWhTask pTask);
 		};

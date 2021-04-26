@@ -239,6 +239,7 @@ TEST(提交任务到线程池日志)
 TEST(线程池运行5秒)
 {
 	{
+#if 0
 		//PhTask t1 = new hTaskBase(50, 2, TaskAttrTypeBit::Loop);
 		//t1->initNodeData(new NodeData());
 		//t1->addNode(new Test1TaskNode());
@@ -249,25 +250,26 @@ TEST(线程池运行5秒)
 		t2->addNode(new Test1TaskNode());
 		t2->addNode(new Test1TaskNode());
 		shPool.commitTasks(t2);
+#endif
+
 	}
 	//this_thread::sleep_for(1s);
 	shPool.run();
-	system("pause");
-	//this_thread::sleep_for(10s);
-	//{
-	//	string is;
-	//	PhTask t;
-	//	t.bind(new Test2Task);
-	//	shPool.commitTasks(t);
-	//	while (1)
-	//	{
-	//
-	//		cin >> is;
-	//		if (is == "quit")
-	//			break;
-	//		t->updateTaskData(0, is.c_str());
-	//	}
-	//}
+	{
+		string is;
+		PhTask t;
+		t.bind(new Test2Task);
+		shPool.commitTasks(t);
+		while (1)
+		{
+			cin >> is;
+			if (is == "quit")
+				break;
+
+			cout << "提交更新:" << is.c_str() << " " << is.size() << endl;
+			t->updateTaskData(100, is.c_str(), is.size() + 1);
+		}
+	}
 
 	ostringstream os;
 	Debug(os, shPool);

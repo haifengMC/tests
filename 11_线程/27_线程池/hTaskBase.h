@@ -22,6 +22,8 @@ namespace hThread
 		size_t getId() const { return _thisId; }
 		template <typename T = hUserData>
 		hTool::hWeakPtr<T> getUserData();
+		template <typename T = hUserData>
+		hTool::hWeakPtr<const T> getUserData() const;
 		/*
 		属性相关
 		*/
@@ -61,8 +63,7 @@ namespace hThread
 		//是否可执行
 		bool canProc(hNodeListIt it);
 		//更新任务数据
-		template <typename ... Args >
-		void updateTaskData(size_t opt, Args ... args);
+		void updateTaskData(size_t opt, const void* data, size_t len);
 
 		bool init(PWhTaskMgr pMgr);
 

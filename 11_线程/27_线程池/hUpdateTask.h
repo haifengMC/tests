@@ -47,9 +47,9 @@ namespace hThread
 	{
 	public:
 		hUpdateTask();
-		void updata(size_t taskId,
+		void update(size_t taskId,
 			std::function<bool()>& checkFn,
 			std::function<void()>& execFn);
-		bool canRepeat();
+		bool canRepeat() const override;
 	};
 }
