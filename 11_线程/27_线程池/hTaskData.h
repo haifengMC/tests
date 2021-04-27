@@ -105,7 +105,7 @@ namespace hThread
 					_nodeIt;//指向最后载入线程的节点
 
 				//重置状态数据
-				void resetData() { writeLk([&]() { _curNodeIt = _nodeIt = hNodeListIt(); }); }
+				void resetData(hNodeListIt it) { writeLk([&]() { _curNodeIt = _nodeIt = it; }); }
 				hNodeListIt getCurNodeIt();
 				hNodeListIt getNextNodeIt(hNodeListIt beg, hNodeListIt end, bool isLoop);
 				//添加线程到任务,还未启用
@@ -148,7 +148,7 @@ namespace hThread
 			bool checkStat(TaskStatType stat) const { return _state.checkStat(stat); }
 			bool updateStat(TaskStatType stat) { return _state.updateStat(stat); }
 			//重置状态数据
-			void resetData() { _run.resetData(); }
+			void resetData(hNodeListIt it = hNodeListIt()) { _run.resetData(it); }
 			hNodeListIt getCurNodeIt() { return _run.getCurNodeIt(); }
 			//获取下一个节点
 			hNodeListIt getNextNodeIt(hNodeListIt beg, hNodeListIt end, bool isLoop) { return _run.getNextNodeIt(beg, end, isLoop); }

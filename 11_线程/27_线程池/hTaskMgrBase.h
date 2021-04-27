@@ -11,7 +11,7 @@ namespace hThread
 		hTaskMgr::PhStatMgrDt _pStatMgr;//状态管理<thisId>
 		hTaskMgr::PhUpMgrDt _pUpdateMgr;//数据更新 任务id
 	public:
-		void init(const TaskMgrCfgItem& base);
+		void init(const TaskMgrCfgItem* base);
 		const char* getName() const;
 
 		//提交任务，将新任务提交给管理器，提交后默认状态为等待
@@ -34,6 +34,7 @@ namespace hThread
 		//将任务加入权重管理
 		void pushTask2Weight(PhTask pTask) { _pWeightMgr->pushTask(pTask); }
 		void pushTask2Weight(PWhTask pTask) { _pWeightMgr->pushTask(pTask); }
+		bool pushUpTask2Weight(size_t taskId);
 		//将任务加入状态管理
 		std::list<size_t>::iterator pushTask2Stat(PhTask pTask) { return _pStatMgr->pushTask(pTask); }
 	};

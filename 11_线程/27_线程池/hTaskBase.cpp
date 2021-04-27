@@ -132,6 +132,18 @@ namespace hThread
 		return true;
 	}
 	
+	bool hTaskBase::resetEndStatData()
+	{
+		if (!check())
+		{
+			checkErrOut();
+			return false;
+		}
+
+		_dynData->resetData(_stcData->getEndNodeIt());
+		return true;
+	}
+
 	bool hTaskBase::addThrdMem(PWhWorkMem pMem)
 	{
 		if (!pMem)

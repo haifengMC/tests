@@ -6,9 +6,9 @@
 namespace hThread
 {
 	
-	void hTaskMgrBase::init(const TaskMgrCfgItem& base)
+	void hTaskMgrBase::init(const TaskMgrCfgItem* base)
 	{
-		COUT_LK(base.index().getName() << " 任务管理器初始化...");
+		COUT_LK("任务管理器" << TSK_MGR(base->index().getName()) << "初始化...");
 
 		_pCfg.emplace(getThis<hTaskMgrBase>(), base);
 		_pTaskMgr.emplace(getThis<hTaskMgrBase>());
@@ -20,6 +20,7 @@ namespace hThread
 		pTsk.bind(new hUpdateTask);
 		commitTasks(pTsk);
 		_pUpdateMgr->setId(pTsk->getId());
+		_pUpdateMgr->setWeight(pTsk->getWeight());
 	}
 
 	const char* hTaskMgrBase::getName() const
@@ -88,7 +89,7 @@ namespace hThread
 		PhTask pTask = _pTaskMgr->getTask(tskId);
 		if (!pTask)
 		{
-			COUT_LK(_pCfg->getName() << "中，任务" << tskId << "不存在...");
+			COUT_LK(TSK_MGR(_pCfg->getName()) << "中，任务" << TSK(tskId) << "不存在...");
 			return PhTask();
 		}
 
@@ -171,5 +172,17 @@ namespace hThread
 		pUpTask->update(taskId, checkFn, execFn);
 		pushTask2Weight(pUpdateTask);
 		shPool.notifyMgrThrd();
+	}
+
+	bool hTaskMgrBase::pushUpTask2Weight(size_t taskId)
+	{
+		if (taskId == _pUpdateMgr->getId())
+			return false;
+
+		_pWeightMgr->pushTask(
+			_pUpdateMgr->getWeight(), 
+			_pUpdateMgr->getId()); 
+
+		return true;
 	}
 }

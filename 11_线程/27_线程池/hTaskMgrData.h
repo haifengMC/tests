@@ -15,7 +15,7 @@ namespace hThread
 			const char* getName() const;
 			size_t getMaxBusyThd() const;
 
-			hCfgData(PWhTaskMgr pMgr, const TaskMgrCfgItem& base);
+			hCfgData(PWhTaskMgr pMgr, const TaskMgrCfgItem* pBase);
 		};
 
 		//任务管理数据
@@ -69,9 +69,12 @@ namespace hThread
 			DefLog_Init();
 			PWhTaskMgr _pMgr;//指向自己所在管理器
 			size_t _updateId = 0;//数据更新 任务id
+			size_t _updateWeight = 0;//数据更新 权重
 		public:
 			void setId(size_t id);
 			size_t getId() const;
+			void setWeight(size_t weight);
+			size_t getWeight() const;
 
 			hUpdateMgrData(PWhTaskMgr pMgr);
 		};

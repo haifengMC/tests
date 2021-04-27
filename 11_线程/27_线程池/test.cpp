@@ -113,6 +113,7 @@ bool Test2TaskNode::preProc()
 
 bool Test2TaskNode::onProc()
 {
+	COUT_LK(OUTCOL_GREEN("test2任务onProc()..."));
 	COUT_LK("test2任务onProc()...");
 	hTool::hWeakPtr<Test2TaskData> pData = _data.dynamic<Test2TaskData>();
 	if (!pData)

@@ -16,7 +16,7 @@ namespace hThread
 
 		const char* hCfgData::getName() const
 		{
-			const char* ret = 0;
+			const char* ret = NULL;
 			readLk([&]() { ret = _base.index().getName(); });
 			return ret;
 		}
@@ -28,8 +28,8 @@ namespace hThread
 			return ret;
 		}
 
-		hCfgData::hCfgData(PWhTaskMgr pMgr, const TaskMgrCfgItem& base) :
-			_pMgr(pMgr), _base(base) {}
+		hCfgData::hCfgData(PWhTaskMgr pMgr, const TaskMgrCfgItem* pBase) :
+			_pMgr(pMgr), _base(*pBase) {}
 
 		auto hTaskMgrData::insertTask(PhTask pTask) ->
 			std::pair<std::map<size_t, hTool::hAutoPtr<hTaskBase>>::iterator, bool>
@@ -174,6 +174,24 @@ namespace hThread
 			return id;
 		}
 
+		void hUpdateMgrData::setWeight(size_t weight)
+		{
+			if (!weight)
+			{
+				COUT_LK(_pMgr->getName() << " 更新管理器weight设置异常...");
+				return;
+			}
+
+
+			writeLk([&]() { _updateWeight = weight; });
+		}
+
+		size_t hUpdateMgrData::getWeight() const
+		{
+			size_t weight = 0;
+			readLk([&]() { weight = _updateWeight; });
+			return weight;
+		}
 
 		hUpdateMgrData::hUpdateMgrData(PWhTaskMgr pMgr) :
 			_pMgr(pMgr) {}

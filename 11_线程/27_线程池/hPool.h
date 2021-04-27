@@ -16,7 +16,7 @@ namespace hThread
 		hMemData _memData[ThreadMemType::Max];
 
 		//size_t waitTask = 0;//等待任务数
-		std::vector<PhTaskMgr> _taskMgr;
+		PhTaskMgr _taskMgr[TaskMgrPriority::Max];
 		//std::map<Task*, hRWLock*> taskLock;//任务锁
 	
 		//hRWLock rwLock;//自锁

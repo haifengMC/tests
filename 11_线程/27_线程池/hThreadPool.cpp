@@ -29,10 +29,10 @@ namespace hThread
 
 		for (auto& item : shPoolMgr.getTaskMgrCfg())
 		{
-			PhTaskMgr pMgr = new hTaskMgrBase();
-			pMgr->init(item.second);
-			_taskMgr.push_back(pMgr);
+			_taskMgr[item.first].bind(new hTaskMgrBase());
+			_taskMgr[item.first]->init(&item.second);
 		}
+
 		COUT_LK("初始化任务管理器完毕...");
 		_memData[ThreadMemType::Work]._type = ThreadMemType::Work;
 		_memData[ThreadMemType::Mgr]._type = ThreadMemType::Mgr;
@@ -78,7 +78,7 @@ namespace hThread
 	PhTask hPool::readyTasks()
 	{
 		size_t busyThdNum = getThrdMemNum(ThreadMemType::Work, ThreadMemStatType::Run);
-		for (auto pMgr : _taskMgr)
+		for (auto& pMgr : _taskMgr)
 		{
 			if (!pMgr)
 				continue;

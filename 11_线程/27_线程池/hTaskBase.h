@@ -48,6 +48,7 @@ namespace hThread
 		void setStat(TaskStatType state);
 		void setStatIt(std::list<size_t>::iterator it);
 		bool resetStatData();
+		bool resetEndStatData();
 		//添加线程到任务,还未启用
 		bool addThrdMem(PWhWorkMem pMem);
 		//初始化当前运行节点

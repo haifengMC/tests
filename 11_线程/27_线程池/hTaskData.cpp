@@ -395,10 +395,16 @@ namespace hThread
 				updateStat(TaskStatType::Wait);
 				resetData();
 
-				if (!_pTask->canRepeat())
-					return;
+				if (_pTask->canRepeat())
+					_pMgr->pushTask2Weight(_pTask);
+				else //任务已重复完成，通知更新任务检测是否有剩余数据
+				{
+					if (!_pMgr->pushUpTask2Weight(_pTask->getId()))
+						return;
 
-				_pMgr->pushTask2Weight(_pTask);
+					COUT_LK(_pTask->getId() << "任务已重复完成，通知更新任务检测是否有剩余数据...");
+				}
+
 				shPool.notifyMgrThrd();
 				return;
 			}

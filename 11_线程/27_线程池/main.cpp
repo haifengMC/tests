@@ -190,7 +190,7 @@ TEST(提交任务到管理器)
 {
 	TaskMgrCfgItem base;
 	hTaskMgrBase tM;
-	tM.init(base);
+	tM.init(&base);
 	Debug(cout, tM) << endl;
 	PhTask t1 = new hTaskBase(50, 2, TaskAttrType::Loop);
 	t1->initNodeData(new TestNodeData("test data"));
@@ -265,6 +265,13 @@ TEST(线程池运行5秒)
 			cin >> is;
 			if (is == "quit")
 				break;
+			else if (is == "print")
+			{
+				ostringstream os;
+				Debug(os, shPool);
+				COUT_LK(os.str());
+				continue;
+			}
 
 			cout << "提交更新:" << is.c_str() << " " << is.size() << endl;
 			t->updateTaskData(100, is.c_str(), is.size() + 1);
