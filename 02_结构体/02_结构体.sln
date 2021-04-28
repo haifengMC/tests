@@ -63,6 +63,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "29_bind和mem_fn实现数�
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "30_命名空间中的声明和定义", "30_命名空间中的声明和定义\30_命名空间中的声明和定义.vcxproj", "{25F99E51-1056-4B86-81E1-9E0E3AFCEAE0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "31_三种时钟", "31_三种时钟\31_三种时钟.vcxproj", "{CB55627A-411B-43D7-A7D7-3A0CCBFD31D6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -311,6 +313,14 @@ Global
 		{25F99E51-1056-4B86-81E1-9E0E3AFCEAE0}.Release|x64.Build.0 = Release|x64
 		{25F99E51-1056-4B86-81E1-9E0E3AFCEAE0}.Release|x86.ActiveCfg = Release|Win32
 		{25F99E51-1056-4B86-81E1-9E0E3AFCEAE0}.Release|x86.Build.0 = Release|Win32
+		{CB55627A-411B-43D7-A7D7-3A0CCBFD31D6}.Debug|x64.ActiveCfg = Debug|x64
+		{CB55627A-411B-43D7-A7D7-3A0CCBFD31D6}.Debug|x64.Build.0 = Debug|x64
+		{CB55627A-411B-43D7-A7D7-3A0CCBFD31D6}.Debug|x86.ActiveCfg = Debug|Win32
+		{CB55627A-411B-43D7-A7D7-3A0CCBFD31D6}.Debug|x86.Build.0 = Debug|Win32
+		{CB55627A-411B-43D7-A7D7-3A0CCBFD31D6}.Release|x64.ActiveCfg = Release|x64
+		{CB55627A-411B-43D7-A7D7-3A0CCBFD31D6}.Release|x64.Build.0 = Release|x64
+		{CB55627A-411B-43D7-A7D7-3A0CCBFD31D6}.Release|x86.ActiveCfg = Release|Win32
+		{CB55627A-411B-43D7-A7D7-3A0CCBFD31D6}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
