@@ -1,6 +1,6 @@
 #include "global.h"
 #include "hThread.h"
-#include "hThread/hThreadPoolMgr.h"
+#include "hThread/hPoolMgr.h"
 #include "test.h"
 
 using namespace std;
@@ -8,23 +8,7 @@ using namespace hThread;
 
 int main()
 {
-	{
-		/*
-				PTask t1 = new Task(50, 2, TaskAttrTypeBit::Loop);
-				t1->initNodeData(new NodeData());
-				t1->addNode(new Test1TaskNode());
-				t1->addNode(new Test1TaskNode());
-				sThrdPool.commitTasks(t1);
-				PTask t2 = new Task(50, 2);
-				t2->initNodeData(new NodeData());
-				t2->addNode(new Test1TaskNode());
-				t2->addNode(new Test1TaskNode());
-				sThrdPool.commitTasks(t2);
-		*/
-	}
-	//this_thread::sleep_for(1s);
 	shPool.run();
-	this_thread::sleep_for(1s);
 	{
 		string is;
 		PhTask t;
@@ -32,11 +16,19 @@ int main()
 		shPool.commitTasks(t);
 		while (1)
 		{
-
 			cin >> is;
 			if (is == "quit")
 				break;
-			t->updateTaskData(0, is.c_str());
+			else if (is == "print")
+			{
+				ostringstream os;
+				Debug(os, shPool);
+				COUT_LK(os.str());
+				continue;
+			}
+
+			cout << "提交更新:" << is.c_str() << " " << is.size() << endl;
+			t->updateTaskData(100, is.c_str(), is.size() + 1);
 		}
 	}
 

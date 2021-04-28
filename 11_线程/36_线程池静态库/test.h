@@ -2,8 +2,8 @@
 
 struct Test2TaskData : public hThread::hUserData
 {
-	std::string _s;
-	void update(size_t opt, ...);
+	std::list<std::string> _sLst;
+	void update(size_t opt, void* data, size_t len) override;
 };
 
 struct Test2TaskNode : public hThread::hNode
@@ -15,9 +15,9 @@ struct Test2TaskNode : public hThread::hNode
 	bool finalProc();
 };
 
-class Test2Task : public hThread::hTask
+class Test2Task : public hThread::hTaskBase
 {
 public:
 	Test2Task();
-	bool canRepeat();
+	bool canRepeat() const override;
 };
