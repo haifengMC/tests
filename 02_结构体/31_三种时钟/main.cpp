@@ -27,11 +27,30 @@ void printClockData()
 	cout << "- is_steady: " << boolalpha << C::is_steady << endl;
 }
 
-uint64_t getNow()
+size_t getNow()
 {
-	const auto& now = std::chrono::steady_clock::now();
-	typedef typename std::ratio_multiply<now::period, std::kilo> KiloPeriod;
-	return now::period / KiloPeriod::den;
+	{
+		auto now = std::chrono::steady_clock::now();
+		typedef std::chrono::steady_clock::period Period;
+		typedef typename std::ratio_multiply<Period, std::kilo> KiloPeriod;
+		std::cout << now.time_since_epoch().count() << std::endl;
+		std::cout << std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count() << "us" << std::endl;
+		std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count() << "ms" << std::endl;
+		std::cout << std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch()).count() << "s" << std::endl;
+		std::cout << std::chrono::duration_cast<std::chrono::minutes>(now.time_since_epoch()).count() << "min" << std::endl;
+	}
+	{
+		auto now = std::chrono::system_clock::now();
+		std::cout << now.time_since_epoch().count() << std::endl;
+		std::cout << std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count() << "us" << std::endl;
+		std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count() << "ms" << std::endl;
+		std::cout << std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch()).count() << "s" << std::endl;
+		std::cout << std::chrono::duration_cast<std::chrono::minutes>(now.time_since_epoch()).count() << "min" << std::endl;
+	}
+
+
+
+	return 0;
 }
 
 int main()
