@@ -8,10 +8,10 @@ int main()
 	{
 		PhObj pObj = new hObjectBase(PWhObj());
 		Debug(cout, pObj) << endl;
-		new hObjectBase(pObj.dynamic());
-		PhObj pSubObj = new hObjectBase(pObj.dynamic());
-		new hObjectBase(pObj.dynamic());
-		new hObjectBase(pSubObj.dynamic());
+		new hObjectBase(pObj);
+		PhObj pSubObj = new hObjectBase(pObj);
+		new hObjectBase(pObj);
+		new hObjectBase(pSubObj);
 		Debug(cout, pObj) << endl;
 		PhObj::debugMap(cout);
 	}
