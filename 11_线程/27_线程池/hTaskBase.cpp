@@ -247,7 +247,7 @@ namespace hThread
 		if (!curThrd)
 			return 0;
 
-		return std::min({curThrd, _stcData->getNeedThrdNum()});
+		return std::min<size_t>({curThrd, _stcData->getNeedThrdNum()});
 	}
 
 	bool hTaskBase::canProc(hNodeListIt it)
