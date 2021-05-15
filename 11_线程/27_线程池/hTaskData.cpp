@@ -113,7 +113,7 @@ namespace hThread
 			size_t expectNum = _attrData.getExpectThrd();
 			size_t nodeNum = _nodeData.getNodeNum();
 
-			return std::min(expectNum, nodeNum);
+			return std::min<size_t>(expectNum, nodeNum);
 		}
 
 		hStaticDataMgr::hStaticDataMgr(size_t weight, size_t expectThrd, const std::bitset<TaskAttrType::Max>& attr) :
