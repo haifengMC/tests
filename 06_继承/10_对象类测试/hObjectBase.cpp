@@ -11,6 +11,11 @@ hObjectBase::hObjectBase(PWhObj parent)
 	_thisIt = parent->insertChild(this);
 }
 
+void hObjectBase::loadUi()
+{
+	new hObjectBase(getThis<hObjectBase>());
+}
+
 #if 0
 GLuint hObjectBase::getBufSize()
 {

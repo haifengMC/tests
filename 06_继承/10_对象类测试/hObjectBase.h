@@ -14,6 +14,8 @@ class hObjectBase : public hTool::hAutoPtrObj
 	hObjList _children;
 public:
 	hObjectBase(PWhObj parent);
+
+	virtual void loadUi();
 #if 0
 	virtual ~hObjectBase() {}
 	virtual GLuint getBufSize();

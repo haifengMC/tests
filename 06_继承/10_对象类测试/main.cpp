@@ -7,11 +7,12 @@ int main()
 {
 	{
 		PhObj pObj = new hObjectBase(PWhObj());
-		Debug(cout, pObj) << endl;
-		new hObjectBase(pObj);
-		PhObj pSubObj = new hObjectBase(pObj);
-		new hObjectBase(pObj);
-		new hObjectBase(pSubObj);
+		pObj->loadUi();
+		//Debug(cout, pObj) << endl;
+		//new hObjectBase(pObj);
+		//PhObj pSubObj = new hObjectBase(pObj);
+		//new hObjectBase(pObj);
+		//new hObjectBase(pSubObj);
 		Debug(cout, pObj) << endl;
 		PhObj::debugMap(cout);
 	}
