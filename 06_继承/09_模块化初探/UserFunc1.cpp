@@ -17,5 +17,5 @@ UserFunc1::RegUserFunc1::RegUserFunc1()
 
 void UserFunc1::printMe()
 {
-	cout << "UserFunc1" << endl;
+	cout << "UserFunc1:" << sizeof(reg) << endl;
 }

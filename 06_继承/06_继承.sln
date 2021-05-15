@@ -23,6 +23,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "09_模块化初探", "09_�
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "10_对象类测试", "10_对象类测试\10_对象类测试.vcxproj", "{58D75A45-0029-4B82-AA20-8E724AF313FC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "11_模块化再探", "11_模块化再探\11_模块化再探.vcxproj", "{B9541E16-138D-4652-9C43-7C5BCE93CA8A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -111,6 +113,14 @@ Global
 		{58D75A45-0029-4B82-AA20-8E724AF313FC}.Release|x64.Build.0 = Release|x64
 		{58D75A45-0029-4B82-AA20-8E724AF313FC}.Release|x86.ActiveCfg = Release|Win32
 		{58D75A45-0029-4B82-AA20-8E724AF313FC}.Release|x86.Build.0 = Release|Win32
+		{B9541E16-138D-4652-9C43-7C5BCE93CA8A}.Debug|x64.ActiveCfg = Debug|x64
+		{B9541E16-138D-4652-9C43-7C5BCE93CA8A}.Debug|x64.Build.0 = Debug|x64
+		{B9541E16-138D-4652-9C43-7C5BCE93CA8A}.Debug|x86.ActiveCfg = Debug|Win32
+		{B9541E16-138D-4652-9C43-7C5BCE93CA8A}.Debug|x86.Build.0 = Debug|Win32
+		{B9541E16-138D-4652-9C43-7C5BCE93CA8A}.Release|x64.ActiveCfg = Release|x64
+		{B9541E16-138D-4652-9C43-7C5BCE93CA8A}.Release|x64.Build.0 = Release|x64
+		{B9541E16-138D-4652-9C43-7C5BCE93CA8A}.Release|x86.ActiveCfg = Release|Win32
+		{B9541E16-138D-4652-9C43-7C5BCE93CA8A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
