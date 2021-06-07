@@ -25,6 +25,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "10_对象类测试", "10_�
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "11_模块化再探", "11_模块化再探\11_模块化再探.vcxproj", "{B9541E16-138D-4652-9C43-7C5BCE93CA8A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "12_特例化成员函数多态", "12_特例化成员函数多态\12_特例化成员函数多态.vcxproj", "{B439F7FD-6D93-4AA2-B64F-86021F20C7E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -121,6 +123,14 @@ Global
 		{B9541E16-138D-4652-9C43-7C5BCE93CA8A}.Release|x64.Build.0 = Release|x64
 		{B9541E16-138D-4652-9C43-7C5BCE93CA8A}.Release|x86.ActiveCfg = Release|Win32
 		{B9541E16-138D-4652-9C43-7C5BCE93CA8A}.Release|x86.Build.0 = Release|Win32
+		{B439F7FD-6D93-4AA2-B64F-86021F20C7E3}.Debug|x64.ActiveCfg = Debug|x64
+		{B439F7FD-6D93-4AA2-B64F-86021F20C7E3}.Debug|x64.Build.0 = Debug|x64
+		{B439F7FD-6D93-4AA2-B64F-86021F20C7E3}.Debug|x86.ActiveCfg = Debug|Win32
+		{B439F7FD-6D93-4AA2-B64F-86021F20C7E3}.Debug|x86.Build.0 = Debug|Win32
+		{B439F7FD-6D93-4AA2-B64F-86021F20C7E3}.Release|x64.ActiveCfg = Release|x64
+		{B439F7FD-6D93-4AA2-B64F-86021F20C7E3}.Release|x64.Build.0 = Release|x64
+		{B439F7FD-6D93-4AA2-B64F-86021F20C7E3}.Release|x86.ActiveCfg = Release|Win32
+		{B439F7FD-6D93-4AA2-B64F-86021F20C7E3}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
