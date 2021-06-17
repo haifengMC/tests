@@ -47,6 +47,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "21_函数类模版", "21_�
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "22_使用模版特化实现工厂模式", "22_使用模版特化实现工厂模式\22_使用模版特化实现工厂模式.vcxproj", "{B1817E62-0BC8-4E80-979A-79E575D02F38}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "23_函数式编程实现加法", "23_函数式编程实现加法\23_函数式编程实现加法.vcxproj", "{78E8D88E-DDB1-4566-BB4E-70ADACCFCAE4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -231,6 +233,14 @@ Global
 		{B1817E62-0BC8-4E80-979A-79E575D02F38}.Release|x64.Build.0 = Release|x64
 		{B1817E62-0BC8-4E80-979A-79E575D02F38}.Release|x86.ActiveCfg = Release|Win32
 		{B1817E62-0BC8-4E80-979A-79E575D02F38}.Release|x86.Build.0 = Release|Win32
+		{78E8D88E-DDB1-4566-BB4E-70ADACCFCAE4}.Debug|x64.ActiveCfg = Debug|x64
+		{78E8D88E-DDB1-4566-BB4E-70ADACCFCAE4}.Debug|x64.Build.0 = Debug|x64
+		{78E8D88E-DDB1-4566-BB4E-70ADACCFCAE4}.Debug|x86.ActiveCfg = Debug|Win32
+		{78E8D88E-DDB1-4566-BB4E-70ADACCFCAE4}.Debug|x86.Build.0 = Debug|Win32
+		{78E8D88E-DDB1-4566-BB4E-70ADACCFCAE4}.Release|x64.ActiveCfg = Release|x64
+		{78E8D88E-DDB1-4566-BB4E-70ADACCFCAE4}.Release|x64.Build.0 = Release|x64
+		{78E8D88E-DDB1-4566-BB4E-70ADACCFCAE4}.Release|x86.ActiveCfg = Release|Win32
+		{78E8D88E-DDB1-4566-BB4E-70ADACCFCAE4}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
