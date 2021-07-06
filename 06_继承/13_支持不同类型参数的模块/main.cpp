@@ -14,40 +14,17 @@ struct B
 	int i2 = 4;
 };
 
-struct FuncBase
-{
-	virtual void printCallback() = 0;
-};
+struct FuncBase { virtual void printCallback() = 0; };
 
 template <typename T>
 struct PrintFunc : public FuncBase
 {
-	void printCallback()
-	{
-		printIt(T());
-	}
-
-	virtual void printIt(const T& a)
-	{
-		cout << "PrintFunc" << endl;
-	}
+	void printCallback() { printIt(T()); }
+	virtual void printIt(const T& a) = 0;
 };
 
-struct FuncA : public PrintFunc<A>
-{
-	void printIt(const A& a)
-	{
-		cout << "A " << a.i1 << "," << a.i2 << endl;
-	}
-};
-
-struct FuncB : public PrintFunc<B>
-{
-	void printIt(const B& b)
-	{
-		cout << "B " << b.i1 << "," << b.i2 << endl;
-	}
-};
+struct FuncA : public PrintFunc<A> { void printIt(const A& a) { cout << "A " << a.i1 << "," << a.i2 << endl; } };
+struct FuncB : public PrintFunc<B> { void printIt(const B& b) { cout << "B " << b.i1 << "," << b.i2 << endl; } };
 
 int main()
 {
