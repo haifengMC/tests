@@ -2,6 +2,9 @@
 
 using namespace std;
 
+template <size_t N>
+struct EventBase {};
+
 enum UserEvent
 {
 	UserEvent_Reg,
@@ -11,43 +14,30 @@ enum UserEvent
 class UserBase
 {
 public:
-	template <size_t N>
-	void onEvent() {}
-	template <>
-	virtual void onEvent<UserEvent_Reg>() {}
-	template <>
-	virtual void onEvent<UserEvent_Login>() {}
+	virtual void onEvent(const EventBase<UserEvent_Reg>&) {}
+	virtual void onEvent(const EventBase<UserEvent_Login>&) {}
 };
 
 class User1 : public UserBase
 {
 public:
-	template <size_t N>
-	void onEvent() {}
-	template <>
-	virtual void onEvent<UserEvent_Reg>() { cout << "User1 Reg" << endl; }
-	template <>
-	virtual void onEvent<UserEvent_Login>() { cout << "User1 Login" << endl; }
+	void onEvent(const EventBase<UserEvent_Reg>&) { cout << "User1 Reg" << endl; }
+	void onEvent(const EventBase<UserEvent_Login>&) { cout << "User1 Login" << endl; }
 };
 
 class User2 : public UserBase
 {
 public:
-	template <size_t N>
-	void onEvent() {}
-	template <>
-	virtual void onEvent<UserEvent_Reg>() { cout << "User2 Reg" << endl; }
-	template <>
-	virtual void onEvent<UserEvent_Login>() { cout << "User2 Login" << endl; }
+	void onEvent(const EventBase<UserEvent_Reg>&) { cout << "User2 Reg" << endl; }
+	void onEvent(const EventBase<UserEvent_Login>&) { cout << "User2 Login" << endl; }
 };
 
 int main()
 {
-	UserBase* pUser1 = new User1;
-	UserBase* pUser2 = new User2;
+	UserBase* userArr[] = { new User1, new User2 };
 
-	pUser1->onEvent<UserEvent_Reg>();
-	pUser2->onEvent<UserEvent_Login>();
+	userArr[0]->onEvent(EventBase<UserEvent_Reg>());
+	userArr[1]->onEvent(EventBase<UserEvent_Login>());
 
 	return 0;
 }
