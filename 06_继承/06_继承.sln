@@ -29,6 +29,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "12_特例化成员函数多
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "13_支持不同类型参数的模块", "13_支持不同类型参数的模块\13_支持不同类型参数的模块.vcxproj", "{EE1DB614-509A-4C8D-B1D3-A47E8ABE09D4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "14_多继承类型转换", "14_多继承类型转换\14_多继承类型转换.vcxproj", "{371A605C-454E-495D-9029-B2A29360D6ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -141,6 +143,14 @@ Global
 		{EE1DB614-509A-4C8D-B1D3-A47E8ABE09D4}.Release|x64.Build.0 = Release|x64
 		{EE1DB614-509A-4C8D-B1D3-A47E8ABE09D4}.Release|x86.ActiveCfg = Release|Win32
 		{EE1DB614-509A-4C8D-B1D3-A47E8ABE09D4}.Release|x86.Build.0 = Release|Win32
+		{371A605C-454E-495D-9029-B2A29360D6ED}.Debug|x64.ActiveCfg = Debug|x64
+		{371A605C-454E-495D-9029-B2A29360D6ED}.Debug|x64.Build.0 = Debug|x64
+		{371A605C-454E-495D-9029-B2A29360D6ED}.Debug|x86.ActiveCfg = Debug|Win32
+		{371A605C-454E-495D-9029-B2A29360D6ED}.Debug|x86.Build.0 = Debug|Win32
+		{371A605C-454E-495D-9029-B2A29360D6ED}.Release|x64.ActiveCfg = Release|x64
+		{371A605C-454E-495D-9029-B2A29360D6ED}.Release|x64.Build.0 = Release|x64
+		{371A605C-454E-495D-9029-B2A29360D6ED}.Release|x86.ActiveCfg = Release|Win32
+		{371A605C-454E-495D-9029-B2A29360D6ED}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
