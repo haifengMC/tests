@@ -1,6 +1,6 @@
 #pragma once
 
-struct UserFuncBase;
+class UserFuncBase;
 struct UserFunc1 : public UserFuncBase
 {
 	void printMe();

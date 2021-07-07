@@ -7,7 +7,7 @@
 using namespace std;
 
 template <>
-static UserFuncBase* UserFuncBase::factory<UserFuncType_2>() { return new UserFunc2; }
+static UserFuncBase* UserFuncBase::factory<UserFuncType_2>() { return new UserFunc2(); }
 UserFunc2::RegUserFunc2 reg;
 UserFunc2::RegUserFunc2::RegUserFunc2()
 {
