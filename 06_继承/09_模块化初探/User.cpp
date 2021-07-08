@@ -1,8 +1,4 @@
-#include <map>
-#include <functional>
-#include <unordered_map>
-#include <iostream>
-
+#include "global.h"
 #include "UserFunc.h"
 #include "UserEvent.h"
 #include "User.h"
@@ -45,12 +41,34 @@ void User::initEvents()
 	}
 }
 
-bool User::doEvents()
+bool User::checkCurEvtList() const
+{
+	return !curEvtList.empty();
+}
+
+bool User::doCurEvtList()
 {
 	if (curEvtList.empty())
 		return false;
 
-	size_t evt = curEvtList.front();
+	auto& evt = curEvtList.front();
+	cout << "处理事件开始:" << evt.first << "_" << (size_t)evt.second << endl;
+	ActGrp& actGrp = evtMap[evt.first];
+	auto actListIt = actGrp.lower_bound(evt.second);
+	for (; actListIt != actGrp.end(); ++actListIt)
+	{
+		cout << "处理事件:" << evt.first << "_" << (size_t)actListIt->first << endl;
+		for (auto& act : actListIt->second)
+			act();
+	}
+	cout << "处理事件结束:" << evt.first << "_" << (size_t)evt.second << endl;
+	curEvtList.pop_front();
 
-	return false;
+	return true;
+}
+
+void User::emit(size_t evt, uint8_t step)
+{
+	cout << "触发事件:" << evt << "_" << (size_t)step << endl;
+	curEvtList.push_back(std::make_pair(evt, step));
 }

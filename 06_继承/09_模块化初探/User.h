@@ -1,5 +1,6 @@
 #pragma once
 
+class UserFuncBase;
 class User
 {
 	friend class UserFuncBase;
@@ -13,5 +14,7 @@ public:
 	void loadFunc();
 	void printEveryFunc();
 	void initEvents();
-	bool doEvents();
+	bool checkCurEvtList() const;
+	bool doCurEvtList();
+	void emit(size_t evt, uint8_t step = 0);
 };

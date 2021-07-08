@@ -138,6 +138,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="global.h" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="User.cpp" />
     <ClCompile Include="UserFunc.cpp" />

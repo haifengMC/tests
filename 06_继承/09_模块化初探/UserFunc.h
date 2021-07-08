@@ -12,7 +12,7 @@ public:
 	virtual void printMe() = 0;
 	virtual void initEvent() {};
 
-	void emit(size_t evt);
+	void emit(size_t evt, uint8_t step = 0);
 	void conn(size_t evt, std::function<void()> act, uint8_t step = 0);
 
 	static UserFuncBase* create(size_t funcTy);

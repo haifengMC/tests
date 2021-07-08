@@ -1,8 +1,6 @@
-#include <iostream>
-#include <map>
-#include <unordered_map>
-
+#include "global.h"
 #include "User.h"
+#include "UserEvent.h"
 
 using namespace std;
 
@@ -12,6 +10,10 @@ int main()
 	u.loadFunc();
 	u.initEvents();
 	u.printEveryFunc();
+
+	u.emit(UserEventType_Reg);
+	while (u.checkCurEvtList())
+		u.doCurEvtList();
 
 	return 0;
 }

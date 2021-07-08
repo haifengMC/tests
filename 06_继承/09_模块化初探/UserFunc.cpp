@@ -1,16 +1,12 @@
-#include <iostream>
-#include <map>
-#include <unordered_map>
-#include <functional>
-
+#include "global.h"
 #include "User.h"
 #include "UserFunc.h"
 
 using namespace std;
 
-void UserFuncBase::emit(size_t evt)
+void UserFuncBase::emit(size_t evt, uint8_t step)
 {
-	pOwner->curEvtList.push_back(std::make_pair(evt, 0));
+	pOwner->emit(evt, step);
 }
 
 void UserFuncBase::conn(size_t evt, std::function<void()> act, uint8_t step)
