@@ -30,6 +30,23 @@ struct MapDataB : public MapDataBase<uint8_t, MapDataA>
 {
 
 };
+
+template <class...> struct PrintType {};
+template<> struct PrintType<>
+{
+	static std::ostream& show(std::ostream& os) { return os; }
+};
+template<typename _First, typename... _Rest>
+struct PrintType <_First, _Rest...>
+{
+	static std::ostream& show(std::ostream& os)
+	{
+		os << typeid(_First).name() << " ";
+		return PrintType<_Rest...>::show(os);
+	}
+};
+
+
 /*
 template<typename...> class MapLinker {};
 
@@ -47,25 +64,26 @@ class MapLinker<Head, Tail...> : public MapLinker<Tail...>
 };
 */
 
-template <class...> struct PrintType {};
-template<> struct PrintType<>
+
+template<typename T>
+string debug_rep(const T& t)
 {
-	static std::ostream& show(std::ostream& os) { return os; }
-};
-template<typename _First, typename... _Rest>
-struct PrintType <_First, _Rest...>
+	ostringstream ret;
+	ret << t;
+	return ret.str();
+}
+
+template<typename... Args>
+void errorMsg(ostream& os, const Args&... rest)
 {
-	static std::ostream& show(std::ostream& os)
-	{
-		os << typeid(_First).name() << " ";
-		return PrintType<_Rest...>::show(os);
-	}
-};
+	os << debug_rep(rset)...;
+}
 
 int main()
 {
 	cout << typeid(MapDataA).name() << ":T" << endl;
 	cout << typeid(std::_Get_first_parameter<MapDataA::MapData>::type).name() << ":T" << endl;
 	PrintType<int, char, float, MapDataA>::show(cout);
+	errorMsg(cout, 1);
 	return 0;
 }
