@@ -65,43 +65,22 @@ struct GetNType <N, _FirstTy, _Rest...> : public GetNType<DecN<N>, _Rest...> {};
 
 template<typename...> class MapLinker {};
 
-template<typename _FirstTy, typename _SecondTy> 
-class MapLinker<_FirstTy, _SecondTy>
-{
-public:
-	/*
-	template <class T, class ... Args>
-	static _SecondTy* getDt(_FirstTy* pFst, T first, Args ... last)
-	{
-		if (!sizeof...(last))
-			return NULL;
-
-		if (!pFst)
-			return NULL;
-
-		return pFst->_getDt(first);
-	}
-	*/
-};
-
-template <size_t N, typename... _Ty>
-using SubType = class GetNType<N, _Ty...>::Type;
-
 template<typename _FirstTy, typename _SecondTy, typename... _Rest>
 class MapLinker<_FirstTy, _SecondTy, _Rest...>
 {
 public:
+	template <size_t N>
+	using SubType = typename GetNType<N, _FirstTy, _SecondTy, _Rest...>::Type;
 
-	
-	MapLinker() 
-	{ 
-		PrintType<_FirstTy, _SecondTy, _Rest...>::show(cout); 
-		cout << endl;
-	}
-	/*
-	template <class T, class ... Args>
-	static SubType<sizeof...(Args)>* getDt(_FirstTy* pFst, T first, Args ... last)
+	template <typename ... Args>
+	static SubType<sizeof...(Args)>* getDt(_FirstTy* pFst, T first, Args ... args)
 	{
+		switch (sizeof...(args))
+		{
+		case 0: return 
+		default:
+			break;
+		}
 		if (!pFst)
 			return NULL;
 
@@ -109,9 +88,11 @@ public:
 		if (!pSec)
 			return NULL;
 
+		if (!sizeof...(last))
+			return pSec;
+
 		return MapLinker<_SecondTy, _Rest...>::getDt(pSec, last...);
 	}
-	*/
 };
 
 struct MapDataA : public MapDataBase<uint8_t, size_t>
@@ -130,12 +111,9 @@ int main()
 	//cout << typeid(MapDataA).name() << ":T" << endl;
 	//cout << typeid(std::_Get_first_parameter<MapDataA::MapData>::type).name() << ":T" << endl;
 	//PrintType<int, char, float, MapDataA>::show(cout);
-	cout << typeid(SubType<0, int, char, float, MapDataA>).name() << endl;
-	cout << typeid(SubType<1, int, char, float, MapDataA>).name() << endl;
 	MapDataB b;
-	MapLinker<MapDataB, MapDataA, size_t> link;
 	//cout << typeid(MapLinker<MapDataB, MapDataA, size_t>).name() << endl;
-	//MapDataA* pA = MapLinker<MapDataB, MapDataA, size_t>::getDt(&b, 1);;
+	MapDataA* pA = MapLinker<MapDataB, MapDataA, size_t>::getDt(&b, 1);;
 	//MapDataA* pA = b.getDt(1);
 	return 0;
 }
