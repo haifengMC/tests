@@ -57,6 +57,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "26_得到第N个类型", "2
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "27_得到第N个变量", "27_得到第N个变量\27_得到第N个变量.vcxproj", "{A7D4EEFD-C6D0-4F10-897B-E60D105C9D0D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "28_有指定成员时调用", "28_有指定成员时调用\28_有指定成员时调用.vcxproj", "{8F4477F3-21FA-4F91-A60F-81F446D19ACC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -281,6 +283,14 @@ Global
 		{A7D4EEFD-C6D0-4F10-897B-E60D105C9D0D}.Release|x64.Build.0 = Release|x64
 		{A7D4EEFD-C6D0-4F10-897B-E60D105C9D0D}.Release|x86.ActiveCfg = Release|Win32
 		{A7D4EEFD-C6D0-4F10-897B-E60D105C9D0D}.Release|x86.Build.0 = Release|Win32
+		{8F4477F3-21FA-4F91-A60F-81F446D19ACC}.Debug|x64.ActiveCfg = Debug|x64
+		{8F4477F3-21FA-4F91-A60F-81F446D19ACC}.Debug|x64.Build.0 = Debug|x64
+		{8F4477F3-21FA-4F91-A60F-81F446D19ACC}.Debug|x86.ActiveCfg = Debug|Win32
+		{8F4477F3-21FA-4F91-A60F-81F446D19ACC}.Debug|x86.Build.0 = Debug|Win32
+		{8F4477F3-21FA-4F91-A60F-81F446D19ACC}.Release|x64.ActiveCfg = Release|x64
+		{8F4477F3-21FA-4F91-A60F-81F446D19ACC}.Release|x64.Build.0 = Release|x64
+		{8F4477F3-21FA-4F91-A60F-81F446D19ACC}.Release|x86.ActiveCfg = Release|Win32
+		{8F4477F3-21FA-4F91-A60F-81F446D19ACC}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
