@@ -19,4 +19,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="hMapLink.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="hMapLinkImpl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="hSomeTool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

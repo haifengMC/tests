@@ -55,6 +55,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "25_map连接器", "25_map�
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "26_得到第N个类型", "26_得到第N个类型\26_得到第N个类型.vcxproj", "{A586FC54-7BFB-4FA8-B046-E724992ED6EC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "27_得到第N个变量", "27_得到第N个变量\27_得到第N个变量.vcxproj", "{A7D4EEFD-C6D0-4F10-897B-E60D105C9D0D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -271,6 +273,14 @@ Global
 		{A586FC54-7BFB-4FA8-B046-E724992ED6EC}.Release|x64.Build.0 = Release|x64
 		{A586FC54-7BFB-4FA8-B046-E724992ED6EC}.Release|x86.ActiveCfg = Release|Win32
 		{A586FC54-7BFB-4FA8-B046-E724992ED6EC}.Release|x86.Build.0 = Release|Win32
+		{A7D4EEFD-C6D0-4F10-897B-E60D105C9D0D}.Debug|x64.ActiveCfg = Debug|x64
+		{A7D4EEFD-C6D0-4F10-897B-E60D105C9D0D}.Debug|x64.Build.0 = Debug|x64
+		{A7D4EEFD-C6D0-4F10-897B-E60D105C9D0D}.Debug|x86.ActiveCfg = Debug|Win32
+		{A7D4EEFD-C6D0-4F10-897B-E60D105C9D0D}.Debug|x86.Build.0 = Debug|Win32
+		{A7D4EEFD-C6D0-4F10-897B-E60D105C9D0D}.Release|x64.ActiveCfg = Release|x64
+		{A7D4EEFD-C6D0-4F10-897B-E60D105C9D0D}.Release|x64.Build.0 = Release|x64
+		{A7D4EEFD-C6D0-4F10-897B-E60D105C9D0D}.Release|x86.ActiveCfg = Release|Win32
+		{A7D4EEFD-C6D0-4F10-897B-E60D105C9D0D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
