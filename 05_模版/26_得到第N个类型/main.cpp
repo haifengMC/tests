@@ -6,10 +6,10 @@
 
 template <size_t N, class...> 
 struct GetNType { using Type = void; };
-template<typename _First, typename... _Rest>
-struct GetNType<1, _First, _Rest...> { using Type = _First; };
-template<size_t N, typename _FirstTy, typename... _Rest>
-struct GetNType <N, _FirstTy, _Rest...> : public GetNType<std::ratio_subtract<std::ratio<N>, std::ratio<1>>::num, _Rest...> {};
+template<typename First, typename... _Rest>
+struct GetNType<1, First, _Rest...> { using Type = First; };
+template<size_t N, typename FirstTy, typename... _Rest>
+struct GetNType <N, FirstTy, _Rest...> : public GetNType<std::ratio_subtract<std::ratio<N>, std::ratio<1>>::num, _Rest...> {};
 
 class A {};
 
