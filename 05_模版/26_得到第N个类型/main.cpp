@@ -4,7 +4,7 @@
 #include <typeinfo>
 #include <type_traits>
 
-template <size_t N, class...> 
+template <size_t N, typename...>
 struct GetNType { using Type = void; };
 template<typename First, typename... _Rest>
 struct GetNType<1, First, _Rest...> { using Type = First; };
