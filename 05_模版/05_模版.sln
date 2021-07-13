@@ -59,6 +59,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "27_得到第N个变量", "2
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "28_有指定成员时调用", "28_有指定成员时调用\28_有指定成员时调用.vcxproj", "{8F4477F3-21FA-4F91-A60F-81F446D19ACC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "29_获取函数返回值和参数类型", "29_获取函数返回值和参数类型\29_获取函数返回值和参数类型.vcxproj", "{30528EB7-35A0-41F5-BD3E-299F3E3A161D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -291,6 +293,14 @@ Global
 		{8F4477F3-21FA-4F91-A60F-81F446D19ACC}.Release|x64.Build.0 = Release|x64
 		{8F4477F3-21FA-4F91-A60F-81F446D19ACC}.Release|x86.ActiveCfg = Release|Win32
 		{8F4477F3-21FA-4F91-A60F-81F446D19ACC}.Release|x86.Build.0 = Release|Win32
+		{30528EB7-35A0-41F5-BD3E-299F3E3A161D}.Debug|x64.ActiveCfg = Debug|x64
+		{30528EB7-35A0-41F5-BD3E-299F3E3A161D}.Debug|x64.Build.0 = Debug|x64
+		{30528EB7-35A0-41F5-BD3E-299F3E3A161D}.Debug|x86.ActiveCfg = Debug|Win32
+		{30528EB7-35A0-41F5-BD3E-299F3E3A161D}.Debug|x86.Build.0 = Debug|Win32
+		{30528EB7-35A0-41F5-BD3E-299F3E3A161D}.Release|x64.ActiveCfg = Release|x64
+		{30528EB7-35A0-41F5-BD3E-299F3E3A161D}.Release|x64.Build.0 = Release|x64
+		{30528EB7-35A0-41F5-BD3E-299F3E3A161D}.Release|x86.ActiveCfg = Release|Win32
+		{30528EB7-35A0-41F5-BD3E-299F3E3A161D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
