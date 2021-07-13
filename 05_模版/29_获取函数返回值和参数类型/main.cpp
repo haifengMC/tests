@@ -14,8 +14,11 @@ template <size_t, typename>
 struct GetFuncRtParmTy { using Type = void; };
 template<size_t N, typename RtTy, typename... Args>
 struct GetFuncRtParmTy<N, RtTy(*)(Args...)> { using Type = typename GetNType<std::ratio_add<std::ratio<N>, std::ratio<1>>::num, RtTy, Args...>::Type; };
+template<size_t N, typename Ty, typename RtTy, typename... Args>
+struct GetFuncRtParmTy<N, RtTy(Ty::*)(Args...)> { using Type = typename GetNType<std::ratio_add<std::ratio<N>, std::ratio<1>>::num, RtTy, Args...>::Type; };
 
 int f(char, double, std::ostream&) { return 0; }
+struct A { int f(char, double, std::ostream&) { return 0; } };
 int main()
 {
 	using namespace std;
@@ -24,6 +27,12 @@ int main()
 	cout << typeid(GetFuncRtParmTy<2, decltype(&f)>::Type).name() << endl;
 	cout << typeid(GetFuncRtParmTy<3, decltype(&f)>::Type).name() << endl;
 	cout << typeid(GetFuncRtParmTy<4, decltype(&f)>::Type).name() << endl;
+
+	cout << typeid(GetFuncRtParmTy<0, decltype(&A::f)>::Type).name() << endl;
+	cout << typeid(GetFuncRtParmTy<1, decltype(&A::f)>::Type).name() << endl;
+	cout << typeid(GetFuncRtParmTy<2, decltype(&A::f)>::Type).name() << endl;
+	cout << typeid(GetFuncRtParmTy<3, decltype(&A::f)>::Type).name() << endl;
+	cout << typeid(GetFuncRtParmTy<4, decltype(&A::f)>::Type).name() << endl;
 	return 0;
 }
 
