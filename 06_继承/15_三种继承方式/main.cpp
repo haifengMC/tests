@@ -6,7 +6,7 @@ using namespace std;
 公共继承
 	1父类中public     子类中变为  public
 	2父类中protected  子类中变为 protected
-	3父类中 private    子类中访问不到
+	3父类中 private   子类中访问不到
 保护继承
 	1父类中public     子类中变为 protected
 	2父类中protected  子类中变为 protected
