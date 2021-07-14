@@ -31,6 +31,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "13_支持不同类型参数
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "14_多继承类型转换", "14_多继承类型转换\14_多继承类型转换.vcxproj", "{371A605C-454E-495D-9029-B2A29360D6ED}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "15_三种继承方式", "15_三种继承方式\15_三种继承方式.vcxproj", "{F43A3454-C898-4EE5-95E7-0DD0CC1976C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -151,6 +153,14 @@ Global
 		{371A605C-454E-495D-9029-B2A29360D6ED}.Release|x64.Build.0 = Release|x64
 		{371A605C-454E-495D-9029-B2A29360D6ED}.Release|x86.ActiveCfg = Release|Win32
 		{371A605C-454E-495D-9029-B2A29360D6ED}.Release|x86.Build.0 = Release|Win32
+		{F43A3454-C898-4EE5-95E7-0DD0CC1976C7}.Debug|x64.ActiveCfg = Debug|x64
+		{F43A3454-C898-4EE5-95E7-0DD0CC1976C7}.Debug|x64.Build.0 = Debug|x64
+		{F43A3454-C898-4EE5-95E7-0DD0CC1976C7}.Debug|x86.ActiveCfg = Debug|Win32
+		{F43A3454-C898-4EE5-95E7-0DD0CC1976C7}.Debug|x86.Build.0 = Debug|Win32
+		{F43A3454-C898-4EE5-95E7-0DD0CC1976C7}.Release|x64.ActiveCfg = Release|x64
+		{F43A3454-C898-4EE5-95E7-0DD0CC1976C7}.Release|x64.Build.0 = Release|x64
+		{F43A3454-C898-4EE5-95E7-0DD0CC1976C7}.Release|x86.ActiveCfg = Release|Win32
+		{F43A3454-C898-4EE5-95E7-0DD0CC1976C7}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
