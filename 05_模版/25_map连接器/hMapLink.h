@@ -3,15 +3,17 @@
 struct hMapFuncBase
 {
 	virtual ~hMapFuncBase() {}
-	virtual std::ostream& fillDebug(std::ostream& os) const { return os; }
+	virtual std::ostream& fillOs(std::ostream& os) const { return os; }
 };
 
 struct _MapDataBase : hMapFuncBase {};
 template<typename Key, typename Val>
 struct MapDataBase : _MapDataBase
 {
-	using MapData = std::map<Key, Val>;
-	MapData _mapDt;
+	using _MapData = std::map<Key, Val>;
+	_MapData _mapDt;
+
+	virtual ~MapDataBase() {}
 };
 
 template<typename...> class MapLinker {};
@@ -24,29 +26,29 @@ public:
 	using SubType = typename GetNType<AddN<N>, SecondTy, Rest...>::Type;
 
 	template <typename First, typename... Last>
-	static SubType<sizeof...(Last)>& addDt(FirstTy& fstT, First fst, Last ... lasts);
+	static SubType<sizeof...(Last)>* addDt(FirstTy* pFstT, First fst, Last ... lasts);
 	template <typename First>
-	static SecondTy& addDt(FirstTy& fstT, First fst);
+	static SecondTy* addDt(FirstTy* pFstT, First fst);
 
 	template <typename First, typename... Last>
-	static SubType<sizeof...(Last)>* getDt(FirstTy& fstT, First fst, Last ... lasts);
+	static SubType<sizeof...(Last)>* getDt(FirstTy* pFstT, First fst, Last ... lasts);
 	template <typename First>
-	static SecondTy* getDt(FirstTy& fstT, First fst);
+	static SecondTy* getDt(FirstTy* pFstT, First fst);
 
 	template <typename First, typename... Last>
-	static const SubType<sizeof...(Last)>* getDt(const FirstTy& fstT, First fst, Last ... lasts);
+	static const SubType<sizeof...(Last)>* getDt(const FirstTy* pFstT, First fst, Last ... lasts);
 	template <typename First>
-	static const SecondTy* getDt(const FirstTy& fstT, First fst);
+	static const SecondTy* getDt(const FirstTy* pFstT, First fst);
 	template <typename First, typename... Last>
-	static std::ostream& fillDebug(std::ostream& os, const FirstTy& fstT, First fst, Last ... lasts);
-	static std::ostream& fillDebug(std::ostream& os, const FirstTy& fstT);
+	static std::ostream& fillDebug(std::ostream& os, const FirstTy* pFstT, First fst, Last ... lasts);
+	static std::ostream& fillDebug(std::ostream& os, const FirstTy* pFstT);
 };
 
 template<typename Ty>
 class MapLinker<Ty>
 {
 public:
-	static std::ostream& fillDebug(std::ostream& os, const Ty& t);
+	static std::ostream& fillDebug(std::ostream& os, const Ty* pT);
 };
 
 namespace GetMapLinkerDetail
@@ -56,7 +58,7 @@ namespace GetMapLinkerDetail
 	template <typename Ty>
 	struct _GetNextLinkerTy<Ty, true>
 	{
-		using Type = typename GetMapTy<typename Ty::MapData>::Val;
+		using Type = typename GetMapTy<typename Ty::_MapData>::Val;
 	};
 
 	template <bool isMapData, typename, typename... Rest>
@@ -72,4 +74,17 @@ namespace GetMapLinkerDetail
 template<typename Ty>
 struct GetMapLinker { using Type = typename GetMapLinkerDetail::_GetMapLinker<std::is_base_of_v<_MapDataBase, Ty>, Ty>::Type; };
 
-
+template<typename Key, typename Val>
+class MapData : public MapDataBase<Key, Val> 
+{
+	using Link = typename GetMapLinker<MapDataBase<Key, Val>>::Type;
+public:
+	template <typename... Args>
+	auto addDt(Args ... args) { return Link::addDt(this, args...); }
+	template <typename... Args>
+	auto getDt(Args ... args) { return Link::getDt(this, args...); }
+	template <typename... Args>
+	auto getDt(Args ... args) const { return Link::getDt(this, args...); }
+	template <typename... Args>
+	std::ostream& fillDebug(std::ostream& os, Args ... args) const { return Link::fillDebug(os, this, args...); }
+};

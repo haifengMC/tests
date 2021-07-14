@@ -5,14 +5,14 @@ using namespace std;
 namespace hCallFuncDetail
 {
 	template <typename Base, bool isBase>
-	struct _hCallFunc
+	struct _hCallFuncBase
 	{
 		template <typename Func, typename Ty>
 		static void exec(Func, Ty&) {}
 	};
 
 	template <typename Base>
-	struct _hCallFunc<Base, true>
+	struct _hCallFuncBase<Base, true>
 	{
 		template <typename Func, typename Ty>
 		static void exec(Func f, Ty& t) { return f(t); }
@@ -25,7 +25,7 @@ struct hCallFunc
 	template <typename Func, typename Ty>
 	static void exec(Func f, Ty& t)
 	{ 
-		hCallFuncDetail::_hCallFunc<Base, std::is_base_of_v<Base, Ty>>::exec(f, t);
+		hCallFuncDetail::_hCallFuncBase<Base, std::is_base_of_v<Base, Ty>>::exec(f, t);
 	}
 };
 

@@ -10,40 +10,36 @@
 
 using namespace std;
 
-struct MapDataA : public MapDataBase<uint8_t, size_t>
+struct OtherData 
 {
-
+	std::ostream& fillOs(std::ostream& os) const { return os << "OtherData"; }
 };
 
-struct MapDataB : public MapDataBase<uint8_t, MapDataA>
+struct MapDataA : public MapData<uint8_t, size_t>
 {
+	std::ostream& fillOs(std::ostream& os) const { return os << "MapDataA"; }
+};
+
+struct MapDataB : public MapData<uint8_t, MapDataA>
+{
+	std::ostream& fillOs(std::ostream& os) const { return os << "MapDataB"; }
 };
 
 int main()
 {
-	//cout << typeid(MapDataA).name() << ":T" << endl;
-	//cout << typeid(std::_Get_first_parameter<MapDataA::MapData>::type).name() << ":T" << endl;
-	//PrintType<int, char, float, MapDataA>::show(cout);
-
-	//cout << typeid(MapLinker<MapDataB, MapDataA, size_t>).name() << endl;
-	using LinkA = MapLinker<MapDataA, size_t>;
-	cout << typeid(LinkA).name() << endl;
-	MapDataA a;
-	LinkA::fillDebug(cout, a) << endl;
-	LinkA::addDt(a, 1) = 10;
-	LinkA::fillDebug(cout, a) << endl;
-	size_t* pSize = LinkA::getDt(a, 1);
-	if (pSize)
-		cout << *pSize << endl;
-	else
-		cout << "NULL" << endl;
-	
 	MapDataB b;
-	using LinkB = MapLinker<MapDataB, MapDataA, size_t>;
-	cout << typeid(GetMapLinker<MapDataB>::Type).name() << endl;
-	LinkB::addDt(b, 1, 2) = 20;
-	LinkB::addDt(b, 1, 3) = 20;
-	LinkB::fillDebug(cout, b) << endl;
-	cout << MapLinker<MapDataB, MapDataA, size_t>::getDt(b, 1, 2) << endl;
+	b.fillDebug(cout) << endl;
+	*b.addDt(1, 2) = 30;
+	*b.addDt(1, 3) = 40;
+	*b.addDt(2, 1) = 50;
+	b.fillDebug(cout) << endl;
+	MapDataA* pA = b.getDt(2);
+	*pA->addDt(3) = 300;
+	*pA->addDt(4) = 400;
+	*pA->addDt(5) = 500;
+	pA->fillDebug(cout) << endl;
+	b.fillDebug(cout, 1) << endl;
+	b.fillDebug(cout) << endl;
+
 	return 0;
 }

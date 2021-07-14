@@ -60,22 +60,46 @@ struct GetNType<1, First, _Rest...>
 template<size_t N, typename FirstTy, typename... _Rest>
 struct GetNType <N, FirstTy, _Rest...> : public GetNType<DecN<N>, _Rest...> {};
 
+template <size_t, typename> struct GetNTemplType;
+template<template <typename, typename...> typename Ty, typename First, typename... Rest>
+struct GetNTemplType<1, Ty<First, Rest...>> { using Type = First; };
+template<size_t N, template <typename, typename...> typename Ty, typename First, typename... Rest>
+struct GetNTemplType <N, Ty<First, Rest...>> : public GetNTemplType<std::ratio_subtract<std::ratio<N>, std::ratio<1>>::num, Ty<Rest...>> {};
+
 namespace hCallFuncDetail
 {
-	template <bool isBase>
-	struct _hCallFunc
+	template <bool>
+	struct _hCallFuncBase
 	{
-		template <typename Ty, typename Func,  typename... Args>
+		template <typename Func, typename Ty, typename... Args>
 		static bool exec(Func, Ty&, Args&...) { return false; }
 	};
 
 	template <>
-	struct _hCallFunc<true>
+	struct _hCallFuncBase<true>
 	{
 		template <typename Func, typename Ty, typename... Args>
 		static bool exec(Func f, Ty& t, Args&... args) 
 		{
 			f(t, args...); 
+			return true;
+		}
+	};
+
+	template <bool>
+	struct _hCallFuncPutOut
+	{
+		template <typename Ty, typename... Args>
+		static bool exec(Ty&, Args&...) { return false; }
+	};
+
+	template <>
+	struct _hCallFuncPutOut<true>
+	{
+		template <typename Os, typename Ty>
+		static bool exec(Os& os, Ty& t)
+		{
+			os << t;
 			return true;
 		}
 	};
@@ -87,17 +111,17 @@ struct hCallFuncBase
 	template <typename Func, typename Ty, typename... Args>
 	static bool exec(Func f, Ty& t, Args&... args)
 	{
-		return hCallFuncDetail::_hCallFunc<std::is_base_of_v<Base, Ty>>::exec(f, t, args...);
+		return hCallFuncDetail::_hCallFuncBase<std::is_base_of_v<Base, Ty>>::exec(f, t, args...);
 	}
 };
 
 template <typename Os>
 struct hCallFuncPutOut
 {
-	template <typename Func, typename Ty, typename... Args>
-	static bool exec(Func f, Ty& t, Args&... args)
+	template <typename Ty>
+	static bool exec(Os& os, Ty& t)
 	{
-		return hCallFuncDetail::_hCallFunc<IsPutOut<Os, Ty>::value>::exec(f, t, args...);
+		return hCallFuncDetail::_hCallFuncPutOut<IsPutOut<Os, Ty>::value>::exec(os, t);
 	}
 };
 
